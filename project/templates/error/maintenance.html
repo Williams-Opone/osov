@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Under Maintenance - OSOV</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-50 h-screen flex flex-col items-center justify-center text-center px-4">
+
+    <div class="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+        
+        <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fa-solid fa-screwdriver-wrench text-2xl"></i>
+        </div>
+
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">We'll be right back!</h1>
+        
+        <p class="text-gray-500 mb-8 leading-relaxed">
+            Our Story Our Voice is currently undergoing scheduled maintenance to improve your experience. We should be back online shortly.
+        </p>
+
+        <div class="border-t border-gray-100 pt-6">
+            <p class="text-xs text-gray-400 mb-2">Are you a team member?</p>
+            <a href="/admin/login" class="text-sm font-medium text-red-600 hover:text-red-700 hover:underline transition">
+                Login to Dashboard <i class="fa-solid fa-arrow-right ml-1"></i>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="mt-8 text-xs text-gray-400">
+        &copy; {{ now.year if now else '2026' }} Our Story Our Voice. All rights reserved.
+    </div>
+
+</body>
+</html>

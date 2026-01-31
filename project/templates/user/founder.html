@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Founder & MD - Our Story Our Voice</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, h5 { font-family: 'Poppins', sans-serif; }
+        .serif-quote { font-family: 'Playfair Display', serif; }
+        
+        .partner-logo {
+            filter: grayscale(100%);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        .partner-logo:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    {%include 'user/header.html'%}
+    <section class="relative bg-gray-900 text-white pt-32 pb-24 overflow-hidden">
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-red-600 opacity-20 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-blue-600 opacity-20 blur-3xl"></div>
+
+        <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-12">
+            
+            <div class="md:w-3/5">
+                <div class="inline-block bg-red-600/20 border border-red-500/30 text-red-400 text-xs font-bold px-3 py-1 rounded-full mb-6 uppercase tracking-widest">
+                    The Visionary
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
+                    Engr. Adaighofua <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">Dax Oyibo</span>
+                </h1>
+                <p class="text-xl text-gray-300 font-light leading-relaxed mb-8 max-w-2xl">
+                    A distinguished Technologist, Entrepreneur, and Leader bridging continents, cultures, and industries.
+                </p>
+                <div class="flex flex-wrap gap-4 text-sm font-medium text-gray-400">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-earth-americas text-red-500"></i> Nigerian-Canadian</span>
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-briefcase text-red-500"></i> CEO, ADAKA Global</span>
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-book-open text-red-500"></i> Author</span>
+                </div>
+            </div>
+
+            <div class="md:w-2/5 relative">
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-gray-800">
+                    <img src="/static/face11.jpg" class="w-full h-auto object-cover transform scale-105 hover:scale-100 transition duration-700" alt="Engr. Adaighofua Dax Oyibo">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6">
+                        <p class="text-white font-bold text-lg">Founder & Managing Director</p>
+                        <p class="text-gray-400 text-sm">Our Story Our Voice</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16">
+                    <i class="fa-solid fa-quote-left text-4xl text-gray-200 mb-4"></i>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6 serif-quote italic leading-relaxed">
+                        "He embodies a unique synthesis of scientific rigor, business acumen, and cultural authenticity."
+                    </h2>
+                    <div class="w-16 h-1 bg-red-600 mx-auto rounded"></div>
+                </div>
+
+                <div class="mb-16 flex flex-col md:flex-row gap-8">
+                    <div class="md:w-1/3 flex-shrink-0">
+                        <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 h-full">
+                            <h3 class="text-red-600 font-bold uppercase tracking-widest text-sm mb-4">Roots & Heritage</h3>
+                            <ul class="space-y-3 text-sm text-gray-600">
+                                <li class="flex gap-3"><i class="fa-solid fa-location-dot mt-1 text-gray-400"></i> Born Nov 21, 1965</li>
+                                <li class="flex gap-3"><i class="fa-solid fa-users mt-1 text-gray-400"></i> Urhobo Ethnic Group</li>
+                                <li class="flex gap-3"><i class="fa-solid fa-map-pin mt-1 text-gray-400"></i> Jesse, Delta State</li>
+                                <li class="flex gap-3"><i class="fa-solid fa-city mt-1 text-gray-400"></i> Raised in Sapele</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="md:w-2/3">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">From the Niger Delta to the World</h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            Engr. Oyibo's formative years were spent in Sapele, a vibrant commercial hub whose multicultural atmosphere profoundly influenced his worldview. Growing up in the Niger Delta region, he developed the resilience, cultural pride, and entrepreneurial spirit that would define his journey.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed">
+                            His academic excellence emerged early at <strong>Urhobo College, Warri</strong>, where he held an impressive portfolio of leadership positions including Assistant Senior Prefect and President of the Dramatic, Science, and Literary & Debating Clubs.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mb-16">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-8 border-b border-gray-200 pb-4">Scientific Rigor & Engineering Excellence</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:border-red-200 transition">
+                            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900 mb-2">Academic Foundation</h4>
+                            <p class="text-sm text-gray-600 mb-2">First degree in <strong>Physics and Astronomy</strong>, cultivating an analytical mindset.</p>
+                            <p class="text-sm text-gray-600 mb-2">Specialization in <strong>Instrumentation & Control Engineering</strong> at Mohawk College, Ontario.</p>
+                            <p class="text-sm text-gray-600"><strong>Heat & Frost Technology</strong> at SAIT, Calgary, Alberta.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:border-red-200 transition">
+                            <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-oil-well"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900 mb-2">Industrial Mastery</h4>
+                            <p class="text-sm text-gray-600 mb-2">Built an impressive career in Canada's demanding oil sands sector.</p>
+                            <ul class="text-sm text-gray-600 list-disc pl-4 space-y-1">
+                                <li>Automation & Control Processes</li>
+                                <li>Refinery Operations Support</li>
+                                <li>Complex Technology Integration</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 rounded-2xl p-8 md:p-12 text-white mb-16">
+                    <div class="flex flex-col md:flex-row gap-8 items-start">
+                        <div class="flex-grow">
+                            <h5 class="text-red-500 font-bold uppercase tracking-widest text-xs mb-2">The Entrepreneur</h5>
+                            <h3 class="text-2xl font-bold mb-4">CEO, ADAKA Global Equipment Ltd.</h3>
+                            <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                                Under his visionary leadership, ADAKA Global operates as a diversified enterprise registered in both Canada and Nigeria, committed to sustainable, community-centered development.
+                            </p>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-bold text-white mb-2 text-sm border-b border-gray-700 pb-2">Core Operations</h4>
+                                    <ul class="text-xs text-gray-400 space-y-2">
+                                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> A.G.E Brand Energy-Saving Bulbs</li>
+                                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> Agricultural Machinery Fabrication</li>
+                                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> International Import/Export</li>
+                                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> Vessel & Waste Recycling</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white mb-2 text-sm border-b border-gray-700 pb-2">Specialized Consultancy</h4>
+                                    <ul class="text-xs text-gray-400 space-y-2">
+                                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> Crude Oil Refinery Structures</li>
+                                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> LNG Refinery Planning</li>
+                                        <li><i class="fa-solid fa-check text-red-500 mr-2"></i> Oil Sands Infrastructure</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden md:block w-px bg-gray-700 self-stretch"></div>
+                        <div class="md:w-1/3 flex-shrink-0">
+                            <div class="bg-gray-800 p-6 rounded-xl">
+                                <i class="fa-solid fa-book text-3xl text-gray-500 mb-4"></i>
+                                <h4 class="font-bold mb-2">A Literary Mind</h4>
+                                <p class="text-xs text-gray-400 mb-4">Engr. Oyibo is also a published author with three books to his credit, showcasing his creative expression alongside technical expertise.</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">A Legacy of Connection</h3>
+                    <p class="text-gray-600 leading-relaxed mb-8">
+                        Married to Jane-Karen Oyibo and blessed with two children, his family remains the cornerstone of his life. Engr. Adaighofua Dax Oyibo represents a new generation of African leaders—individuals who honor their cultural heritage while building bridges across borders, combining technical excellence with business innovation.
+                    </p>
+                    <a href="/contact" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:-translate-y-1">
+                        Connect with Engr. Oyibo
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    {%include 'user/footer.html'%}
+
+</body>
+</html>

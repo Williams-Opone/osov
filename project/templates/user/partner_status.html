@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partnership Status | Our Story Our Voice</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+
+    {% include 'user/header.html' %}
+
+    <main class="flex-grow flex items-center justify-center py-16 px-4">
+        <div class="max-w-5xl w-full">
+            
+            <div class="mb-6">
+                <a href="{{ url_for('main.index') }}" class="text-slate-500 hover:text-slate-800 text-sm font-medium transition">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Back to Dashboard
+                </a>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200 flex flex-col lg:flex-row">
+                
+                <div class="lg:w-1/3 p-10 flex flex-col justify-center items-center text-center relative overflow-hidden
+                    {% if app.status == 'Approved' %}
+                        bg-blue-900 text-white
+                    {% elif app.status == 'Rejected' %}
+                        bg-slate-700 text-white
+                    {% else %}
+                        bg-slate-800 text-white
+                    {% endif %}">
+                    
+                    <div class="absolute inset-0 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+
+                    <div class="relative z-10">
+                        <div class="w-24 h-24 rounded-full flex items-center justify-center mb-6 shadow-xl border-4 border-white/20 mx-auto
+                            {% if app.status == 'Approved' %} bg-blue-600 {% elif app.status == 'Rejected' %} bg-slate-600 {% else %} bg-amber-500 {% endif %}">
+                            
+                            {% if app.status == 'Approved' %}
+                                <i class="fa-solid fa-handshake text-4xl"></i>
+                            {% elif app.status == 'Rejected' %}
+                                <i class="fa-solid fa-ban text-4xl"></i>
+                            {% else %}
+                                <i class="fa-solid fa-hourglass-half text-4xl animate-pulse"></i>
+                            {% endif %}
+                        </div>
+
+                        <h1 class="text-2xl font-bold tracking-wide uppercase">
+                            {% if app.status == 'Pending' %}
+                                Proposal Pending
+                            {% elif app.status == 'Approved' %}
+                                Active Partner
+                            {% else %}
+                                Application Closed
+                            {% endif %}
+                        </h1>
+                        
+                        <p class="mt-4 text-white/80 text-sm leading-relaxed px-4">
+                            {% if app.status == 'Pending' %}
+                                Our Partnerships Team is currently vetting your organization's proposal details.
+                            {% elif app.status == 'Approved' %}
+                                Congratulations! Your organization is now an official partner of "Our Story Our Voice."
+                            {% else %}
+                                Thank you for your interest. Unfortunately, we are not proceeding with this partnership at this time.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="lg:w-2/3 p-8 md:p-12 bg-white">
+                    
+                    <div class="flex justify-between items-start mb-8 border-b border-slate-100 pb-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900">Organization Profile</h2>
+                            <p class="text-sm text-slate-500">Submitted on {{ app.created_at.strftime('%B %d, %Y') }}</p>
+                        </div>
+                        <span class="px-3 py-1 rounded text-xs font-bold uppercase tracking-wider
+                            {% if app.status == 'Approved' %} bg-blue-50 text-blue-700 border border-blue-200
+                            {% elif app.status == 'Rejected' %} bg-slate-100 text-slate-500 border border-slate-200
+                            {% else %} bg-amber-50 text-amber-700 border border-amber-200 {% endif %}">
+                            {{ app.status }}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-400 uppercase mb-1">Organization Name</h3>
+                            <p class="font-bold text-slate-900 text-lg">{{ app.org_name }}</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-400 uppercase mb-1">Sector / Type</h3>
+                            <p class="font-medium text-slate-700">{{ app.org_type }}</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-400 uppercase mb-1">Partnership Category</h3>
+                            <p class="font-medium text-slate-700 bg-slate-50 inline-block px-3 py-1 rounded border border-slate-200">
+                                {{ app.partnership_type.replace('_', ' ') }}
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-400 uppercase mb-1">Website</h3>
+                            {% if app.website %}
+                                <a href="{{ app.website }}" target="_blank" class="text-blue-600 hover:underline flex items-center gap-2">
+                                    {{ app.website }} <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                </a>
+                            {% else %}
+                                <p class="text-slate-400 italic">Not provided</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-10">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Proposal Summary</h3>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-sm text-slate-600 leading-relaxed">
+                            {{ app.proposal_details }}
+                        </div>
+                    </div>
+
+                    {% if app.status == 'Approved' %}
+                        <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 flex flex-col md:flex-row items-center gap-6">
+                            <div class="bg-white p-3 rounded-full shadow-sm text-blue-600">
+                                <i class="fa-solid fa-file-contract text-2xl"></i>
+                            </div>
+                            <div class="flex-grow text-center md:text-left">
+                                <h4 class="font-bold text-slate-900">Sign Memorandum (MOU)</h4>
+                                <p class="text-xs text-slate-500">Please verify the partnership terms sent to your email.</p>
+                            </div>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition text-sm shadow-md">
+                                Download MOU
+                            </button>
+                        </div>
+                    {% elif app.status == 'Pending' %}
+                         <div class="flex items-start gap-4 p-4 border border-amber-100 bg-amber-50 rounded-xl">
+                            <i class="fa-solid fa-circle-info text-amber-500 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-amber-800 text-sm">Next Step: Discovery Call</h4>
+                                <p class="text-xs text-amber-700 mt-1">Our director will reach out to the email associated with this account ({{ current_user.email }}) within 5 business days.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <div class="text-center mt-8 text-slate-400 text-sm">
+                Need to update your proposal? <a href="mailto:partnerships@ourstory.com" class="text-slate-600 underline hover:text-blue-600">Contact Partnership Support</a>
+            </div>
+        </div>
+    </main>
+
+    {% include 'user/footer.html' %}
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You! - Our Story Our Voice</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        
+        /* Receipt jagged edge effect */
+        .receipt-edge {
+            background-image: radial-gradient(circle at 10px -5px, transparent 12px, white 13px);
+            background-size: 20px 20px;
+            background-repeat: repeat-x;
+            height: 20px;
+            width: 100%;
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            transform: rotate(180deg);
+        }
+        
+        /* Smooth Fade In */
+        .animate-fade-up {
+            animation: fadeUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    {% include 'user/header.html' %}
+
+    <section class="min-h-screen pt-32 pb-20 flex items-center justify-center relative overflow-hidden">
+        
+        <div class="absolute inset-0 bg-gradient-to-br from-red-50 to-blue-50 opacity-50"></div>
+        <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-lg mx-auto animate-fade-up">
+                
+                <div class="bg-white rounded-3xl shadow-2xl overflow-hidden relative border border-gray-100">
+                    
+                    <div class="bg-slate-900 text-white p-8 text-center relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-full bg-red-600/10"></div>
+                        
+                        <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-500/30 relative z-10">
+                            <i class="fa-solid fa-check text-4xl text-white"></i>
+                        </div>
+                        
+                        <h1 class="text-3xl font-bold mb-2">Donation Successful!</h1>
+                        <p class="text-gray-400">Thank you for supporting our mission.</p>
+                    </div>
+
+                    <div class="p-8 relative">
+                        <div class="space-y-6">
+                            
+                            <div class="text-center pb-6 border-b border-gray-100 border-dashed">
+                                <p class="text-sm text-gray-500 uppercase tracking-widest font-semibold mb-1">Total Contribution</p>
+                                <h2 class="text-5xl font-bold text-slate-900">${{ amount }} <span class="text-lg text-gray-400 font-medium">CAD</span></h2>
+                            </div>
+
+                            <div class="bg-gray-50 rounded-xl p-5 space-y-3 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Status</span>
+                                    <span class="font-bold text-green-600 flex items-center gap-1"><i class="fa-solid fa-circle text-[8px]"></i> Completed</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Date</span>
+                                    <span class="font-bold text-gray-800" id="dateDisplay"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Reference ID</span>
+                                    <span class="font-mono text-gray-600 truncate max-w-[150px]">{{ request.args.get('session_id', 'Unknown')[-8:] | upper }}</span>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3 pt-2">
+                                <a href="{{ url_for('main.donate') }}" class="block w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl text-center transition shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                                    Return to Donate Page
+                                </a>
+
+                                {% if current_user.is_authenticated %}
+                                    <a href="{{ url_for('main.donation_history') }}" class="block w-full bg-white border-2 border-slate-200 hover:border-slate-900 text-slate-700 hover:text-slate-900 font-bold py-4 rounded-xl text-center transition">
+                                        View Donation History
+                                    </a>
+                                {% else %}
+                                    <div class="text-center mt-4">
+                                        <p class="text-xs text-gray-500 mb-2">Want to track your tax receipts?</p>
+                                        <a href="/signup" class="text-red-600 font-semibold hover:underline text-sm">Create an account</a>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                        
+                        <div class="receipt-edge"></div>
+                    </div>
+                </div>
+
+                <p class="text-center text-gray-400 text-xs mt-8">
+                    An automated receipt has been sent to your email. <br>
+                    Questions? Contact <a href="mailto:info@ourstoryourvoice.org" class="underline hover:text-red-500">info@ourstoryourvoice.org</a>
+                </p>
+
+            </div>
+        </div>
+    </section>
+
+    {% include 'user/footer.html' %}
+
+    <script>
+        // 1. Set Date
+        const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-CA', dateOptions);
+
+        // 2. Trigger Confetti
+        window.addEventListener('load', () => {
+            const duration = 3 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+              const timeLeft = animationEnd - Date.now();
+
+              if (timeLeft <= 0) {
+                return clearInterval(interval);
+              }
+
+              const particleCount = 50 * (timeLeft / duration);
+              
+              // Shoot confetti from two angles
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        });
+    </script>
+</body>
+</html>

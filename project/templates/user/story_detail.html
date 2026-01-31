@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ story.title }} | Our Story Our Voice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; }
+        
+        /* The "Article" font - crucial for long-form reading */
+        .prose-content { font-family: 'Merriweather', serif; color: #334155; line-height: 1.8; font-size: 1.125rem; }
+        
+        /* Styling the raw HTML content from database */
+        .prose-content p { margin-bottom: 1.5em; }
+        .prose-content h2 { font-family: 'Poppins', sans-serif; font-size: 1.75rem; font-weight: 700; color: #0f172a; margin-top: 2em; margin-bottom: 0.75em; }
+        .prose-content h3 { font-family: 'Poppins', sans-serif; font-size: 1.4rem; font-weight: 600; color: #1e293b; margin-top: 1.5em; margin-bottom: 0.5em; }
+        .prose-content blockquote { border-left: 4px solid #dc2626; padding-left: 1.5rem; margin: 2rem 0; font-style: italic; color: #475569; background: #f8fafc; padding: 1.5rem; border-radius: 0 8px 8px 0; }
+        .prose-content img { border-radius: 12px; margin: 2rem 0; width: 100%; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .prose-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.5rem; }
+        .prose-content a { color: #dc2626; text-decoration: underline; text-underline-offset: 2px; }
+        
+        /* Drop Cap for first letter */
+        .drop-cap::first-letter {
+            float: left;
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            line-height: 0.8;
+            font-weight: 800;
+            padding-right: 12px;
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-800 antialiased">
+
+    {% include 'user/header.html' %}
+
+    <div class="fixed top-0 left-0 h-1 bg-red-600 z-50 transition-all duration-300" id="progressBar" style="width: 0%"></div>
+
+    <header class="relative w-full h-[60vh] min-h-[400px]">
+        <img src="{{ story.image_url }}" alt="{{ story.title }}" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
+        
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="container mx-auto px-6 text-center max-w-4xl pt-16">
+                <a href="{{ url_for('main.stories') }}" class="inline-block bg-white/20 hover:bg-white/30 backdrop-blur border border-white/30 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-6 transition">
+                    {{ story.category }}
+                </a>
+                
+                <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
+                    {{ story.title }}
+                </h1>
+                
+                <div class="flex items-center justify-center gap-6 text-white/90 text-sm font-medium">
+                    <div class="flex items-center gap-2">
+                        <img src="https://ui-avatars.com/api/?name={{ story.author.first_name }}+{{ story.author.last_name }}&background=random" class="w-8 h-8 rounded-full border border-white/50">
+                        <span>{{ story.author.first_name }} {{ story.author.last_name }}</span>
+                    </div>
+                    <span class="w-1 h-1 rounded-full bg-white/50"></span>
+                    <span>{{ story.created_at.strftime('%B %d, %Y') }}</span>
+                    <span class="w-1 h-1 rounded-full bg-white/50"></span>
+                    <span><i class="fa-regular fa-clock mr-1"></i> 5 min read</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-16 relative">
+        <div class="flex flex-col lg:flex-row gap-12 max-w-6xl mx-auto">
+
+            <aside class="hidden lg:block w-20 relative">
+                <div class="sticky top-32 flex flex-col gap-4 items-center">
+                    <span class="text-xs font-bold text-gray-400 uppercase rotate-180 writing-vertical mb-2" style="writing-mode: vertical-rl;">Share</span>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" onclick="openShareWindow(this.href); return false;"class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center shadow-sm hover:shadow-md cursor-pointer"title="Share on Facebook">
+                        <i class="fa-brands fa-facebook-f text-lg"></i>
+                    </a>
+                    
+                    <a href="https://api.whatsapp.com/send?text={{ story.title }}%20{{ request.url }}" 
+       target="_blank"
+       class="w-10 h-10 rounded-full bg-green-50 text-green-600 hover:bg-green-600 hover:text-white transition flex items-center justify-center shadow-sm hover:shadow-md cursor-pointer"
+       title="Share on WhatsApp">
+        <i class="fa-brands fa-whatsapp text-lg"></i>
+    </a>
+
+    <div class="relative group">
+        <button onclick="copyLink()" 
+                class="w-10 h-10 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-800 hover:text-white transition flex items-center justify-center shadow-sm hover:shadow-md"
+                title="Copy Link">
+            <i class="fa-solid fa-link text-lg"></i>
+        </button>
+        
+        <span id="copyTooltip" class="absolute left-12 top-2 bg-gray-900 text-white text-xs font-bold px-2 py-1 rounded opacity-0 transition duration-300 pointer-events-none whitespace-nowrap">
+            Copied!
+        </span>
+    </div>
+                </div>
+            </aside>
+
+            <article class="flex-1 max-w-3xl mx-auto">
+                
+                <p class="text-xl md:text-2xl text-slate-600 font-light leading-relaxed mb-10 border-b border-gray-100 pb-10 italic">
+                    {{ story.summary }}
+                </p>
+
+                <div class="prose-content drop-cap">
+                    {{ story.content | safe }}
+                </div>
+
+                <div class="mt-16 pt-8 border-t border-gray-100">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
+                        <div class="flex gap-2">
+                            <span class="text-xs font-bold text-gray-400 uppercase mt-1">Tags:</span>
+                            <div class="flex gap-2">
+                                <a href="#" class="bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs px-3 py-1 rounded-full transition">Community</a>
+                                <a href="#" class="bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs px-3 py-1 rounded-full transition">Growth</a>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 lg:hidden">
+                            <span class="text-xs font-bold text-gray-400 uppercase mt-2">Share:</span>
+                            <button class="text-slate-400 hover:text-blue-600 text-xl"><i class="fa-brands fa-facebook"></i></button>
+                            <button class="text-slate-400 hover:text-sky-500 text-xl"><i class="fa-brands fa-twitter"></i></button>
+                            <button class="text-slate-400 hover:text-green-500 text-xl"><i class="fa-brands fa-whatsapp"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl p-8 mt-12 flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
+                    <img src="https://ui-avatars.com/api/?name={{ story.author.first_name }}+{{ story.author.last_name }}&size=128" class="w-20 h-20 rounded-full border-4 border-white shadow-md">
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-900">Written by {{ story.author.first_name }} {{ story.author.last_name }}</h4>
+                        <p class="text-xs font-bold text-red-500 uppercase tracking-wide mb-2">Community Contributor</p>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            A dedicated member of the Our Story Our Voice team, focusing on bringing hidden narratives to light.
+                        </p>
+                    </div>
+                </div>
+
+            </article>
+
+            <aside class="hidden xl:block w-80">
+                <div class="sticky top-32">
+                    <h3 class="font-bold text-slate-900 mb-6 border-l-4 border-red-500 pl-3">More Stories</h3>
+                    {% if more_stories %}
+            
+            <div class="space-y-6">
+                {% for s in more_stories %}
+                
+                <a href="{{ url_for('main.story_detail', slug=s.slug) }}" class="group block">
+                    <div class="h-32 rounded-xl overflow-hidden mb-3 relative">
+                        {% if s.image_url %}
+                            <img src="{{ s.image_url }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        {% else %}
+                            <div class="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400 text-xs">No Image</div>
+                        {% endif %}
+                    </div>
+                    
+                    <h4 class="font-bold text-slate-800 text-sm leading-snug group-hover:text-red-600 transition">
+                        {{ s.title }}
+                    </h4>
+                    
+                    <span class="text-xs text-slate-400 mt-1 block">{{ s.created_at.strftime('%b %d') }}</span>
+                </a>
+                
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <p class="text-slate-400 text-sm italic">No other stories available yet.</p>
+        {% endif %}
+                    
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    {% include 'user/footer.html' %}
+
+    <script>
+        // Reading Progress Bar Logic
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        };
+    </script>
+    <script>
+        // --- FUNCTION 1: OPEN POP-UP WINDOW ---
+        // This prevents the user from navigating away from your site entirely.
+        function openShareWindow(url) {
+            const width = 600;
+            const height = 400;
+            // Calculate center of screen
+            const left = (window.innerWidth - width) / 2;
+            const top = (window.innerHeight - height) / 2;
+            
+            window.open(
+                url, 
+                'shareWindow', 
+                `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`
+            );
+        }
+    
+        // --- FUNCTION 2: COPY LINK TO CLIPBOARD ---
+        function copyLink() {
+            // 1. Get the current page URL
+            const url = window.location.href;
+            
+            // 2. Use the modern Clipboard API
+            // Fallback for older browsers included
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(() => {
+                    showTooltip();
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            } else {
+                // Fallback method (creates a temp hidden input)
+                const input = document.createElement('textarea');
+                input.value = url;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                showTooltip();
+            }
+        }
+    
+        // Helper to animate the "Copied!" text
+        function showTooltip() {
+            const tooltip = document.getElementById('copyTooltip');
+            
+            // Make it visible
+            tooltip.classList.remove('opacity-0');
+            tooltip.classList.add('opacity-100');
+            
+            // Hide it again after 2 seconds
+            setTimeout(() => {
+                tooltip.classList.remove('opacity-100');
+                tooltip.classList.add('opacity-0');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

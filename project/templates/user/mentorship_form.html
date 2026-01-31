@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apply for EICP | Our Story Our Voice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; } h1,h2 { font-family: 'Poppins', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center py-12 px-4">
+
+    <div class="max-w-3xl w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+        <div class="bg-gray-900 px-8 py-8 text-white">
+            <h2 class="text-2xl font-bold">EICP Application Form</h2>
+            <p class="text-gray-400 text-sm mt-1">Please select your program track to begin.</p>
+        </div>
+
+        <form method="POST" class="p-8 space-y-8">
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Which program are you applying for?</label>
+                <select id="program_track" name="program_track" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white" onchange="toggleFields()">
+                    <option value="" disabled selected>Select a path...</option>
+                    <option value="youth_school">Youth Mentorship (Grades 7-12)</option>
+                    <option value="idp_reintegration">IDP Reintegration & Skills</option>
+                    <option value="youth_addiction">Youth Support & Counseling</option>
+                    <option value="intercultural">Intercultural Tuition</option>
+                </select>
+            </div>
+
+            <div id="youth-fields" class="hidden space-y-6 border-l-4 border-red-500 pl-6 bg-red-50/50 p-4 rounded-r-xl">
+                <h3 class="font-bold text-gray-900 text-lg">Student (Beneficiary) Details</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Child's First Name</label>
+                        <input type="text" name="child_fname" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-red-500 focus:border-red-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Child's Last Name</label>
+                        <input type="text" name="child_lname" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-red-500 focus:border-red-500">
+                    </div>
+                </div>
+            
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Grade</label>
+                        <select name="grade_level" class="w-full px-4 py-2 rounded-lg border border-gray-300">
+                            <option value="Grade 7">Grade 7</option>
+                            <option value="Grade 8">Grade 8</option>
+                            <option value="Grade 9">Grade 9</option>
+                            <option value="Grade 10">Grade 10</option>
+                            <option value="Grade 11">Grade 11</option>
+                            <option value="Grade 12">Grade 12</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">School Name</label>
+                        <input type="text" name="school_name" class="w-full px-4 py-2 rounded-lg border border-gray-300">
+                    </div>
+                </div>
+            
+                <hr class="border-gray-300">
+            
+                <h3 class="font-bold text-gray-900">Parent/Guardian Consent</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Guardian Full Name</label>
+                        <input type="text" name="guardian_name" class="w-full px-4 py-2 rounded-lg border border-gray-300">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Guardian Email</label>
+                        <input type="email" name="parent_email" value="{{ current_user.email }}" class="w-full px-4 py-2 rounded-lg border border-gray-300">
+                    </div>
+                </div>
+            </div>
+            <div id="idp-fields" class="hidden space-y-6 border-l-4 border-orange-500 pl-6 bg-orange-50/50 p-4 rounded-r-xl">
+                <h3 class="font-bold text-gray-900">Skill Development</h3>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Vocational Interest</label>
+                    <select name="vocational_interest" class="w-full px-4 py-2 rounded-lg border border-gray-300">
+                        <option value="Baking">Baking & Culinary</option>
+                        <option value="Tailoring">Tailoring & Fashion</option>
+                        <option value="Tech">Tech & Digital Skills</option>
+                        <option value="Agriculture">Agriculture</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Do you have a business idea? (For Microfinance)</label>
+                    <textarea name="business_idea" rows="2" class="w-full px-4 py-2 rounded-lg border border-gray-300" placeholder="Briefly describe your business idea..."></textarea>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Why do you want to join this program?</label>
+                <textarea name="goals" rows="4" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500"></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg transition">
+                Submit Application
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function toggleFields() {
+            const track = document.getElementById('program_track').value;
+            const youthFields = document.getElementById('youth-fields');
+            const idpFields = document.getElementById('idp-fields');
+
+            // Reset all first
+            youthFields.classList.add('hidden');
+            idpFields.classList.add('hidden');
+
+            // Show specific
+            if (track === 'youth_school') {
+                youthFields.classList.remove('hidden');
+            } else if (track === 'idp_reintegration') {
+                idpFields.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

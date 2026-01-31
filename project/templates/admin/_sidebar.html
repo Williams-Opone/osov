@@ -1,0 +1,68 @@
+<aside class="w-64 bg-gray-900 text-white flex flex-col fixed inset-y-0 left-0 z-30 shadow-xl">
+    
+    <div class="h-16 flex items-center px-6 bg-gray-900 border-b border-gray-800 shrink-0">
+        <div class="font-bold text-xl tracking-tight flex items-center gap-2">
+            <div class="w-8 h-8 bg-red-600 rounded flex items-center justify-center text-xs"><i class="fa-solid fa-microphone-lines"></i></div>
+            <span>OSOV <span class="text-red-500">Admin</span></span>
+        </div>
+    </div>
+
+    <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto sidebar-scroll">
+        
+        <a href="{{url_for('admin.dashboard')}}" 
+           class="flex items-center gap-3 px-4 py-3 rounded-lg transition group mb-4 {{ 'bg-red-600 text-white shadow-md' if active_page == 'dashboard' else 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+            <i class="fa-solid fa-gauge-high w-5 text-center {{ '' if active_page == 'dashboard' else 'group-hover:text-red-500 transition' }}"></i>
+            <span class="font-medium">Dashboard</span>
+        </a>
+
+        <div class="px-4 pt-4 pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Stories & Media</div>
+        
+        <a href="{{url_for('admin.manage_stories')}}" 
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition group {{ 'bg-red-600 text-white shadow-md' if active_page == 'stories' else 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+            <i class="fa-solid fa-list-check w-5 text-center {{ '' if active_page == 'stories' else 'group-hover:text-red-500 transition' }}"></i>
+            <span class="text-sm font-medium">Manage Stories</span>
+        </a>
+
+        <div class="px-4 pt-4 pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Community & Funds</div>
+        
+        <a href="{{url_for('admin.manage_events')}}" 
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition group {{ 'bg-red-600 text-white shadow-md' if active_page == 'events' else 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+            <i class="fa-regular fa-calendar-days w-5 text-center {{ '' if active_page == 'events' else 'group-hover:text-red-500 transition' }}"></i>
+            <span class="text-sm font-medium">Events</span>
+        </a>
+
+        <a href="{{url_for('admin.fundraising')}}" 
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition group {{ 'bg-red-600 text-white shadow-md' if active_page == 'fundraising' else 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+            <i class="fa-solid fa-hand-holding-dollar w-5 text-center {{ '' if active_page == 'fundraising' else 'group-hover:text-red-500 transition' }}"></i>
+            <span class="text-sm font-medium">Fundraising</span>
+        </a>
+
+        <a href="{{url_for('admin.manage_campaigns')}}" 
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition group {{ 'bg-red-600 text-white shadow-md' if active_page == 'campaigns' else 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+            <i class="fa-solid fa-bullhorn w-5 text-center {{ '' if active_page == 'campaigns' else 'group-hover:text-red-500 transition' }}"></i>
+            <span class="text-sm font-medium">Campaigns</span>
+        </a>
+
+        <a href="{{url_for('admin.approvals')}}" 
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition group {{ 'bg-red-600 text-white shadow-md' if active_page == 'campaigns' else 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+            <i class="fa-solid fa-check w-5 text-center {{ '' if active_page == 'campaigns' else 'group-hover:text-red-500 transition' }}"></i>
+            <span class="text-sm font-medium">Application Management</span>
+        </a>
+
+        <div class="px-4 pt-4 pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">System</div>
+        
+        <a href="{{url_for('admin.settings')}}" 
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition group {{ 'bg-red-600 text-white shadow-md' if active_page == 'settings' else 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+            <i class="fa-solid fa-cog w-5 text-center {{ '' if active_page == 'settings' else 'group-hover:text-red-500 transition' }}"></i>
+            <span class="text-sm font-medium">Settings</span>
+        </a>
+
+    </nav>
+
+    <div class="p-4 border-t border-gray-800">
+        <a href="{{url_for('admin.logouts')}}" class="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-gray-800 hover:text-red-300 rounded-lg transition">
+            <i class="fa-solid fa-right-from-bracket w-5 text-center"></i>
+            <span class="font-medium text-sm">Logout</span>
+        </a>
+    </div>
+</aside>

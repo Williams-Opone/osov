@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation History - Our Story Our Voice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    {% include 'user/header.html' %}
+
+    <section class="min-h-screen pt-32 pb-20">
+        <div class="container mx-auto px-6 max-w-5xl">
+            
+            <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-slate-900 mb-2">Donation History</h1>
+                    <p class="text-gray-500">Thank you for supporting our mission. Here is a record of your contributions.</p>
+                </div>
+                <a href="{{ url_for('main.donate') }}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-lg hover:shadow-red-500/30">
+                    <i class="fa-solid fa-heart mr-2"></i> Make a New Donation
+                </a>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                
+                {% if donations %}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500">
+                                <th class="p-6 font-semibold">Date</th>
+                                <th class="p-6 font-semibold">Reference ID</th>
+                                <th class="p-6 font-semibold">Type</th>
+                                <th class="p-6 font-semibold">Amount</th>
+                                <th class="p-6 font-semibold text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            {% for donation in donations %}
+                            <tr class="hover:bg-slate-50 transition duration-150">
+                                
+                                <td class="p-6 whitespace-nowrap text-sm text-gray-600">
+                                    {{ donation.created_at.strftime('%b %d, %Y') }}
+                                    <span class="block text-xs text-gray-400">{{ donation.created_at.strftime('%I:%M %p') }}</span>
+                                </td>
+
+                                <td class="p-6 whitespace-nowrap">
+                                    <span class="font-mono text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                                        {{ donation.reference[-8:] | upper }}
+                                    </span>
+                                </td>
+
+                                <td class="p-6 whitespace-nowrap text-sm">
+                                    {% if donation.frequency == 'monthly' %}
+                                        <span class="inline-flex items-center gap-1.5 text-purple-700 font-medium bg-purple-50 px-2.5 py-0.5 rounded-full text-xs border border-purple-100">
+                                            <i class="fa-solid fa-rotate text-[10px]"></i> Monthly
+                                        </span>
+                                    {% else %}
+                                        <span class="text-gray-600">One-Time</span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="p-6 whitespace-nowrap">
+                                    <span class="text-slate-900 font-bold">${{ "%.2f"|format(donation.amount) }}</span>
+                                    <span class="text-xs text-gray-400">{{ donation.currency }}</span>
+                                </td>
+
+                                <td class="p-6 whitespace-nowrap text-center">
+                                    {% if donation.status == 'Success' %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200">
+                                            Success
+                                        </span>
+                                    {% elif donation.status == 'Pending' %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700 border border-yellow-200">
+                                            Pending
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-600">
+                                            {{ donation.status }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% else %}
+                <div class="text-center py-20 px-6">
+                    <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-300">
+                        <i class="fa-solid fa-hand-holding-dollar text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-1">No donations yet</h3>
+                    <p class="text-gray-500 text-sm mb-6">You haven't made any contributions yet. Your support helps us grow!</p>
+                    <a href="{{ url_for('main.donate') }}" class="text-red-600 font-semibold hover:underline text-sm">
+                        Make your first donation &rarr;
+                    </a>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <p class="text-center text-xs text-gray-400 mt-8">
+                * Official tax receipts are emailed to you at the end of the fiscal year.
+            </p>
+
+        </div>
+    </section>
+
+    {% include 'user/footer.html' %}
+
+</body>
+</html>

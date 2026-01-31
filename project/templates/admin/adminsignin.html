@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Our Story Our Voice</title>
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2 { font-family: 'Poppins', sans-serif; }
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #dadce0;
+            color: #3c4043;
+            font-family: 'Roboto', sans-serif; /* or your site's font */
+            font-weight: 500;
+            font-size: 14px;
+            border-radius: 4px;
+            padding: 8px 16px;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            text-decoration: none; /* Removes underline */
+            }
+
+            /* Style the Google Logo inside the button */
+            .google-btn img {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px; /* Space between logo and text */
+            }
+
+            /* Hover State */
+            .google-btn:hover {
+            background-color: #f7fafe;
+            border-color: #d2e3fc;
+            color: #3c4043;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            }
+
+            /* Focus/Active State */
+            .google-btn:focus {
+            background-color: #f7fafe;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66,133,244,0.3);
+            }
+            .alert {
+            opacity: 1; /* Start fully visible */
+            /* This ensures the transition works even if you don't set it in JS */
+            transition: opacity 0.5s ease; 
+            color: red;
+            padding: 2px;
+            }
+            /* Makes the eye icon area look clickable */
+            
+    </style>
+</head>
+<body class="bg-gray-900 h-screen flex items-center justify-center overflow-hidden relative">
+
+    <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#4b5563 1px, transparent 1px); background-size: 30px 30px;"></div>
+
+    <div class="relative z-10 w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-800">
+        
+        <div class="bg-red-600 h-2 w-full"></div>
+
+        <div class="p-8 md:p-10">
+            
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 text-gray-900 mb-4">
+                    <i class="fa-solid fa-shield-halved text-xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-900">Admin Portal</h1>
+                <p class="text-sm text-gray-500 mt-1">Our Story Our Voice Management System</p>
+
+                <div id="flash-messages">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, message in messages %}
+                          <div class="alert alert-{{ category }}">
+                            {{ message }}
+                          </div>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+                  </div>
+            </div>
+
+            <form class="space-y-6" action="{{url_for('admin.adminsignin')}}" method="post">
+                
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+
+                <div>
+                    <label for="admin-id" class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Administrator Email</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-regular fa-envelope text-gray-400"></i>
+                        </div>
+                        <input type="email" id="admin-id" class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition text-sm font-medium text-gray-900" placeholder="admin@ourstoryourvoice.ca" autocomplete="off" name="email">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-lock text-gray-400"></i>
+                        </div>
+                
+                        <input type="password" id="password" class="w-full pl-10 pr-10 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none transition text-sm font-medium text-gray-900" placeholder="••••••••••••" name="password">
+                
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" id="togglePassword">
+                            <i class="fas fa-eye text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+                <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i> Access Dashboard
+                </button>
+
+            </form>
+
+            <hr>
+            <p class="text-center">OR</p>
+            <a href="{{ url_for('admin.admingoogle_login') }}" class="btn google-btn w-100">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+                Sign in with Google
+            </a>
+        </div>
+
+        <div class="bg-gray-50 px-8 py-4 border-t border-gray-100 text-center">
+            <a href="{{url_for('main.index')}}" class="text-xs text-gray-500 hover:text-gray-900 font-medium transition flex items-center justify-center gap-1">
+                <i class="fa-solid fa-arrow-left"></i> Return to Main Site
+            </a>
+        </div>
+
+    </div>
+
+    <div class="absolute bottom-6 text-gray-600 text-xs font-mono">
+        System v1.0.4 &bull; Lux & Taurus Secure Build
+    </div>
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordInput = document.querySelector('#password');
+        const icon = togglePassword.querySelector('i');
+    
+        togglePassword.addEventListener('click', function () {
+            // 1. Toggle the type attribute
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+    
+            // 2. Toggle the eye / eye-slash icon
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+    </script>
+    <script>
+        // Wait for the DOM to be fully loaded
+        document.addEventListener("DOMContentLoaded", function() {
+          
+          // Select all elements with the class 'alert'
+          const alerts = document.querySelectorAll('.alert');
+      
+          alerts.forEach(function(alert) {
+            // Set a timeout to execute after 3 seconds (3000 milliseconds)
+            setTimeout(function() {
+              
+              // 1. Start the fade out
+              alert.style.transition = "opacity 0.5s ease";
+              alert.style.opacity = "0";
+      
+              // 2. Remove the element from the DOM completely after the fade is done
+              // We wait 500ms (0.5s) which matches the transition time above
+              setTimeout(function() {
+                alert.remove();
+              }, 500);
+      
+            }, 2000); // 3000ms = 3 seconds
+          });
+        });
+      </script>
+</body>
+</html>

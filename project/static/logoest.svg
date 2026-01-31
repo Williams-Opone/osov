@@ -1,0 +1,25 @@
+<svg width="3000" height="3000" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* Styles for the text elements */
+    .title-text { font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 65px; text-anchor: middle; fill: black; }
+    .sub-text { font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 55px; text-anchor: middle; fill: black; letter-spacing: 2px; }
+  </style>
+
+  <circle cx="250" cy="250" r="230" stroke="#D32F2F" stroke-width="15" fill="none" />
+  
+  <circle cx="250" cy="250" r="210" stroke="#424242" stroke-width="12" fill="white" />
+
+  <g transform="translate(150, 60) scale(0.4)">
+    <path d="M100,300 C100,100 400,100 400,300" stroke="#333" stroke-width="40" fill="none" stroke-linecap="round"/>
+    <rect x="50" y="280" width="80" height="120" rx="20" fill="#333"/>
+    <rect x="370" y="280" width="80" height="120" rx="20" fill="#333"/>
+    <rect x="180" y="200" width="140" height="220" rx="70" fill="#333"/>
+    <rect x="210" y="240" width="80" height="15" rx="5" fill="#fff"/>
+    <rect x="210" y="270" width="80" height="15" rx="5" fill="#fff"/>
+    <rect x="210" y="300" width="80" height="15" rx="5" fill="#fff"/>
+  </g>
+
+  <text x="250" y="290" class="title-text">Our Story</text>
+
+  <text x="250" y="360" class="sub-text">Our Voice</text>
+</svg>

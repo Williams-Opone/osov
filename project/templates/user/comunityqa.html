@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Q&A - Our Story Our Voice</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; }
+        
+        .sidebar-nav::-webkit-scrollbar { width: 4px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <nav class="bg-white border-b border-gray-200 fixed w-full z-30 top-0 start-0">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="font-bold text-2xl flex items-center gap-2">
+                <span class="text-red-600"><i class="fa-solid fa-microphone-lines"></i></span> OSOV
+            </div>
+            <div class="hidden md:flex space-x-8 font-medium text-sm">
+                <a href="/" class="hover:text-red-600 transition">Home</a>
+                <a href="#" class="hover:text-red-600 transition">Stories</a>
+                <a href="#" class="hover:text-red-600 transition">Events</a>
+                <a href="#" class="hover:text-red-600 transition">About</a>
+                <a href="#" class="hover:text-red-600 transition">Contact</a>
+            </div>
+            <div>
+                 <a href="/signin" class="text-sm font-bold text-gray-900 hover:text-red-600 mr-4">Sign In</a>
+                 <a href="/donate" class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-2.5 px-6 rounded-full transition">Donate</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="bg-gray-900 text-white py-16 pt-32">
+        <div class="container mx-auto px-6 text-center max-w-3xl">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Community Discussions</h1>
+            <p class="text-gray-400 mb-8">Ask questions, share advice, and connect with other storytellers.</p>
+            
+            <div class="relative">
+                <input type="text" placeholder="Search for topics (e.g., 'Audio editing', 'Interview tips')..." class="w-full pl-12 pr-4 py-4 rounded-lg text-gray-900 focus:outline-none focus:ring-4 focus:ring-red-500/50 shadow-lg">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fa-solid fa-search text-gray-400"></i>
+                </div>
+                <button class="absolute inset-y-1 right-1 bg-red-600 hover:bg-red-700 text-white px-6 rounded-md font-medium transition">
+                    Search
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div class="container mx-auto px-6 py-12">
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <aside class="w-full lg:w-1/4 space-y-8">
+                
+                <button class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-pen-to-square"></i> Ask a Question
+                </button>
+
+                <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+                    <h3 class="font-bold text-gray-900 mb-4 px-2">Categories</h3>
+                    <nav class="space-y-1">
+                        <a href="#" class="flex items-center justify-between px-2 py-2 bg-red-50 text-red-700 rounded-md font-medium">
+                            <span><i class="fa-solid fa-layer-group w-6"></i> All Topics</span>
+                            <span class="bg-white text-red-600 text-xs px-2 py-0.5 rounded-full border border-red-100">120</span>
+                        </a>
+                        <a href="#" class="flex items-center justify-between px-2 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition">
+                            <span><i class="fa-solid fa-microphone w-6"></i> Storytelling Tips</span>
+                            <span class="text-xs text-gray-400">45</span>
+                        </a>
+                        <a href="#" class="flex items-center justify-between px-2 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition">
+                            <span><i class="fa-solid fa-wrench w-6"></i> Technical Support</span>
+                            <span class="text-xs text-gray-400">32</span>
+                        </a>
+                        <a href="#" class="flex items-center justify-between px-2 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition">
+                            <span><i class="fa-solid fa-handshake w-6"></i> Collab Requests</span>
+                            <span class="text-xs text-gray-400">18</span>
+                        </a>
+                        <a href="#" class="flex items-center justify-between px-2 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition">
+                            <span><i class="fa-solid fa-calendar-day w-6"></i> Events & Meetups</span>
+                            <span class="text-xs text-gray-400">10</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                    <h4 class="font-bold text-blue-800 text-sm mb-2"><i class="fa-solid fa-circle-info mr-1"></i> Community Guidelines</h4>
+                    <p class="text-xs text-blue-700 leading-relaxed">
+                        Be respectful. Use inclusive language. This is a safe space for all voices. <a href="#" class="underline hover:text-blue-900">Read full rules.</a>
+                    </p>
+                </div>
+            </aside>
+
+            <main class="w-full lg:w-3/4">
+                
+                <div class="flex flex-wrap justify-between items-center mb-6 border-b border-gray-200 pb-4">
+                    <div class="flex space-x-6 text-sm font-medium">
+                        <a href="#" class="text-red-600 border-b-2 border-red-600 pb-4 -mb-4.5">Latest</a>
+                        <a href="#" class="text-gray-500 hover:text-gray-800 transition">Top Voted</a>
+                        <a href="#" class="text-gray-500 hover:text-gray-800 transition">Unanswered</a>
+                    </div>
+                    <div class="text-sm text-gray-500 mt-4 md:mt-0">
+                        Showing 1-10 of 120 discussions
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-gray-900 hover:shadow-md transition cursor-pointer">
+                        <div class="flex items-start gap-4">
+                            <div class="flex flex-col items-center min-w-[50px] space-y-2">
+                                <div class="text-gray-400 text-center">
+                                    <span class="block font-bold text-lg text-gray-900"><i class="fa-solid fa-thumbtack"></i></span>
+                                </div>
+                            </div>
+                            <div class="flex-grow">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="bg-gray-900 text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded">Announcement</span>
+                                    <span class="text-xs text-gray-500">Posted by Admin &bull; 2 days ago</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-1 hover:text-red-600 transition">Welcome to the new Our Story Our Voice Community Forum!</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">
+                                    Please take a moment to introduce yourself here. We are excited to have you join this platform dedicated to amplifying diverse voices...
+                                </p>
+                            </div>
+                             <img src="https://ui-avatars.com/api/?name=Admin&background=111827&color=fff" class="w-10 h-10 rounded-full hidden sm:block">
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer">
+                        <div class="flex items-start gap-4">
+                            <div class="flex flex-col items-center min-w-[50px] space-y-3">
+                                <div class="text-center">
+                                    <span class="block font-bold text-lg text-gray-700">24</span>
+                                    <span class="text-xs text-gray-500">Votes</span>
+                                </div>
+                                <div class="text-center bg-green-100 text-green-700 rounded px-2 py-1">
+                                    <span class="block font-bold text-lg"><i class="fa-solid fa-check"></i></span>
+                                    <span class="text-[10px]">Solved</span>
+                                </div>
+                            </div>
+                            <div class="flex-grow">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="bg-blue-100 text-blue-600 text-[10px] uppercase font-bold px-2 py-0.5 rounded">Technical</span>
+                                    <span class="text-xs text-gray-500">Posted by Sarah J. &bull; 4 hours ago</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-1 hover:text-red-600 transition">Best affordable microphone for outdoor interviews?</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">
+                                    I want to interview elders in my community, often in their gardens. It can be windy. Does anyone have recommendations for a budget-friendly mic that handles wind noise well?
+                                </p>
+                                <div class="mt-3 flex gap-4 text-xs text-gray-400">
+                                    <span><i class="fa-regular fa-comment"></i> 8 Replies</span>
+                                    <span><i class="fa-regular fa-eye"></i> 142 Views</span>
+                                </div>
+                            </div>
+                             <img src="https://i.pravatar.cc/100?img=5" class="w-10 h-10 rounded-full hidden sm:block">
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer">
+                        <div class="flex items-start gap-4">
+                            <div class="flex flex-col items-center min-w-[50px] space-y-3">
+                                <div class="text-center">
+                                    <span class="block font-bold text-lg text-gray-700">15</span>
+                                    <span class="text-xs text-gray-500">Votes</span>
+                                </div>
+                                <div class="text-center text-gray-400">
+                                    <span class="block font-bold text-lg">3</span>
+                                    <span class="text-xs">Replies</span>
+                                </div>
+                            </div>
+                            <div class="flex-grow">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="bg-red-100 text-red-600 text-[10px] uppercase font-bold px-2 py-0.5 rounded">Storytelling</span>
+                                    <span class="text-xs text-gray-500">Posted by David O. &bull; 1 day ago</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-1 hover:text-red-600 transition">Tips for approaching sensitive cultural topics?</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">
+                                    I want to document a specific tradition, but I want to make sure I am being respectful and accurate. How do you approach community leaders for permission?
+                                </p>
+                                <div class="mt-3 flex gap-4 text-xs text-gray-400">
+                                    <span><i class="fa-regular fa-comment"></i> 3 Replies</span>
+                                    <span><i class="fa-regular fa-eye"></i> 89 Views</span>
+                                </div>
+                            </div>
+                            <img src="https://i.pravatar.cc/100?img=11" class="w-10 h-10 rounded-full hidden sm:block">
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer opacity-90">
+                        <div class="flex items-start gap-4">
+                            <div class="flex flex-col items-center min-w-[50px] space-y-3">
+                                <div class="text-center">
+                                    <span class="block font-bold text-lg text-gray-400">0</span>
+                                    <span class="text-xs text-gray-400">Votes</span>
+                                </div>
+                                <div class="text-center text-gray-400">
+                                    <span class="block font-bold text-lg">0</span>
+                                    <span class="text-xs">Replies</span>
+                                </div>
+                            </div>
+                            <div class="flex-grow">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="bg-yellow-100 text-yellow-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded">Collab</span>
+                                    <span class="text-xs text-gray-500">Posted by Amara &bull; 20 mins ago</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-1 hover:text-red-600 transition">Looking for a video editor in Vancouver</h3>
+                                <p class="text-gray-600 text-sm line-clamp-2">
+                                    Hey everyone! I have some footage from the recent festival but I'm not great at editing. Is anyone open to collaborating on a short reel?
+                                </p>
+                                <div class="mt-3 flex gap-4 text-xs text-gray-400">
+                                    <span><i class="fa-regular fa-comment"></i> 0 Replies</span>
+                                    <span><i class="fa-regular fa-eye"></i> 5 Views</span>
+                                </div>
+                            </div>
+                             <img src="https://i.pravatar.cc/100?img=32" class="w-10 h-10 rounded-full hidden sm:block">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-12 flex justify-center">
+                    <nav class="flex items-center gap-2">
+                        <a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 text-gray-500"><i class="fa-solid fa-chevron-left"></i></a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center bg-red-600 text-white rounded font-bold">1</a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 text-gray-600">2</a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 text-gray-600">3</a>
+                        <span class="text-gray-400">...</span>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 text-gray-500"><i class="fa-solid fa-chevron-right"></i></a>
+                    </nav>
+                </div>
+
+            </main>
+
+        </div>
+    </div>
+
+</body>
+</html>
