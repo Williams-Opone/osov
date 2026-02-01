@@ -14,19 +14,15 @@
         body { font-family: 'Inter', sans-serif; }
         h1, h2, h3, h4, h5 { font-family: 'Poppins', sans-serif; }
         
-        /* Custom Button Styles for Selection */
         .amount-btn { transition: all 0.2s ease; }
-        
         .amount-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        
         .amount-btn.selected { 
-            background-color: #FEF2F2; /* red-50 */
-            border-color: #DC2626; /* red-600 */
+            background-color: #FEF2F2; 
+            border-color: #DC2626; 
             color: #DC2626; 
             box-shadow: 0 0 0 1px #DC2626;
         }
 
-        /* Frequency Toggle Animation */
         .freq-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .freq-btn.selected { 
             background-color: white; 
@@ -65,12 +61,9 @@
                         <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6 tracking-tight">
                             {{ campaign.title }}
                         </h1>
-                        
                         <p class="text-lg text-gray-300 mb-10 leading-relaxed font-light">
                             {{ campaign.description }}
                         </p>
-                        
-                        
 
                     {% else %}
                         <div class="inline-block bg-white/10 border border-white/20 text-gray-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-6">
@@ -80,7 +73,6 @@
                         <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6 tracking-tight">
                             Power the stories that <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">shape our nation.</span>
                         </h1>
-                        
                         <p class="text-lg text-gray-300 mb-8 leading-relaxed font-light border-l-4 border-red-600 pl-6">
                             Your contribution isn't just a donation; it's a microphone for marginalized voices. It funds equipment, training workshops, and platforms that ensure Canada's rich mosaic is truly heard.
                         </p>
@@ -135,7 +127,7 @@
                                     <i class="fa-solid fa-lock"></i> SSL Secure
                                 </div>
                             </div>
-                
+
                             {% with messages = get_flashed_messages(with_categories=true) %}
                               {% if messages %}
                                 {% for category, message in messages %}
@@ -148,13 +140,13 @@
                                 {% endfor %}
                               {% endif %}
                             {% endwith %}
-                
+
                             <form method="POST" action="{{ request.path }}" id="donateForm">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="amount" id="finalAmount" value="50">
                                 <input type="hidden" name="currency" value="CAD">
                                 <input type="hidden" name="frequency" id="frequencyInput" value="onetime">
-                
+
                                 <div class="bg-gray-100 p-1.5 rounded-xl mb-8 flex relative">
                                     <button type="button" onclick="setFrequency('monthly')" id="btn-monthly" class="freq-btn flex-1 py-3.5 rounded-lg text-sm font-bold text-gray-500 relative z-10">
                                         Monthly <span class="hidden sm:inline font-normal text-xs ml-1 opacity-75">(Recommended)</span>
@@ -163,7 +155,7 @@
                                         One-Time
                                     </button>
                                 </div>
-                
+
                                 <div class="mb-8">
                                     <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Select Amount (CAD)</p>
                                     <div class="grid grid-cols-3 gap-4 mb-4">
@@ -190,7 +182,7 @@
                                             oninput="setCustomAmount(this.value)">
                                     </div>
                                 </div>
-                
+
                                 <div class="mb-8 space-y-4">
                                     {% if not current_user.is_authenticated %}
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -216,12 +208,20 @@
                                         </div>
                                     {% endif %}
                                 </div>
-                
-                                <div class="flex flex-col gap-4">
-                                    <button type="submit" id="submitBtn" class="w-full bg-gray-900 hover:bg-black text-white text-lg font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex justify-between items-center group">
+
+                                <div class="flex flex-col md:flex-row gap-4 items-stretch">
+                                    
+                                    <button type="submit" id="submitBtn" class="flex-grow bg-gray-900 hover:bg-black text-white text-lg font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex justify-between items-center group">
                                         <span>Donate Now</span>
                                         <span class="bg-white/20 px-3 py-1 rounded-lg text-sm font-mono group-hover:bg-white/30 transition" id="btnAmountDisplay">$50.00 CAD</span>
                                     </button>
+
+                                    {% if current_user.is_authenticated %}
+                                        <a href="{{ url_for('main.donation_history') }}" class="md:w-auto flex items-center justify-center px-6 py-4 rounded-xl border-2 border-gray-200 text-gray-600 font-bold hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all">
+                                            <i class="fa-solid fa-clock-rotate-left md:mr-0 lg:mr-2"></i> 
+                                            <span class="md:hidden lg:inline">History</span>
+                                        </a>
+                                    {% endif %}
                                 </div>
                                 
                             </form>
@@ -305,12 +305,9 @@
             let buttons = document.querySelectorAll('.amount-btn');
             buttons.forEach(btn => {
                 if(parseInt(btn.dataset.amount) === amount) {
-                    // Selected Style
                     btn.classList.add('selected');
                     btn.classList.remove('border-gray-100', 'bg-white', 'text-gray-700');
-                    // Add specific styling for selected state (red border/text defined in CSS)
                 } else {
-                    // Deselected Style
                     btn.classList.remove('selected');
                     btn.classList.add('border-gray-100', 'bg-white', 'text-gray-700');
                 }
