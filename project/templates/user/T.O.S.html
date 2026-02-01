@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,47 +14,35 @@
         body { font-family: 'Inter', sans-serif; }
         h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; }
         
-        /* Smooth scrolling */
-        html { scroll-behavior: smooth; }
-        
         /* Custom scrollbar for the sidebar */
-        .sidebar-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-        .sidebar-scroll::-webkit-scrollbar-track {
-            background: #f1f1f1; 
-        }
-        .sidebar-scroll::-webkit-scrollbar-thumb {
-            background: #cbd5e1; 
-            border-radius: 4px;
-        }
-        .sidebar-scroll::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8; 
-        }
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 text-gray-800 antialiased overflow-x-hidden">
 
     {% include 'user/header.html' %}
 
-    <section class="bg-slate-900 text-white pt-32 pb-20">
-        <div class="container mx-auto px-6 text-center">
-            <span class="inline-block py-1 px-3 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold tracking-wider mb-4">
+    <section class="bg-slate-900 text-white pt-28 md:pt-32 pb-16 md:pb-20">
+        <div class="container mx-auto px-4 md:px-6 text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-[10px] md:text-xs font-semibold tracking-wider mb-4">
                 LEGAL INFORMATION
             </span>
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Terms of Use</h1>
-            <p class="text-slate-400 max-w-2xl mx-auto text-lg">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4">Terms of Use</h1>
+            <p class="text-slate-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
                 Please read these terms carefully before using our platform.
             </p>
-            <p class="mt-4 text-sm text-slate-500">Last Updated: <span id="current-date"></span></p>
+            <p class="mt-4 text-xs md:text-sm text-slate-500">Last Updated: <span id="current-date"></span></p>
         </div>
     </section>
 
-    <div class="container mx-auto px-6 py-16">
-        <div class="flex flex-col lg:flex-row gap-12">
+    <div class="container mx-auto px-4 md:px-6 py-12 md:py-16">
+        <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
             
             <div class="hidden lg:block w-1/4">
-                <div class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto sidebar-scroll pr-4">
+                <div class="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto sidebar-scroll pr-4">
                     <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Table of Contents</h3>
                     <nav class="space-y-1">
                         <a href="#intro" class="block py-2 px-3 rounded-lg text-sm text-gray-600 hover:bg-red-50 hover:text-red-600 transition">1. Introduction</a>
@@ -71,29 +59,29 @@
             </div>
 
             <div class="w-full lg:w-3/4">
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12 space-y-12">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-12 space-y-10 md:space-y-12">
                     
-                    <section id="intro" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                            <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">1</span>
+                    <section id="intro" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">1</span>
                             Introduction
                         </h2>
-                        <p class="text-gray-600 leading-relaxed">
+                        <p class="text-gray-600 leading-relaxed text-sm md:text-base">
                             Welcome to <strong>Our Story Our Voice</strong>. By accessing or using our website, platform, and services, you agree to be bound by these Terms of Use ("Terms"). If you disagree with any part of these terms, you may not access the service.
                         </p>
                     </section>
 
                     <div class="h-px bg-gray-100"></div>
 
-                    <section id="accounts" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                            <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">2</span>
+                    <section id="accounts" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">2</span>
                             Accounts and Registration
                         </h2>
-                        <p class="text-gray-600 mb-4">
+                        <p class="text-gray-600 mb-4 text-sm md:text-base">
                             To access certain features of the platform (such as "Becoming a volunteer"), you may be required to register an account using <strong>Google Sign-In</strong> or email credentials.
                         </p>
-                        <ul class="list-disc list-inside space-y-2 text-gray-600 ml-2">
+                        <ul class="list-disc list-inside space-y-2 text-gray-600 ml-2 text-sm md:text-base">
                             <li><strong>Accuracy:</strong> You agree that the information provided is accurate and current.</li>
                             <li><strong>Security:</strong> You are responsible for maintaining the confidentiality of your account. You must notify us immediately of any unauthorized use of your account.</li>
                         </ul>
@@ -101,29 +89,25 @@
 
                     <div class="h-px bg-gray-100"></div>
 
-                    <section id="ip" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                            <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">3</span>
+                    <section id="ip" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">3</span>
                             Intellectual Property Rights
                         </h2>
-                        <p class="text-gray-600 leading-relaxed">
+                        <p class="text-gray-600 leading-relaxed text-sm md:text-base">
                             Unless otherwise indicated, the website acts as the intellectual property of <strong>Our Story Our Voice</strong>. All source code, databases, functionality, software, website designs, audio, video, text, photographs, and graphics on the Site (collectively, the "Content") and the trademarks, service marks, and logos contained therein (the "Marks") are owned or controlled by us or licensed to us.
                         </p>
                     </section>
 
                     <div class="h-px bg-gray-100"></div>
 
-                    
-
-                    <div class="h-px bg-gray-100"></div>
-
-                    <section id="donations" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                            <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">4</span>
+                    <section id="donations" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">4</span>
                             Donations
                         </h2>
-                        <ul class="space-y-3 text-gray-600">
-                            <li><strong>Processing:</strong> All donations are securely processed via industry-leading payment gateways, including Paystack, Flutterwave, and Stripe. We never access or store your full financial details</li>
+                        <ul class="space-y-3 text-gray-600 text-sm md:text-base">
+                            <li><strong>Processing:</strong> All donations are securely processed via industry-leading payment gateways, including Paystack, Flutterwave, and Stripe. We never access or store your full financial details.</li>
                             <li><strong>Refunds:</strong> All donations are final and non-refundable, except where required by applicable law or at the discretion of management.</li>
                             <li><strong>Usage:</strong> We retain discretion over the allocation of donated funds to support our mission and operational costs.</li>
                         </ul>
@@ -131,23 +115,23 @@
 
                     <div class="h-px bg-gray-100"></div>
 
-                    <section id="prohibited" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                            <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">5</span>
+                    <section id="prohibited" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">5</span>
                             Prohibited Activities
                         </h2>
-                        <p class="text-gray-600 mb-4">You specifically agree not to:</p>
-                        <div class="grid md:grid-cols-2 gap-4">
+                        <p class="text-gray-600 mb-4 text-sm md:text-base">You specifically agree not to:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="bg-gray-50 p-4 rounded-lg flex items-start gap-3">
-                                <i class="fa-solid fa-ban text-red-500 mt-1"></i>
+                                <i class="fa-solid fa-ban text-red-500 mt-1 shrink-0"></i>
                                 <span class="text-sm text-gray-700">Systematically retrieve data (scraping) without permission.</span>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg flex items-start gap-3">
-                                <i class="fa-solid fa-ban text-red-500 mt-1"></i>
+                                <i class="fa-solid fa-ban text-red-500 mt-1 shrink-0"></i>
                                 <span class="text-sm text-gray-700">Attempt to bypass any security measures of the Site.</span>
                             </div>
-                            <div class="bg-gray-50 p-4 rounded-lg flex items-start gap-3">
-                                <i class="fa-solid fa-ban text-red-500 mt-1"></i>
+                            <div class="bg-gray-50 p-4 rounded-lg flex items-start gap-3 md:col-span-2">
+                                <i class="fa-solid fa-ban text-red-500 mt-1 shrink-0"></i>
                                 <span class="text-sm text-gray-700">Harass, annoy, or threaten employees or agents.</span>
                             </div>
                         </div>
@@ -155,49 +139,50 @@
 
                     <div class="h-px bg-gray-100"></div>
 
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <section id="liability" class="scroll-mt-28">
-                            <h2 class="text-xl font-bold text-gray-900 mb-3">6. Limitation of Liability</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                        <section id="liability" class="scroll-mt-28 md:scroll-mt-32">
+                            <h2 class="text-lg md:text-xl font-bold text-gray-900 mb-3">6. Limitation of Liability</h2>
                             <p class="text-gray-600 text-sm leading-relaxed">
                                 In no event will <strong>Our Story Our Voice</strong>, including our directors, employees, or agents, be liable to you for any direct, indirect, consequential, exemplary, incidental, special, or punitive damages, including lost profit, lost data, or other damages arising from your use of the site.
                             </p>
                         </section>
 
-                        <section id="law" class="scroll-mt-28">
-                            <h2 class="text-xl font-bold text-gray-900 mb-3">7. Governing Law</h2>
+                        <section id="law" class="scroll-mt-28 md:scroll-mt-32">
+                            <h2 class="text-lg md:text-xl font-bold text-gray-900 mb-3">7. Governing Law</h2>
                             <p class="text-gray-600 text-sm leading-relaxed">
-                                These Terms shall be governed by and defined following the laws of the <strong>Province of Alberta</strong>. and the laws of Canada applicable therein. You accept that the courts of the <strong>Alberta</strong>  shall have exclusive jurisdiction to resolve any dispute which may arise.
+                                These Terms shall be governed by and defined following the laws of the <strong>Province of Alberta</strong> and the laws of Canada applicable therein. You accept that the courts of Alberta shall have exclusive jurisdiction to resolve any dispute which may arise.
                             </p>
                         </section>
                     </div>
 
                     <div class="h-px bg-gray-100"></div>
 
-                    <section id="changes" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                            <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">8</span>
+                    <section id="changes" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">8</span>
                             Changes to Terms
                         </h2>
-                        <p class="text-gray-600">
+                        <p class="text-gray-600 text-sm md:text-base">
                             We reserve the right to modify these Terms at any time. We will alert you about any changes by updating the "Last Updated" date of these Terms of Use. Your continued use of the Site represents your acceptance of the changes.
                         </p>
                     </section>
 
-                    <section id="contact" class="scroll-mt-28 bg-gray-900 text-white p-8 rounded-xl">
-                        <h2 class="text-2xl font-bold mb-4">9. Contact Us</h2>
-                        <p class="text-gray-400 mb-6">To resolve a complaint regarding the Site or to receive further information regarding use of the Site, please contact us at:</p>
+                    <section id="contact" class="scroll-mt-28 md:scroll-mt-32 bg-gray-900 text-white p-6 md:p-8 rounded-xl">
+                        <h2 class="text-xl md:text-2xl font-bold mb-4">9. Contact Us</h2>
+                        <p class="text-gray-400 mb-6 text-sm md:text-base">To resolve a complaint regarding the Site or to receive further information regarding use of the Site, please contact us at:</p>
                         
-                        <div class="space-y-4">
+                        <div class="space-y-4 text-sm md:text-base">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-red-500">
+                                <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-red-500 shrink-0">
                                     <i class="fa-regular fa-envelope"></i>
                                 </div>
-                                <span>info@ourstoryourvoice.org</span> </div>
+                                <a href="mailto:info@ourstoryourvoice.org" class="hover:text-red-400 transition">info@ourstoryourvoice.org</a>
+                            </div>
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-red-500">
+                                <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-red-500 shrink-0">
                                     <i class="fa-solid fa-location-dot"></i>
                                 </div>
-                                <span> Calgary,Alberta, Canada</span>
+                                <span>Calgary, Alberta, Canada</span>
                             </div>
                         </div>
                     </section>

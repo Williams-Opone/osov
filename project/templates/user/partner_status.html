@@ -15,22 +15,22 @@
         h1, h2, h3 { font-family: 'Poppins', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen overflow-x-hidden">
 
     {% include 'user/header.html' %}
 
-    <main class="flex-grow flex items-center justify-center py-16 px-4">
+    <main class="flex-grow flex items-center justify-center py-12 px-4 md:px-6 pt-32">
         <div class="max-w-5xl w-full">
             
             <div class="mb-6">
-                <a href="{{ url_for('main.index') }}" class="text-slate-500 hover:text-slate-800 text-sm font-medium transition">
-                    <i class="fa-solid fa-arrow-left mr-2"></i> Back to Dashboard
+                <a href="{{ url_for('main.index') }}" class="text-slate-500 hover:text-slate-800 text-sm font-medium transition inline-flex items-center group">
+                    <i class="fa-solid fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i> Back to Home
                 </a>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200 flex flex-col lg:flex-row">
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200 flex flex-col lg:flex-row">
                 
-                <div class="lg:w-1/3 p-10 flex flex-col justify-center items-center text-center relative overflow-hidden
+                <div class="lg:w-1/3 p-8 md:p-12 flex flex-col justify-center items-center text-center relative overflow-hidden shrink-0
                     {% if app.status == 'Approved' %}
                         bg-blue-900 text-white
                     {% elif app.status == 'Rejected' %}
@@ -42,19 +42,19 @@
                     <div class="absolute inset-0 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
 
                     <div class="relative z-10">
-                        <div class="w-24 h-24 rounded-full flex items-center justify-center mb-6 shadow-xl border-4 border-white/20 mx-auto
+                        <div class="w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mb-6 shadow-xl border-4 border-white/20 mx-auto
                             {% if app.status == 'Approved' %} bg-blue-600 {% elif app.status == 'Rejected' %} bg-slate-600 {% else %} bg-amber-500 {% endif %}">
                             
                             {% if app.status == 'Approved' %}
-                                <i class="fa-solid fa-handshake text-4xl"></i>
+                                <i class="fa-solid fa-handshake text-3xl md:text-4xl"></i>
                             {% elif app.status == 'Rejected' %}
-                                <i class="fa-solid fa-ban text-4xl"></i>
+                                <i class="fa-solid fa-ban text-3xl md:text-4xl"></i>
                             {% else %}
-                                <i class="fa-solid fa-hourglass-half text-4xl animate-pulse"></i>
+                                <i class="fa-solid fa-hourglass-half text-3xl md:text-4xl animate-pulse"></i>
                             {% endif %}
                         </div>
 
-                        <h1 class="text-2xl font-bold tracking-wide uppercase">
+                        <h1 class="text-xl md:text-2xl font-bold tracking-wide uppercase">
                             {% if app.status == 'Pending' %}
                                 Proposal Pending
                             {% elif app.status == 'Approved' %}
@@ -64,7 +64,7 @@
                             {% endif %}
                         </h1>
                         
-                        <p class="mt-4 text-white/80 text-sm leading-relaxed px-4">
+                        <p class="mt-4 text-white/80 text-sm leading-relaxed px-2 md:px-4">
                             {% if app.status == 'Pending' %}
                                 Our Partnerships Team is currently vetting your organization's proposal details.
                             {% elif app.status == 'Approved' %}
@@ -76,14 +76,14 @@
                     </div>
                 </div>
 
-                <div class="lg:w-2/3 p-8 md:p-12 bg-white">
+                <div class="lg:w-2/3 p-6 md:p-12 bg-white">
                     
-                    <div class="flex justify-between items-start mb-8 border-b border-slate-100 pb-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 border-b border-slate-100 pb-6 gap-4">
                         <div>
                             <h2 class="text-xl font-bold text-slate-900">Organization Profile</h2>
-                            <p class="text-sm text-slate-500">Submitted on {{ app.created_at.strftime('%B %d, %Y') }}</p>
+                            <p class="text-xs md:text-sm text-slate-500">Submitted on {{ app.created_at.strftime('%B %d, %Y') }}</p>
                         </div>
-                        <span class="px-3 py-1 rounded text-xs font-bold uppercase tracking-wider
+                        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider
                             {% if app.status == 'Approved' %} bg-blue-50 text-blue-700 border border-blue-200
                             {% elif app.status == 'Rejected' %} bg-slate-100 text-slate-500 border border-slate-200
                             {% else %} bg-amber-50 text-amber-700 border border-amber-200 {% endif %}">
@@ -91,10 +91,10 @@
                         </span>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 mb-8">
                         <div>
                             <h3 class="text-xs font-bold text-slate-400 uppercase mb-1">Organization Name</h3>
-                            <p class="font-bold text-slate-900 text-lg">{{ app.org_name }}</p>
+                            <p class="font-bold text-slate-900 text-base md:text-lg break-words">{{ app.org_name }}</p>
                         </div>
                         <div>
                             <h3 class="text-xs font-bold text-slate-400 uppercase mb-1">Sector / Type</h3>
@@ -102,45 +102,45 @@
                         </div>
                         <div>
                             <h3 class="text-xs font-bold text-slate-400 uppercase mb-1">Partnership Category</h3>
-                            <p class="font-medium text-slate-700 bg-slate-50 inline-block px-3 py-1 rounded border border-slate-200">
+                            <p class="font-medium text-slate-700 bg-slate-50 inline-block px-3 py-1 rounded border border-slate-200 text-sm">
                                 {{ app.partnership_type.replace('_', ' ') }}
                             </p>
                         </div>
                         <div>
                             <h3 class="text-xs font-bold text-slate-400 uppercase mb-1">Website</h3>
                             {% if app.website %}
-                                <a href="{{ app.website }}" target="_blank" class="text-blue-600 hover:underline flex items-center gap-2">
+                                <a href="{{ app.website }}" target="_blank" class="text-blue-600 hover:underline flex items-center gap-2 text-sm break-all">
                                     {{ app.website }} <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                                 </a>
                             {% else %}
-                                <p class="text-slate-400 italic">Not provided</p>
+                                <p class="text-slate-400 italic text-sm">Not provided</p>
                             {% endif %}
                         </div>
                     </div>
 
                     <div class="mb-10">
                         <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Proposal Summary</h3>
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-sm text-slate-600 leading-relaxed">
+                        <div class="bg-slate-50 p-4 md:p-6 rounded-xl border border-slate-100 text-sm text-slate-600 leading-relaxed">
                             {{ app.proposal_details }}
                         </div>
                     </div>
 
-                    
-                        
                     {% if app.status == 'Pending' %}
-                         <div class="flex items-start gap-4 p-4 border border-amber-100 bg-amber-50 rounded-xl">
-                            <i class="fa-solid fa-circle-info text-amber-500 mt-1"></i>
+                         <div class="flex flex-col sm:flex-row items-start gap-4 p-4 md:p-5 border border-amber-100 bg-amber-50 rounded-xl">
+                            <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-500 shrink-0">
+                                <i class="fa-solid fa-phone-volume"></i>
+                            </div>
                             <div>
-                                <h4 class="font-bold text-amber-800 text-sm">Next Step: Discovery Call</h4>
-                                <p class="text-xs text-amber-700 mt-1">Our director will reach out to the email associated with this account ({{ current_user.email }}) within 5 business days.</p>
+                                <h4 class="font-bold text-amber-900 text-sm">Next Step: Discovery Call</h4>
+                                <p class="text-xs md:text-sm text-amber-800/80 mt-1 leading-relaxed">
+                                    Our director will reach out to the email associated with this account (<strong>{{ current_user.email }}</strong>) within 5 business days to discuss alignment.
+                                </p>
                             </div>
                         </div>
                     {% endif %}
 
                 </div>
             </div>
-
-            
         </div>
     </main>
 

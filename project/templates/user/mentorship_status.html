@@ -15,100 +15,102 @@
         h1, h2, h3 { font-family: 'Poppins', sans-serif; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased flex flex-col min-h-screen">
+<body class="bg-gray-50 text-gray-800 antialiased flex flex-col min-h-screen overflow-x-hidden">
 
     {% include 'user/header.html' %}
 
-    <main class="flex-grow flex items-center justify-center py-16 px-4">
+    <main class="flex-grow flex items-center justify-center py-20 px-4 md:px-6 pt-32">
         <div class="max-w-4xl w-full">
             
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Application Status</h1>
-                <p class="text-gray-500">Track your EICP mentorship journey.</p>
+            <div class="mb-8 text-center md:text-left">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Application Status</h1>
+                <p class="text-gray-500 text-sm md:text-base">Track your EICP mentorship journey.</p>
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 flex flex-col md:flex-row">
                 
                 {% if app.status == 'Approved' %}
-                    <div class="md:w-1/3 bg-green-600 p-8 text-white flex flex-col justify-center items-center text-center">
-                        <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mb-6 shadow-lg">
-                            <i class="fa-solid fa-check text-4xl"></i>
+                    <div class="w-full md:w-1/3 bg-green-600 p-8 md:p-10 text-white flex flex-col justify-center items-center text-center">
+                        <div class="w-16 h-16 md:w-20 md:h-20 bg-green-500 rounded-full flex items-center justify-center mb-4 md:mb-6 shadow-lg">
+                            <i class="fa-solid fa-check text-3xl md:text-4xl"></i>
                         </div>
-                        <h2 class="text-2xl font-bold">Approved</h2>
-                        <p class="text-green-100 mt-2">Welcome to the team!</p>
+                        <h2 class="text-xl md:text-2xl font-bold">Approved</h2>
+                        <p class="text-green-100 mt-2 text-sm md:text-base">Welcome to the team!</p>
                     </div>
                 {% elif app.status == 'Rejected' %}
-                    <div class="md:w-1/3 bg-gray-600 p-8 text-white flex flex-col justify-center items-center text-center">
-                        <div class="w-20 h-20 bg-gray-500 rounded-full flex items-center justify-center mb-6 shadow-lg">
-                            <i class="fa-solid fa-xmark text-4xl"></i>
+                    <div class="w-full md:w-1/3 bg-gray-600 p-8 md:p-10 text-white flex flex-col justify-center items-center text-center">
+                        <div class="w-16 h-16 md:w-20 md:h-20 bg-gray-500 rounded-full flex items-center justify-center mb-4 md:mb-6 shadow-lg">
+                            <i class="fa-solid fa-xmark text-3xl md:text-4xl"></i>
                         </div>
-                        <h2 class="text-2xl font-bold">Not Selected</h2>
-                        <p class="text-gray-200 mt-2">Update on your application.</p>
+                        <h2 class="text-xl md:text-2xl font-bold">Not Selected</h2>
+                        <p class="text-gray-200 mt-2 text-sm md:text-base">Update on your application.</p>
                     </div>
-                {% else %} <div class="md:w-1/3 bg-amber-500 p-8 text-white flex flex-col justify-center items-center text-center">
-                        <div class="w-20 h-20 bg-amber-400 rounded-full flex items-center justify-center mb-6 shadow-lg animate-pulse">
-                            <i class="fa-solid fa-hourglass-half text-4xl"></i>
+                {% else %} 
+                    <div class="w-full md:w-1/3 bg-amber-500 p-8 md:p-10 text-white flex flex-col justify-center items-center text-center">
+                        <div class="w-16 h-16 md:w-20 md:h-20 bg-amber-400 rounded-full flex items-center justify-center mb-4 md:mb-6 shadow-lg animate-pulse">
+                            <i class="fa-solid fa-hourglass-half text-3xl md:text-4xl"></i>
                         </div>
-                        <h2 class="text-2xl font-bold">Under Review</h2>
-                        <p class="text-amber-100 mt-2">We are assessing your profile.</p>
+                        <h2 class="text-xl md:text-2xl font-bold">Under Review</h2>
+                        <p class="text-amber-100 mt-2 text-sm md:text-base">We are assessing your profile.</p>
                     </div>
                 {% endif %}
 
 
-                <div class="md:w-2/3 p-8 md:p-12">
+                <div class="w-full md:w-2/3 p-6 md:p-12">
                     
-                    <div class="bg-gray-50 rounded-xl p-6 mb-8 border border-gray-100">
+                    <div class="bg-gray-50 rounded-xl p-5 md:p-6 mb-8 border border-gray-100">
                         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Application Details</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
                             <div>
-                                <p class="text-sm text-gray-500">Program Track</p>
-                                <p class="font-bold text-gray-900 capitalize">{{ app.program_track.replace('_', ' ') }}</p>
+                                <p class="text-xs md:text-sm text-gray-500 mb-0.5">Program Track</p>
+                                <p class="font-bold text-gray-900 text-sm md:text-base capitalize">{{ app.program_track.replace('_', ' ') }}</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Date Applied</p>
-                                <p class="font-bold text-gray-900">{{ app.created_at.strftime('%B %d, %Y') }}</p>
+                                <p class="text-xs md:text-sm text-gray-500 mb-0.5">Date Applied</p>
+                                <p class="font-bold text-gray-900 text-sm md:text-base">{{ app.created_at.strftime('%B %d, %Y') }}</p>
                             </div>
                             {% if app.child_first_name %}
                             <div>
-                                <p class="text-sm text-gray-500">Beneficiary</p>
-                                <p class="font-bold text-gray-900">{{ app.child_first_name }} {{ app.child_last_name }}</p>
+                                <p class="text-xs md:text-sm text-gray-500 mb-0.5">Beneficiary</p>
+                                <p class="font-bold text-gray-900 text-sm md:text-base">{{ app.child_first_name }} {{ app.child_last_name }}</p>
                             </div>
                             {% endif %}
                             {% if app.vocational_interest %}
                             <div>
-                                <p class="text-sm text-gray-500">Interest</p>
-                                <p class="font-bold text-gray-900">{{ app.vocational_interest }}</p>
+                                <p class="text-xs md:text-sm text-gray-500 mb-0.5">Interest</p>
+                                <p class="font-bold text-gray-900 text-sm md:text-base">{{ app.vocational_interest }}</p>
                             </div>
                             {% endif %}
                         </div>
                     </div>
 
                     {% if app.status == 'Approved' %}
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Next Steps</h3>
-                        <p class="text-gray-600 mb-6">Congratulations! You have been accepted. Your mentor will reach out to you within 48 hours via email.</p>
+                        <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">Next Steps</h3>
+                        <p class="text-gray-600 mb-6 text-sm md:text-base">Congratulations! You have been accepted. Your mentor will reach out to you within 48 hours via email.</p>
                         
                         <div class="flex flex-col gap-3">
-                            <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition shadow-md flex justify-center items-center gap-2">
+                            <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl transition shadow-md flex justify-center items-center gap-2 text-sm md:text-base">
                                 <i class="fa-brands fa-whatsapp"></i> Join Orientation Group
                             </button>
-                            <button class="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-3 rounded-xl transition">
+                            <button class="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-3.5 rounded-xl transition text-sm md:text-base">
                                 View Orientation Schedule
                             </button>
                         </div>
 
                     {% elif app.status == 'Rejected' %}
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Thank you for applying</h3>
-                        <p class="text-gray-600 mb-6">Unfortunately, we cannot offer you a spot in the current cohort due to limited capacity. We encourage you to apply again next season.</p>
+                        <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">Thank you for applying</h3>
+                        <p class="text-gray-600 mb-6 text-sm md:text-base">Unfortunately, we cannot offer you a spot in the current cohort due to limited capacity. We encourage you to apply again next season.</p>
                         
-                        <a href="{{ url_for('main.index') }}" class="block w-full text-center bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 rounded-xl transition">
+                        <a href="{{ url_for('main.index') }}" class="block w-full text-center bg-gray-900 hover:bg-gray-800 text-white font-bold py-3.5 rounded-xl transition text-sm md:text-base">
                             Back to Home
                         </a>
 
-                    {% else %} <h3 class="text-xl font-bold text-gray-900 mb-2">What we are looking for</h3>
-                        <p class="text-gray-600 mb-6">Our team is verifying your eligibility criteria. If you applied for the Youth Track, we may contact your guardian for verification.</p>
+                    {% else %} 
+                        <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">What we are looking for</h3>
+                        <p class="text-gray-600 mb-6 text-sm md:text-base">Our team is verifying your eligibility criteria. If you applied for the Youth Track, we may contact your guardian for verification.</p>
                         
-                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
-                            <i class="fa-solid fa-circle-info text-amber-500 mt-1"></i>
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+                            <i class="fa-solid fa-circle-info text-amber-500 mt-1 shrink-0"></i>
                             <div>
                                 <p class="text-sm font-bold text-amber-800">Need to make changes?</p>
                                 <p class="text-xs text-amber-700 mt-1">If you made a mistake in your application, please contact support immediately.</p>

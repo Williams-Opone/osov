@@ -35,61 +35,68 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center p-6 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+<body class="bg-gray-50 text-gray-800 antialiased flex flex-col min-h-screen bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
 
-    <div class="max-w-2xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 text-center">
+    {% include 'user/header.html' %}
+
+    <main class="flex-grow flex items-center justify-center px-4 py-12 pt-32">
         
-        <div class="bg-green-50 p-10 border-b border-green-100">
-            <div class="check-circle w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-200">
-                <i class="fa-solid fa-check text-4xl text-white"></i>
-            </div>
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Application Received!</h1>
-            <p class="text-gray-600">Thank you for stepping up to be the voice behind the story.</p>
-        </div>
-
-        <div class="p-10">
-            <h2 class="text-lg font-semibold text-gray-800 mb-8">What happens next?</h2>
+        <div class="max-w-2xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 text-center relative">
             
-            <div class="relative flex justify-between max-w-sm mx-auto mb-10">
-                <div class="timeline-line"></div>
+            <div class="bg-green-50 p-8 md:p-10 border-b border-green-100">
+                <div class="check-circle w-16 h-16 md:w-20 md:h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-200">
+                    <i class="fa-solid fa-check text-3xl md:text-4xl text-white"></i>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Application Received!</h1>
+                <p class="text-gray-600 text-sm md:text-base">Thank you for stepping up to be the voice behind the story.</p>
+            </div>
+
+            <div class="p-6 md:p-10">
+                <h2 class="text-lg font-semibold text-gray-800 mb-8">What happens next?</h2>
                 
-                <div class="relative z-10 text-center">
-                    <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto text-sm font-bold ring-4 ring-white">
-                        <i class="fa-solid fa-check"></i>
+                <div class="relative flex justify-between max-w-xs md:max-w-sm mx-auto mb-10 px-2">
+                    <div class="timeline-line"></div>
+                    
+                    <div class="relative z-10 text-center">
+                        <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto text-sm font-bold ring-4 ring-white shadow-sm">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <p class="text-xs font-bold mt-2 text-green-600">Applied</p>
                     </div>
-                    <p class="text-xs font-bold mt-2 text-green-600">Applied</p>
+
+                    <div class="relative z-10 text-center">
+                        <div class="w-8 h-8 bg-white border-2 border-gray-300 text-gray-400 rounded-full flex items-center justify-center mx-auto text-sm font-bold ring-4 ring-white shadow-sm">
+                            2
+                        </div>
+                        <p class="text-xs font-medium mt-2 text-gray-500">Review</p>
+                    </div>
+
+                    <div class="relative z-10 text-center">
+                        <div class="w-8 h-8 bg-white border-2 border-gray-300 text-gray-400 rounded-full flex items-center justify-center mx-auto text-sm font-bold ring-4 ring-white shadow-sm">
+                            3
+                        </div>
+                        <p class="text-xs font-medium mt-2 text-gray-500">Welcome</p>
+                    </div>
                 </div>
 
-                <div class="relative z-10 text-center">
-                    <div class="w-8 h-8 bg-white border-2 border-gray-300 text-gray-400 rounded-full flex items-center justify-center mx-auto text-sm font-bold ring-4 ring-white">
-                        2
-                    </div>
-                    <p class="text-xs font-medium mt-2 text-gray-500">Review</p>
-                </div>
+                <p class="text-sm text-gray-500 mb-8 max-w-md mx-auto leading-relaxed">
+                    Our coordinators review applications every Monday and Thursday. You will receive an email update regarding your status within <strong>3-5 business days</strong>.
+                </p>
 
-                <div class="relative z-10 text-center">
-                    <div class="w-8 h-8 bg-white border-2 border-gray-300 text-gray-400 rounded-full flex items-center justify-center mx-auto text-sm font-bold ring-4 ring-white">
-                        3
-                    </div>
-                    <p class="text-xs font-medium mt-2 text-gray-500">Welcome</p>
+                <div class="space-y-3">
+                    <a href="{{ url_for('main.index') }}" class="block w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3.5 px-6 rounded-xl transition duration-300 shadow-md hover:shadow-lg">
+                        Return to Home
+                    </a>
+                    <a href="{{ url_for('main.volunteer') }}" class="block w-full text-gray-500 hover:text-red-600 font-medium text-sm py-2 transition">
+                        View Other Opportunities
+                    </a>
                 </div>
             </div>
-
-            <p class="text-sm text-gray-500 mb-8 max-w-md mx-auto">
-                Our coordinators review applications every Monday and Thursday. You will receive an email update regarding your status within <strong>3-5 business days</strong>.
-            </p>
-
-            <div class="space-y-3">
-                <a href="{{ url_for('main.index') }}" class="block w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-xl transition duration-300">
-                    Return to Home
-                </a>
-                <a href="#" class="block w-full text-gray-500 hover:text-red-600 font-medium text-sm py-2 transition">
-                    View Volunteer Programs
-                </a>
-            </div>
+            
         </div>
-        
-    </div>
+    </main>
+
+    {% include 'user/footer.html' %}
 
 </body>
 </html>

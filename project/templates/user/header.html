@@ -1,87 +1,66 @@
-<nav 
-    class="fixed w-full z-50 top-0 start-0 border-b border-gray-100 bg-white/90 backdrop-blur-md transition-all duration-300 animate-slide-down"
->
+<nav class="fixed w-full z-50 top-0 start-0 border-b border-gray-100 bg-white/95 backdrop-blur-md transition-all duration-300" id="mainNav">
     <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+        
         <a href="/" class="group flex items-center gap-3 font-bold text-xl md:text-2xl tracking-tight text-slate-900">
-            <img 
-                src="/static/logoest.svg" 
-                alt="Our Story Our Voice Logo" 
-                class="h-12 w-12 rounded-full object-cover shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-300 ease-out"
-            >
-            
-            <span class="hidden sm:block group-hover:text-slate-700 transition-colors duration-300">
+            <img src="/static/logoest.svg" alt="OSOV Logo" class="h-10 w-10 md:h-12 md:w-12 rounded-full object-cover shadow-sm group-hover:shadow-md transition-all">
+            <span class="hidden sm:block group-hover:text-slate-700 transition-colors">
                 Our Story Our Voice<span class="text-red-600">.</span>
             </span>
             <span class="sm:hidden block">OSOV</span> 
         </a>
 
         <div class="hidden lg:flex items-center space-x-8 font-medium text-sm text-slate-600">
-    
-            <a href="{{ url_for('main.index') }}" class="relative group transition-colors
-               {% if request.endpoint == 'main.index' %} text-slate-900 font-semibold {% else %} hover:text-red-600 {% endif %}">
-                Home
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-600 transition-all duration-300
-                      {% if request.endpoint == 'main.index' %} w-full {% else %} w-0 group-hover:w-full {% endif %}">
-                </span>
-            </a>
-            
-            <a href="{{ url_for('main.mentorship') }}" class="relative group transition-colors
-               {% if request.endpoint == 'main.mentorship' %} text-slate-900 font-semibold {% else %} hover:text-red-600 {% endif %}">
-                Programs (EICP)
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-600 transition-all duration-300
-                      {% if request.endpoint == 'main.mentorship' %} w-full {% else %} w-0 group-hover:w-full {% endif %}">
-                </span>
-            </a>
-        
-            <a href="{{ url_for('main.stories') }}" class="relative group transition-colors
-               {% if request.endpoint == 'main.stories' %} text-slate-900 font-semibold {% else %} hover:text-red-600 {% endif %}">
-                Stories
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-600 transition-all duration-300
-                      {% if request.endpoint == 'main.stories' %} w-full {% else %} w-0 group-hover:w-full {% endif %}">
-                </span>
-            </a>
-        
-            <a href="{{ url_for('main.events') }}" class="relative group transition-colors
-               {% if request.endpoint == 'main.events' %} text-slate-900 font-semibold {% else %} hover:text-red-600 {% endif %}">
-                Events
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-600 transition-all duration-300
-                      {% if request.endpoint == 'main.events' %} w-full {% else %} w-0 group-hover:w-full {% endif %}">
-                </span>
-            </a>
-        
-            <a href="{{ url_for('main.about') }}" class="relative group transition-colors
-               {% if request.endpoint == 'main.about' %} text-slate-900 font-semibold {% else %} hover:text-red-600 {% endif %}">
-                About
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-600 transition-all duration-300
-                      {% if request.endpoint == 'main.about' %} w-full {% else %} w-0 group-hover:w-full {% endif %}">
-                </span>
-            </a>
-        
+            <a href="{{ url_for('main.index') }}" class="hover:text-red-600 transition-colors">Home</a>
+            <a href="{{ url_for('main.mentorship') }}" class="hover:text-red-600 transition-colors">Programs (EICP)</a>
+            <a href="{{ url_for('main.stories') }}" class="hover:text-red-600 transition-colors">Stories</a>
+            <a href="{{ url_for('main.events') }}" class="hover:text-red-600 transition-colors">Events</a>
+            <a href="{{ url_for('main.about') }}" class="hover:text-red-600 transition-colors">About</a>
         </div>
-        <div class="flex items-center gap-4">
+
+        <div class="flex items-center gap-3 md:gap-4">
             
-            <a href="{{url_for('main.signin')}}" class="hidden md:block text-sm font-semibold relative group transition-colors
-            {# 1. Text Color Logic #}
-            {% if request.endpoint == 'main.signin' %} text-slate-900 {% else %} text-slate-900 hover:text-red-600 {% endif %}">
-             
-             Sign In
-             
-             {# 2. The Red Underline Span #}
-             <span class="absolute -bottom-1 left-0 h-0.5 bg-red-600 transition-all duration-300
-                   {% if request.endpoint == 'main.signin' %} w-full {% else %} w-0 group-hover:w-full {% endif %}">
-             </span>
-         </a>
+            <a href="{{ url_for('main.google_login', next=request.args.get('next')) }}" class="hidden lg:block text-sm font-semibold text-slate-900 hover:text-red-600 transition-colors">
+                Sign In
+            </a>
             
-            <a href="/campaigns" class="group relative overflow-hidden bg-red-600 hover:bg-red-700 text-white text-sm font-semibold py-2.5 px-6 rounded-full shadow-lg shadow-red-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-red-600/40">
-                <span class="relative z-10 flex items-center gap-1">
-                    Donate <i class="fa-solid fa-heart text-xs group-hover:text-pink-200 transition-colors"></i>
-                </span>
-                <div class="absolute inset-0 h-full w-full scale-0 rounded-full transition-all duration-300 group-hover:scale-100 group-hover:bg-white/10"></div>
+            <a href="/campaigns" class="bg-red-600 hover:bg-red-700 text-white text-xs md:text-sm font-bold py-2.5 px-4 md:px-6 rounded-full shadow-lg shadow-red-600/20 transition-all hover:-translate-y-0.5 flex items-center gap-2">
+                <span>Donate</span> 
+                <i class="fa-solid fa-heart text-xs"></i>
             </a>
 
-            <button class="lg:hidden text-slate-900 text-xl focus:outline-none ml-2 active:scale-95 transition-transform">
-                <i class="fa-solid fa-bars"></i>
+            <button onclick="toggleMobileMenu()" class="lg:hidden text-slate-900 text-2xl focus:outline-none p-1">
+                <i class="fa-solid fa-bars" id="menuIcon"></i>
             </button>
         </div>
     </div>
+
+    <div id="mobileMenu" class="hidden lg:hidden bg-white border-t border-gray-100 absolute w-full left-0 top-full shadow-xl transition-all duration-300">
+        <div class="flex flex-col p-6 space-y-4 font-medium text-slate-700">
+            <a href="{{ url_for('main.index') }}" class="hover:text-red-600 py-2 border-b border-gray-50">Home</a>
+            <a href="{{ url_for('main.mentorship') }}" class="hover:text-red-600 py-2 border-b border-gray-50">Programs (EICP)</a>
+            <a href="{{ url_for('main.stories') }}" class="hover:text-red-600 py-2 border-b border-gray-50">Stories</a>
+            <a href="{{ url_for('main.events') }}" class="hover:text-red-600 py-2 border-b border-gray-50">Events</a>
+            <a href="{{ url_for('main.about') }}" class="hover:text-red-600 py-2 border-b border-gray-50">About</a>
+            <a href="{{ url_for('main.google_login', next=request.args.get('next')) }}" class="text-red-600 font-bold py-2">Sign In</a>
+        </div>
+    </div>
 </nav>
+
+<script>
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const icon = document.getElementById('menuIcon');
+        
+        if (menu.classList.contains('hidden')) {
+            // Open Menu
+            menu.classList.remove('hidden');
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-xmark');
+        } else {
+            // Close Menu
+            menu.classList.add('hidden');
+            icon.classList.remove('fa-xmark');
+            icon.classList.add('fa-bars');
+        }
+    }
+</script>

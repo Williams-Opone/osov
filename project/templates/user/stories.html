@@ -2,34 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stories of Resilience | Our Story Our Voice</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;700;800&family=Merriweather:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
+
     <style>
         body { font-family: 'Inter', sans-serif; }
         h1, h2, h3 { font-family: 'Poppins', sans-serif; }
         .serif { font-family: 'Merriweather', serif; } 
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased">
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen overflow-x-hidden">
 
     {% include 'user/header.html' %}
 
-    <div class="bg-white border-b border-gray-100 pt-32 pb-12">
-        <div class="container mx-auto px-6 text-center">
-            <span class="text-red-500 font-bold tracking-widest uppercase text-xs mb-2 block">The Journal</span>
-            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Voices of Our Community</h1>
-            <p class="text-slate-500 max-w-2xl mx-auto text-lg">
+    <div class="bg-white border-b border-gray-100 pt-28 md:pt-36 pb-10 md:pb-16">
+        <div class="container mx-auto px-4 md:px-6 text-center">
+            <span class="text-red-500 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 block">The Journal</span>
+            <h1 class="text-3xl md:text-5xl font-bold text-slate-900 mb-4">Voices of Our Community</h1>
+            <p class="text-slate-500 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
                 Real stories of migration, adaptation, and triumph from the people of "Our Story Our Voice."
             </p>
             
-            <div class="flex flex-wrap justify-center gap-2 mt-8">
+            <div class="flex flex-wrap justify-center gap-2 md:gap-3 mt-8">
                 
                 <a href="{{ url_for('main.stories') }}" 
-                   class="px-5 py-2 rounded-full text-sm font-medium transition
+                   class="px-4 py-2 md:px-5 md:py-2.5 rounded-full text-xs md:text-sm font-medium transition shadow-sm
                    {% if not current_category or current_category == 'All Stories' %}
-                       bg-slate-900 text-white hover:bg-slate-800
+                       bg-slate-900 text-white hover:bg-slate-800 shadow-slate-200
                    {% else %}
                        bg-white border border-gray-200 text-slate-600 hover:border-red-500 hover:text-red-600
                    {% endif %}">
@@ -38,9 +42,9 @@
 
                 {% for cat in categories %}
                 <a href="{{ url_for('main.stories', category=cat) }}" 
-                   class="px-5 py-2 rounded-full text-sm font-medium transition
+                   class="px-4 py-2 md:px-5 md:py-2.5 rounded-full text-xs md:text-sm font-medium transition shadow-sm
                    {% if current_category == cat %}
-                       bg-red-600 text-white border border-red-600
+                       bg-red-600 text-white border border-red-600 shadow-red-100
                    {% else %}
                        bg-white border border-gray-200 text-slate-600 hover:border-red-500 hover:text-red-600
                    {% endif %}">
@@ -52,61 +56,64 @@
         </div>
     </div>
 
-    <main class="container mx-auto px-6 py-12">
+    <main class="flex-grow container mx-auto px-4 md:px-6 py-12">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {% for story in stories %}
-            <article class="flex flex-col group h-full">
-                <a href="{{ url_for('main.story_detail', slug=story.slug) }}" class="block rounded-2xl overflow-hidden mb-4 relative h-64 shadow-md group-hover:shadow-xl transition">
-                    <img src="{{ story.image_url }}" alt="{{ story.title }}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
-                    <span class="absolute bottom-4 left-4 bg-white/90 backdrop-blur text-slate-900 text-xs font-bold px-3 py-1 rounded">
+            <article class="flex flex-col group h-full bg-white md:bg-transparent rounded-2xl md:rounded-none shadow-sm md:shadow-none overflow-hidden md:overflow-visible">
+                
+                <a href="{{ url_for('main.story_detail', slug=story.slug) }}" class="block rounded-none md:rounded-2xl overflow-hidden mb-0 md:mb-4 relative h-56 md:h-64 shadow-none md:shadow-md group-hover:shadow-xl transition transform md:group-hover:-translate-y-1">
+                    <img src="{{ story.image_url }}" alt="{{ story.title }}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <span class="absolute bottom-3 left-3 md:bottom-4 md:left-4 bg-white/95 backdrop-blur text-slate-900 text-[10px] md:text-xs font-bold px-2.5 py-1 rounded shadow-sm border border-gray-100">
                         {{ story.category }}
                     </span>
                 </a>
 
-                <div class="flex flex-col flex-grow">
-                    <div class="text-xs text-slate-500 mb-2 flex items-center gap-2">
-                        <i class="fa-regular fa-calendar"></i> {{ story.created_at.strftime('%B %d, %Y') }}
+                <div class="flex flex-col flex-grow p-5 md:p-0">
+                    <div class="text-[10px] md:text-xs text-slate-500 mb-2 flex items-center gap-2 uppercase tracking-wide font-medium">
+                        <i class="fa-regular fa-calendar text-red-400"></i> {{ story.created_at.strftime('%B %d, %Y') }}
                     </div>
                     
                     <a href="{{ url_for('main.story_detail', slug=story.slug) }}">
-                        <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-red-600 transition">
+                        <h3 class="text-lg md:text-xl font-bold text-slate-900 mb-2 leading-snug group-hover:text-red-600 transition line-clamp-2">
                             {{ story.title }}
                         </h3>
                     </a>
                     
-                    <p class="text-slate-600 text-sm mb-4 line-clamp-3 serif flex-grow">
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3 serif flex-grow leading-relaxed">
                         {{ story.summary }}
                     </p>
 
                     <div class="flex items-center justify-between border-t border-gray-100 pt-4 mt-auto">
                         <div class="flex items-center gap-2">
-                            <div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">
+                            <div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600 shrink-0">
                                 {{ story.author.first_name[0] }}
                             </div>
                             <span class="text-xs text-slate-500 font-medium">{{ story.author.first_name }}</span>
                         </div>
-                        <a href="{{ url_for('main.story_detail', slug=story.slug) }}" class="text-xs font-bold text-red-600 hover:text-red-800 uppercase tracking-wide flex items-center gap-1">
-                            Read Story <i class="fa-solid fa-arrow-right"></i>
+                        <a href="{{ url_for('main.story_detail', slug=story.slug) }}" class="text-xs font-bold text-red-600 hover:text-red-800 uppercase tracking-wide flex items-center gap-1 group/link">
+                            Read Story <i class="fa-solid fa-arrow-right transition-transform group-hover/link:translate-x-1"></i>
                         </a>
                     </div>
                 </div>
             </article>
             {% else %}
                 <div class="col-span-full text-center py-20">
-                    <div class="inline-block p-6 rounded-full bg-slate-50 mb-4">
+                    <div class="inline-block p-6 rounded-full bg-white shadow-sm border border-gray-100 mb-4">
                         <i class="fa-solid fa-feather text-4xl text-slate-300"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900">No stories found</h3>
-                    <p class="text-slate-500">There are no stories in this category yet.</p>
-                    <a href="{{ url_for('main.stories') }}" class="mt-4 inline-block text-red-600 font-bold hover:underline">View all stories</a>
+                    <p class="text-slate-500 text-sm mt-1">There are no stories in this category yet.</p>
+                    <a href="{{ url_for('main.stories') }}" class="mt-6 inline-flex items-center text-red-600 font-bold hover:underline text-sm">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> View all stories
+                    </a>
                 </div>
             {% endfor %}
         </div>
 
         {% if stories|length >= 9 %}
-        <div class="text-center mt-16">
-            <button class="px-8 py-3 bg-white border border-gray-300 text-slate-700 font-bold rounded-full hover:bg-slate-50 hover:text-slate-900 transition shadow-sm">
+        <div class="text-center mt-12 md:mt-16">
+            <button class="px-8 py-3 bg-white border border-gray-300 text-slate-700 text-sm font-bold rounded-full hover:bg-slate-50 hover:text-slate-900 transition shadow-sm hover:shadow-md">
                 Load More Stories
             </button>
         </div>

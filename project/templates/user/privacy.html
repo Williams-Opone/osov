@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,37 +14,34 @@
         body { font-family: 'Inter', sans-serif; }
         h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; }
         
-        /* Smooth scrolling */
-        html { scroll-behavior: smooth; }
-        
-        /* Sidebar Scrollbar styling */
+        /* Custom Scrollbar for Sidebar */
         .sidebar-scroll::-webkit-scrollbar { width: 4px; }
         .sidebar-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
         .sidebar-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 text-gray-800 antialiased overflow-x-hidden">
 
     {% include 'user/header.html' %}
 
-    <section class="bg-slate-900 text-white pt-32 pb-20">
-        <div class="container mx-auto px-6 text-center">
-            <span class="inline-block py-1 px-3 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold tracking-wider mb-4">
+    <section class="bg-slate-900 text-white pt-28 md:pt-32 pb-16 md:pb-20">
+        <div class="container mx-auto px-4 md:px-6 text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-[10px] md:text-xs font-semibold tracking-wider mb-4">
                 DATA PROTECTION
             </span>
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Privacy Policy</h1>
-            <p class="text-slate-400 max-w-2xl mx-auto text-lg">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4">Privacy Policy</h1>
+            <p class="text-slate-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
                 We are committed to protecting your personal information and your right to privacy.
             </p>
-            <p class="mt-4 text-sm text-slate-500">Last Updated: <span id="current-date"></span></p>
+            <p class="mt-4 text-xs md:text-sm text-slate-500">Last Updated: <span id="current-date"></span></p>
         </div>
     </section>
 
-    <div class="container mx-auto px-6 py-16">
-        <div class="flex flex-col lg:flex-row gap-12">
+    <div class="container mx-auto px-4 md:px-6 py-12 md:py-16">
+        <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
             
             <div class="hidden lg:block w-1/4">
-                <div class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto sidebar-scroll pr-4">
+                <div class="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto sidebar-scroll pr-4">
                     <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Contents</h3>
                     <nav class="space-y-1">
                         <a href="#intro" class="block py-2 px-3 rounded-lg text-sm text-gray-600 hover:bg-red-50 hover:text-red-600 transition">1. Introduction</a>
@@ -61,31 +58,31 @@
             </div>
 
             <div class="w-full lg:w-3/4">
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12 space-y-12">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-12 space-y-10 md:space-y-12">
                     
-                    <section id="intro" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">1</span>
+                    <section id="intro" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">1</span>
                             Introduction
                         </h2>
-                        <p class="text-gray-600 leading-relaxed mb-4">
+                        <p class="text-gray-600 leading-relaxed mb-4 text-sm md:text-base">
                             Welcome to <strong>Our Story Our Voice</strong>. If you have any questions or concerns about our policy or our practices with regards to your personal information, please contact us.
                         </p>
-                        <p class="text-gray-600 leading-relaxed">
+                        <p class="text-gray-600 leading-relaxed text-sm md:text-base">
                             This Privacy Policy governs the privacy policies and practices of our website and application. Please read our privacy policy carefully as it will help you make informed decisions about sharing your personal information with us.
                         </p>
                     </section>
 
                     <div class="h-px bg-gray-100"></div>
 
-                    <section id="collect" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">2</span>
+                    <section id="collect" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">2</span>
                             Information We Collect
                         </h2>
-                        <p class="text-gray-600 mb-6">We collect personal information that you voluntarily provide to us when you register on the website.</p>
+                        <p class="text-gray-600 mb-6 text-sm md:text-base">We collect personal information that you voluntarily provide to us when you register on the website.</p>
                         
-                        <div class="grid md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
                                 <div class="text-blue-600 mb-3 text-xl"><i class="fa-regular fa-id-card"></i></div>
                                 <h3 class="font-bold text-gray-900 mb-2">A. Personal Information</h3>
@@ -109,26 +106,26 @@
 
                     <div class="h-px bg-gray-100"></div>
 
-                    <section id="usage" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">3</span>
+                    <section id="usage" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">3</span>
                             How We Use Your Information
                         </h2>
-                        <ul class="space-y-4 text-gray-600">
+                        <ul class="space-y-4 text-gray-600 text-sm md:text-base">
                             <li class="flex items-start">
-                                <i class="fa-solid fa-check text-red-500 mt-1 mr-3"></i>
+                                <i class="fa-solid fa-check text-red-500 mt-1 mr-3 shrink-0"></i>
                                 <div><strong>Account Management:</strong> To facilitate account creation and logon process (including Google OAuth).</div>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa-solid fa-check text-red-500 mt-1 mr-3"></i>
+                                <i class="fa-solid fa-check text-red-500 mt-1 mr-3 shrink-0"></i>
                                 <div><strong>Donations:</strong> To manage your contributions and provide receipts.</div>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa-solid fa-check text-red-500 mt-1 mr-3"></i>
+                                <i class="fa-solid fa-check text-red-500 mt-1 mr-3 shrink-0"></i>
                                 <div><strong>Stories & Testimonials:</strong> With your consent, we may post your story along with your name.</div>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa-solid fa-check text-red-500 mt-1 mr-3"></i>
+                                <i class="fa-solid fa-check text-red-500 mt-1 mr-3 shrink-0"></i>
                                 <div><strong>Communication:</strong> To send administrative information about terms, policies, or service updates.</div>
                             </li>
                         </ul>
@@ -136,40 +133,40 @@
 
                     <div class="h-px bg-gray-100"></div>
 
-                    <section id="sharing" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">4</span>
+                    <section id="sharing" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">4</span>
                             Sharing Your Information
                         </h2>
-                        <p class="text-gray-600 mb-4">We only share information with your consent, to comply with laws, or to fulfill business obligations.</p>
+                        <p class="text-gray-600 mb-4 text-sm md:text-base">We only share information with your consent, to comply with laws, or to fulfill business obligations.</p>
                         <div class="space-y-3">
                             <div class="p-4 bg-gray-50 rounded-lg">
-                                <strong class="text-gray-900 block mb-1">Service Providers</strong>
-                                <span class="text-gray-600 text-sm">We share data with vendors who perform services for us (e.g., <strong>Google</strong> for auth, <strong>Stripe</strong> for payments).</span>
+                                <strong class="text-gray-900 block mb-1 text-sm md:text-base">Service Providers</strong>
+                                <span class="text-gray-600 text-xs md:text-sm">We share data with vendors who perform services for us (e.g., <strong>Google</strong> for auth, <strong>Stripe</strong> for payments).</span>
                             </div>
                             <div class="p-4 bg-gray-50 rounded-lg">
-                                <strong class="text-gray-900 block mb-1">Legal Obligations</strong>
-                                <span class="text-gray-600 text-sm">We may disclose info where legally required to comply with applicable law or judicial proceedings.</span>
+                                <strong class="text-gray-900 block mb-1 text-sm md:text-base">Legal Obligations</strong>
+                                <span class="text-gray-600 text-xs md:text-sm">We may disclose info where legally required to comply with applicable law or judicial proceedings.</span>
                             </div>
                         </div>
                     </section>
 
                     <div class="h-px bg-gray-100"></div>
 
-                    <section id="oauth" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">5</span>
+                    <section id="oauth" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">5</span>
                             Third-Party Logins (Google)
                         </h2>
-                        <div class="flex items-start gap-4">
+                        <div class="flex flex-col sm:flex-row items-start gap-4">
                             <div class="flex-shrink-0 w-12 h-12 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-sm">
                                 <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google" class="w-6 h-6">
                             </div>
                             <div>
-                                <p class="text-gray-600 mb-3">
+                                <p class="text-gray-600 mb-3 text-sm md:text-base">
                                     Our website allows you to register and log in using your Google account. If you choose to do this, we receive certain profile information (Name, Email, Profile Picture).
                                 </p>
-                                <p class="text-gray-600 text-sm">
+                                <p class="text-gray-600 text-xs md:text-sm">
                                     We do not control other uses of your personal information by Google. We recommend reviewing <a href="#" class="text-red-600 underline">Google's Privacy Policy</a>.
                                 </p>
                             </div>
@@ -178,73 +175,62 @@
 
                     <div class="h-px bg-gray-100"></div>
 
-                    <section id="security" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">6</span>
+                    <section id="security" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">6</span>
                             Security of Your Information
                         </h2>
-                        <p class="text-gray-600">
+                        <p class="text-gray-600 text-sm md:text-base">
                             We use administrative, technical, and physical security measures (such as SSL encryption) to protect your personal information. However, please be aware that no security measures are perfect or impenetrable.
                         </p>
                     </section>
 
                     <div class="h-px bg-gray-100"></div>
 
-                    <section id="rights" class="scroll-mt-28 bg-red-50 p-6 rounded-xl border border-red-100">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center text-red-800">
+                    <section id="rights" class="scroll-mt-28 md:scroll-mt-32 bg-red-50 p-6 rounded-xl border border-red-100">
+                        <h2 class="text-lg md:text-xl font-bold text-gray-900 mb-4 flex items-center text-red-800">
                             <i class="fa-solid fa-scale-balanced mr-3"></i>
-                            7. Your Privacy Rights (Compliance with Canadian Privacy Laws)
+                            7. Your Privacy Rights (NDPR)
                         </h2>
-                        <p class="text-gray-700 mb-4 text-sm">
-                            We are committed to maintaining the accuracy, confidentiality, and security of your personally identifiable information ("Personal Information"). As part of this commitment, our privacy policy is governed by the <strong>Personal Information Protection and Electronic Documents Act (PIPEDA)</strong> and Alberta's <strong>Personal Information Protection Act (PIPA)</strong>.
+                        <p class="text-gray-700 mb-4 text-sm leading-relaxed">
+                            We are committed to maintaining the accuracy, confidentiality, and security of your personally identifiable information. Our privacy policy is governed by applicable Canadian and International privacy laws.
                         </p>
-                        <ul class="grid sm:grid-cols-2 gap-3">
-                            <li class="bg-white p-3 rounded border border-red-100 text-sm text-gray-700">
-                                Request access to your personal information.
-                            </li>
-                        
-                            <li class="bg-white p-3 rounded border border-red-100 text-sm text-gray-700">
-                                Request correction of inaccurate data.
-                            </li>
-                        
-                            <li class="bg-white p-3 rounded border border-red-100 text-sm text-gray-700">
-                                Withdraw consent for data use.
-                            </li>
-                        
-                            <li class="bg-white p-3 rounded border border-red-100 text-sm text-gray-700">
-                                File a complaint regarding privacy practices.
-                            </li>
+                        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <li class="bg-white p-3 rounded border border-red-100 text-xs md:text-sm text-gray-700">Request access to your personal information.</li>
+                            <li class="bg-white p-3 rounded border border-red-100 text-xs md:text-sm text-gray-700">Request correction of inaccurate data.</li>
+                            <li class="bg-white p-3 rounded border border-red-100 text-xs md:text-sm text-gray-700">Withdraw consent for data use.</li>
+                            <li class="bg-white p-3 rounded border border-red-100 text-xs md:text-sm text-gray-700">File a complaint regarding privacy practices.</li>
                         </ul>
                     </section>
 
                     <div class="h-px bg-gray-100"></div>
 
-                    <section id="updates" class="scroll-mt-28">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">8</span>
+                    <section id="updates" class="scroll-mt-28 md:scroll-mt-32">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="bg-slate-100 text-slate-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3 shrink-0">8</span>
                             Policy Updates
                         </h2>
-                        <p class="text-gray-600">
+                        <p class="text-gray-600 text-sm md:text-base">
                             We may update this privacy policy from time to time. The updated version will be indicated by an updated "Revised" date.
                         </p>
                     </section>
 
-                    <section id="contact" class="scroll-mt-28 bg-gray-900 text-white p-8 rounded-xl">
-                        <h2 class="text-2xl font-bold mb-4">9. Contact Us</h2>
-                        <p class="text-gray-400 mb-6">If you have questions or comments about this policy, please contact us:</p>
+                    <section id="contact" class="scroll-mt-28 md:scroll-mt-32 bg-gray-900 text-white p-6 md:p-8 rounded-xl">
+                        <h2 class="text-xl md:text-2xl font-bold mb-4">9. Contact Us</h2>
+                        <p class="text-gray-400 mb-6 text-sm md:text-base">If you have questions or comments about this policy, please contact us:</p>
                         
-                        <div class="space-y-4">
+                        <div class="space-y-4 text-sm md:text-base">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-red-500">
+                                <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-red-500 shrink-0">
                                     <i class="fa-regular fa-envelope"></i>
                                 </div>
-                                <span>privacy@ourstoryourvoice.org</span>
+                                <a href="mailto:privacy@ourstoryourvoice.org" class="hover:text-red-400 transition">privacy@ourstoryourvoice.org</a>
                             </div>
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-red-500">
+                                <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-red-500 shrink-0">
                                     <i class="fa-solid fa-location-dot"></i>
                                 </div>
-                                <span>Calgary,Alberta,Canada</span>
+                                <span>Calgary, Alberta, Canada</span>
                             </div>
                         </div>
                     </section>

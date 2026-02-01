@@ -26,6 +26,7 @@
             bottom: -10px;
             left: 0;
             transform: rotate(180deg);
+            z-index: 10;
         }
         
         /* Smooth Fade In */
@@ -40,40 +41,42 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 text-gray-800 overflow-x-hidden">
 
     {% include 'user/header.html' %}
 
-    <section class="min-h-screen pt-32 pb-20 flex items-center justify-center relative overflow-hidden">
+    <section class="min-h-screen pt-28 md:pt-32 pb-20 flex items-center justify-center relative overflow-hidden">
         
         <div class="absolute inset-0 bg-gradient-to-br from-red-50 to-blue-50 opacity-50"></div>
         <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
 
-        <div class="container mx-auto px-6 relative z-10">
+        <div class="container mx-auto px-4 md:px-6 relative z-10">
             <div class="max-w-lg mx-auto animate-fade-up">
                 
                 <div class="bg-white rounded-3xl shadow-2xl overflow-hidden relative border border-gray-100">
                     
-                    <div class="bg-slate-900 text-white p-8 text-center relative overflow-hidden">
+                    <div class="bg-slate-900 text-white p-6 md:p-8 text-center relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-full h-full bg-red-600/10"></div>
                         
-                        <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-500/30 relative z-10">
-                            <i class="fa-solid fa-check text-4xl text-white"></i>
+                        <div class="w-16 h-16 md:w-20 md:h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-lg shadow-green-500/30 relative z-10">
+                            <i class="fa-solid fa-check text-3xl md:text-4xl text-white"></i>
                         </div>
                         
-                        <h1 class="text-3xl font-bold mb-2">Donation Successful!</h1>
-                        <p class="text-gray-400">Thank you for supporting our mission.</p>
+                        <h1 class="text-2xl md:text-3xl font-bold mb-2">Donation Successful!</h1>
+                        <p class="text-gray-400 text-sm md:text-base">Thank you for supporting our mission.</p>
                     </div>
 
-                    <div class="p-8 relative">
+                    <div class="p-6 md:p-8 relative">
                         <div class="space-y-6">
                             
                             <div class="text-center pb-6 border-b border-gray-100 border-dashed">
-                                <p class="text-sm text-gray-500 uppercase tracking-widest font-semibold mb-1">Total Contribution</p>
-                                <h2 class="text-5xl font-bold text-slate-900">${{ amount }} <span class="text-lg text-gray-400 font-medium">CAD</span></h2>
+                                <p class="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-1">Total Contribution</p>
+                                <h2 class="text-4xl md:text-5xl font-bold text-slate-900 break-words">
+                                    ${{ amount }} <span class="text-base md:text-lg text-gray-400 font-medium align-middle">CAD</span>
+                                </h2>
                             </div>
 
-                            <div class="bg-gray-50 rounded-xl p-5 space-y-3 text-sm">
+                            <div class="bg-gray-50 rounded-xl p-4 md:p-5 space-y-3 text-sm">
                                 <div class="flex justify-between">
                                     <span class="text-gray-500">Status</span>
                                     <span class="font-bold text-green-600 flex items-center gap-1"><i class="fa-solid fa-circle text-[8px]"></i> Completed</span>
@@ -84,17 +87,17 @@
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-gray-500">Reference ID</span>
-                                    <span class="font-mono text-gray-600 truncate max-w-[150px]">{{ request.args.get('session_id', 'Unknown')[-8:] | upper }}</span>
+                                    <span class="font-mono text-gray-600 truncate max-w-[120px] md:max-w-[150px]">{{ request.args.get('session_id', 'Unknown')[-8:] | upper }}</span>
                                 </div>
                             </div>
 
                             <div class="space-y-3 pt-2">
-                                <a href="{{ url_for('main.donate') }}" class="block w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl text-center transition shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                                <a href="{{ url_for('main.donate') }}" class="block w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 md:py-4 rounded-xl text-center transition shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-sm md:text-base">
                                     Return to Donate Page
                                 </a>
 
                                 {% if current_user.is_authenticated %}
-                                    <a href="{{ url_for('main.donation_history') }}" class="block w-full bg-white border-2 border-slate-200 hover:border-slate-900 text-slate-700 hover:text-slate-900 font-bold py-4 rounded-xl text-center transition">
+                                    <a href="{{ url_for('main.donation_history') }}" class="block w-full bg-white border-2 border-slate-200 hover:border-slate-900 text-slate-700 hover:text-slate-900 font-bold py-3.5 md:py-4 rounded-xl text-center transition text-sm md:text-base">
                                         View Donation History
                                     </a>
                                 {% else %}
@@ -111,8 +114,8 @@
                     </div>
                 </div>
 
-                <p class="text-center text-gray-400 text-xs mt-8">
-                    An automated receipt has been sent to your email. <br>
+                <p class="text-center text-gray-400 text-xs mt-8 px-4">
+                    An automated receipt has been sent to your email. <br class="hidden sm:block">
                     Questions? Contact <a href="mailto:info@ourstoryourvoice.org" class="underline hover:text-red-500">info@ourstoryourvoice.org</a>
                 </p>
 

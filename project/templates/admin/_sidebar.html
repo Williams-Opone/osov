@@ -1,10 +1,15 @@
-<aside class="w-64 bg-gray-900 text-white flex flex-col fixed inset-y-0 left-0 z-30 shadow-xl">
+<div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden transition-opacity"></div>
+
+<aside id="sidebar" class="w-64 bg-gray-900 text-white flex flex-col fixed inset-y-0 left-0 z-30 shadow-xl transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
     
-    <div class="h-16 flex items-center px-6 bg-gray-900 border-b border-gray-800 shrink-0">
+    <div class="h-16 flex items-center justify-between px-6 bg-gray-900 border-b border-gray-800 shrink-0">
         <div class="font-bold text-xl tracking-tight flex items-center gap-2">
             <div class="w-8 h-8 bg-red-600 rounded flex items-center justify-center text-xs"><i class="fa-solid fa-microphone-lines"></i></div>
             <span>OSOV <span class="text-red-500">Admin</span></span>
         </div>
+        <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white">
+            <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
     </div>
 
     <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto sidebar-scroll">
@@ -44,8 +49,8 @@
         </a>
 
         <a href="{{url_for('admin.approvals')}}" 
-           class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition group {{ 'bg-red-600 text-white shadow-md' if active_page == 'campaigns' else 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
-            <i class="fa-solid fa-check w-5 text-center {{ '' if active_page == 'campaigns' else 'group-hover:text-red-500 transition' }}"></i>
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition group {{ 'bg-red-600 text-white shadow-md' if active_page == 'approvals' else 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+            <i class="fa-solid fa-check w-5 text-center {{ '' if active_page == 'approvals' else 'group-hover:text-red-500 transition' }}"></i>
             <span class="text-sm font-medium">Application Management</span>
         </a>
 

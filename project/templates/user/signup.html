@@ -6,7 +6,6 @@
     <title>Join the Community - Our Story Our Voice</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
@@ -16,19 +15,21 @@
         h1, h2, h3 { font-family: 'Poppins', sans-serif; }
     </style>
 </head>
-<body class="h-screen bg-gray-50">
+<body class="bg-gray-50 flex flex-col min-h-screen antialiased">
 
-    <div class="min-h-screen flex">
+    {% include 'user/header.html' %}
+
+    <div class="flex-grow flex flex-col lg:flex-row pt-20">
         
-        <div class="hidden lg:flex w-1/2 bg-gray-900 relative items-center justify-center overflow-hidden">
+        <div class="hidden lg:flex w-1/2 bg-gray-900 relative items-center justify-center overflow-hidden min-h-[600px]">
             <img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?q=80&w=2669&auto=format&fit=crop" alt="Community gathering" class="absolute inset-0 w-full h-full object-cover opacity-40">
             
             <div class="relative z-10 p-12 text-white max-w-lg">
-                <div class="mb-6 text-red-500 text-4xl">
+                <div class="mb-6 text-red-500 text-5xl">
                     <i class="fa-solid fa-quote-left"></i>
                 </div>
                 <h2 class="text-4xl font-bold mb-6 leading-tight">"Your story is the missing piece of Canada's mosaic."</h2>
-                <p class="text-lg text-gray-300 mb-8">
+                <p class="text-lg text-gray-300 mb-8 leading-relaxed">
                     Join a growing community dedicated to amplifying diverse voices. Whether you are here to speak, listen, or advocate, you belong here.
                 </p>
                 
@@ -38,97 +39,88 @@
                         <img class="w-10 h-10 rounded-full border-2 border-gray-900" src="https://i.pravatar.cc/100?img=5" alt="User">
                         <img class="w-10 h-10 rounded-full border-2 border-gray-900" src="https://i.pravatar.cc/100?img=8" alt="User">
                     </div>
-                    <span>Join to become a member</span>
+                    <span>Join 1,000+ members</span>
                 </div>
             </div>
         </div>
 
-        <div class="w-full lg:w-1/2 flex items-center justify-center p-8 overflow-y-auto">
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-12 bg-white">
             <div class="w-full max-w-md">
                 
                 <div class="mb-8 text-center lg:text-left">
                     <h1 class="text-3xl font-bold text-gray-900">Create an Account</h1>
-                    <p class="text-gray-500 mt-2">Become a member of <span class="font-semibold text-red-600">Our Story Our Voice</span>.</p>
+                    <p class="text-gray-500 mt-2 text-sm">Become a member of <span class="font-semibold text-red-600">Our Story Our Voice</span>.</p>
                 </div>
 
                 <div class="mb-6">
                     {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <div class="mb-6 space-y-2">
-      {% for category, message in messages %}
-        <div class="p-4 rounded-lg border-l-4 
-            {% if category == 'error' %}
-                bg-red-50 border-red-500 text-red-700
-            {% else %}
-                bg-green-50 border-green-500 text-green-700
-            {% endif %}">
-            
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    {% if category == 'error' %}
-                        <i class="fa-solid fa-circle-exclamation"></i>
-                    {% else %}
-                        <i class="fa-solid fa-circle-check"></i>
-                    {% endif %}
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium">{{ message }}</p>
-                </div>
-            </div>
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-{% endwith %}
-                    <a href="{{ url_for('main.google_login', next=request.args.get('next')) }}" class="w-full flex justify-center items-center gap-2 bg-white border border-gray-300 rounded-lg py-2.5 text-sm font-medium hover:bg-gray-50 transition">
-                        <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google logo" class="w-5 h-5">
-                        Sign up with Google
-                    </a>
+                        {% if messages %}
+                            <div class="space-y-3">
+                            {% for category, message in messages %}
+                                <div class="p-4 rounded-lg border-l-4 flex items-center gap-3 transition-opacity duration-500 flash-message
+                                    {% if category == 'error' %} bg-red-50 border-red-500 text-red-700
+                                    {% else %} bg-green-50 border-green-500 text-green-700 {% endif %}">
+                                    
+                                    <div class="flex-shrink-0">
+                                        {% if category == 'error' %}
+                                            <i class="fa-solid fa-circle-exclamation"></i>
+                                        {% else %}
+                                            <i class="fa-solid fa-circle-check"></i>
+                                        {% endif %}
+                                    </div>
+                                    <p class="text-sm font-medium">{{ message }}</p>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
                 </div>
 
-                <div class="relative mb-6">
+                <a href="{{ url_for('main.google_login', next=request.args.get('next')) }}" class="w-full flex justify-center items-center gap-3 bg-white border border-gray-300 rounded-xl py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition shadow-sm">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5">
+                    Sign up with Google
+                </a>
+
+                <div class="relative my-8">
                     <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
-                    <div class="relative flex justify-center text-sm"><span class="px-2 bg-gray-50 text-gray-500">Or continue with email</span></div>
+                    <div class="relative flex justify-center text-xs uppercase tracking-wide font-bold"><span class="px-2 bg-white text-gray-400">Or continue with email</span></div>
                 </div>
 
                 <form class="space-y-5" method="post" action="">
                     <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                    
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                            <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" placeholder="John" name="fname">
+                            <label class="block text-sm font-bold text-gray-700 mb-1.5">First Name</label>
+                            <input type="text" name="fname" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" placeholder="John">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                            <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" placeholder="Doe" name="lname">
+                            <label class="block text-sm font-bold text-gray-700 mb-1.5">Last Name</label>
+                            <input type="text" name="lname" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" placeholder="Doe">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                        <input type="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" placeholder="you@example.com" name="email">
+                        <label class="block text-sm font-bold text-gray-700 mb-1.5">Email Address</label>
+                        <input type="email" name="email" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" placeholder="you@example.com">
                     </div>
 
-                    
-
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-1.5">Password</label>
                         <div class="relative">
-                            <input type="password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" placeholder="••••••••" name="pwd">
-                            
-                            <button type="button" class="toggle-password absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                            <input type="password" name="pwd" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition pr-10" placeholder="••••••••">
+                            <button type="button" class="toggle-password absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
                                 <i class="fa-regular fa-eye"></i>
                             </button>
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">Password must be at least 8 characters, include an uppercase letter, a number, and a special character.</p>
+                        <p class="text-xs text-gray-500 mt-1.5">Must include 1 uppercase, 1 number, and 1 special char.</p>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-1.5">Confirm Password</label>
                         <div class="relative">
-                            <input type="password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" placeholder="••••••••" name="conpwd">
-                            
-                            <button type="button" class="toggle-password absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                            <input type="password" name="conpwd" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition pr-10" placeholder="••••••••">
+                            <button type="button" class="toggle-password absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
                                 <i class="fa-regular fa-eye"></i>
                             </button>
                         </div>
@@ -136,93 +128,80 @@
 
                     <div class="flex items-start">
                         <div class="flex items-center h-5">
-                            <input id="terms" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-red-300 text-red-600">
+                            <input id="terms" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-red-300 text-red-600 cursor-pointer">
                         </div>
-                        <label for="terms" class="ml-3 text-sm text-gray-500">
+                        <label for="terms" class="ml-3 text-sm text-gray-500 cursor-pointer">
                             I agree to the <a href="{{url_for('main.TOS')}}" class="font-medium text-red-600 hover:underline">Terms of Service</a> and <a href="{{url_for('main.privacy')}}" class="font-medium text-red-600 hover:underline">Privacy Policy</a>.
                         </label>
                     </div>
 
-                    <button 
-                    id="submit-btn" 
-                    type="submit" 
-                    disabled 
-                    class="w-full bg-gray-400 text-white font-bold py-3 px-4 rounded-lg shadow-none cursor-not-allowed transition duration-300 transform">
-                    Create Account
-                </button>                </form>
+                    <button id="submit-btn" type="submit" disabled class="w-full bg-gray-300 text-white font-bold py-3.5 px-4 rounded-xl shadow-none cursor-not-allowed transition duration-300 transform mt-6">
+                        Create Account
+                    </button>
+                </form>
 
                 <p class="mt-8 text-center text-sm text-gray-500">
                     Already have an account? 
-                    <a href="{{url_for('main.signin')}}" class="font-semibold text-red-600 hover:underline">Log in</a>
+                    <a href="{{url_for('main.signin')}}" class="font-bold text-red-600 hover:underline">Log in</a>
                 </p>
 
             </div>
         </div>
     </div>
-    
+
+    {% include 'user/footer.html' %}
+
     <script>
-
         // --- 1. PASSWORD TOGGLE LOGIC ---
-    // Select all buttons that wrap the eye icon
-    const toggleButtons = document.querySelectorAll('.toggle-password');
+        const toggleButtons = document.querySelectorAll('.toggle-password');
 
-toggleButtons.forEach(button => {
-    button.addEventListener('click', function() {
-        // Find the input field inside the same container
-        const input = this.previousElementSibling;
-        const icon = this.querySelector('i');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                const icon = this.querySelector('i');
 
-        // Toggle logic
-        if (input.type === "password") {
-            input.type = "text";
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash'); // Change icon to 'crossed out eye'
-        } else {
-            input.type = "password";
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye'); // Change back to normal eye
-        }
-    });
-});
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = "password";
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
 
+        // --- 2. TERMS CHECKBOX LOGIC ---
         const termsCheckbox = document.getElementById('terms');
         const submitButton = document.getElementById('submit-btn');
 
         termsCheckbox.addEventListener('change', function() {
             if (this.checked) {
-                // Enable button
                 submitButton.disabled = false;
-                submitButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                submitButton.classList.add('bg-red-600', 'hover:bg-red-700', 'hover:shadow-xl', 'hover:-translate-y-0.5');
+                submitButton.classList.remove('bg-gray-300', 'cursor-not-allowed', 'shadow-none');
+                submitButton.classList.add('bg-red-600', 'hover:bg-red-700', 'shadow-lg', 'hover:shadow-xl', 'hover:-translate-y-0.5');
             } else {
-                // Disable button
                 submitButton.disabled = true;
-                submitButton.classList.add('bg-gray-400', 'cursor-not-allowed');
-                submitButton.classList.remove('bg-red-600', 'hover:bg-red-700', 'hover:shadow-xl', 'hover:-translate-y-0.5');
+                submitButton.classList.add('bg-gray-300', 'cursor-not-allowed', 'shadow-none');
+                submitButton.classList.remove('bg-red-600', 'hover:bg-red-700', 'shadow-lg', 'hover:shadow-xl', 'hover:-translate-y-0.5');
+            }
+        });
+
+        // --- 3. FLASH MESSAGE FADE OUT ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.flash-message');
+            if (messages.length > 0) {
+                setTimeout(function() {
+                    messages.forEach(function(msg) {
+                        msg.style.opacity = '0';
+                        setTimeout(function() {
+                            msg.remove();
+                        }, 500); 
+                    });
+                }, 3000); 
             }
         });
     </script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // 1. Find all elements with the class 'flash-message'
-        const messages = document.querySelectorAll('.flash-message');
-
-        // 2. Set a timeout to run after 2 seconds (2000ms)
-        if (messages.length > 0) {
-            setTimeout(function() {
-                messages.forEach(function(msg) {
-                    // Start the fade out
-                    msg.style.opacity = '0';
-                    
-                    // Wait for the fade out to finish (0.5s), then remove from DOM
-                    setTimeout(function() {
-                        msg.remove();
-                    }, 500); 
-                });
-            }, 2000); // <-- Time before fading starts
-        }
-    });
-</script>
 </body>
 </html>

@@ -22,24 +22,30 @@
 
         {% include 'admin/_sidebar.html' %}
 
-        <main class="flex-1 ml-64 flex flex-col h-screen overflow-hidden relative">
+        <main class="flex-1 md:ml-64 flex flex-col h-screen overflow-hidden relative w-full">
             
-            <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
-                <h1 class="text-2xl font-bold text-gray-900">Events & Workshops</h1>
+            <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 md:px-8 shrink-0 z-10">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="md:hidden text-gray-500 hover:text-gray-900 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-900 truncate">Events & Workshops</h1>
+                </div>
                 
-                <button onclick="openCreateModal()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition flex items-center gap-2 shadow-sm">
-                    <i class="fa-solid fa-plus"></i> New Event
+                <button onclick="openCreateModal()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 md:px-4 rounded-lg text-sm transition flex items-center gap-2 shadow-sm whitespace-nowrap">
+                    <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">New Event</span>
+                    <span class="sm:hidden">New</span>
                 </button>
             </header>
 
-            <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-8">
+            <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 md:p-8">
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         
                     {% for event in events %}
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col transition hover:shadow-md h-full">
                         
-                        <div class="relative h-48 w-full bg-gray-100 group">
+                        <div class="relative h-48 w-full bg-gray-100 group shrink-0">
                             <img src="{{ event.image_url or 'https://via.placeholder.com/400x200?text=No+Image' }}" 
                                  alt="{{ event.title }}" 
                                  class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
@@ -87,34 +93,32 @@
                                 <div class="flex-1 flex gap-2">
                                     {% if event.status == 'Draft' %}
                                         <button onclick='openEditModal(
-                                                    {{ event.id|tojson }},
-                                                    {{ event.title|tojson }},
-                                                    {{ event.description|tojson }},
-                                                    {{ event.location|tojson }},
-                                                    {{ event.capacity|tojson }}, 
-                                                    {{ event.image_url|tojson }},
-                                                    {{ event.status|tojson }},
-                                                    "{{ event.date_time.strftime("%Y-%m-%dT%H:%M") }}"
-                                                )' 
-                                                class="w-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2.5 rounded-lg transition text-center shadow-sm">
+                                                        {{ event.id|tojson }},
+                                                        {{ event.title|tojson }},
+                                                        {{ event.description|tojson }},
+                                                        {{ event.location|tojson }},
+                                                        {{ event.capacity|tojson }}, 
+                                                        {{ event.image_url|tojson }},
+                                                        {{ event.status|tojson }},
+                                                        "{{ event.date_time.strftime("%Y-%m-%dT%H:%M") }}"
+                                                    )' 
+                                                    class="w-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2.5 rounded-lg transition text-center shadow-sm">
                                             Finish Setup
                                         </button>
                                     {% else %}
                                         <button onclick='openEditModal(
-                                                    {{ event.id|tojson }},
-                                                    {{ event.title|tojson }},
-                                                    {{ event.description|tojson }},
-                                                    {{ event.location|tojson }},
-                                                    {{ event.capacity|tojson }},
-                                                    {{ event.image_url|tojson }},
-                                                    {{ event.status|tojson }},
-                                                    "{{ event.date_time.strftime("%Y-%m-%dT%H:%M") }}"
-                                                )' 
-                                                class="flex-1 bg-white hover:bg-gray-50 text-gray-700 text-xs font-bold py-2 rounded-lg border border-gray-300 transition text-center">
+                                                        {{ event.id|tojson }},
+                                                        {{ event.title|tojson }},
+                                                        {{ event.description|tojson }},
+                                                        {{ event.location|tojson }},
+                                                        {{ event.capacity|tojson }},
+                                                        {{ event.image_url|tojson }},
+                                                        {{ event.status|tojson }},
+                                                        "{{ event.date_time.strftime("%Y-%m-%dT%H:%M") }}"
+                                                    )' 
+                                                    class="flex-1 bg-white hover:bg-gray-50 text-gray-700 text-xs font-bold py-2 rounded-lg border border-gray-300 transition text-center">
                                             Edit
                                         </button>
-                                        
-                                        
                                     {% endif %}
                                 </div>
                             
@@ -131,62 +135,67 @@
                     {% endfor %}
             
                 </div>
-                </div>
+            </div>
         </main>
     </div>
 
-    <div id="offcanvasOverlay" onclick="toggleOffcanvas()" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
-    <div id="eventOffcanvas" class="fixed inset-y-0 right-0 w-96 bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 p-6 overflow-y-auto">
+    <div id="offcanvasOverlay" onclick="toggleOffcanvas()" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40 transition-opacity duration-300"></div>
+    
+    <div id="eventOffcanvas" class="fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 p-6 overflow-y-auto">
         
-        <h2 id="modalTitle" class="text-xl font-bold mb-4">Create New Event</h2>
+        <div class="flex justify-between items-center mb-6">
+            <h2 id="modalTitle" class="text-xl font-bold">Create New Event</h2>
+            <button onclick="toggleOffcanvas()" class="text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+        </div>
         
         <form action="{{ url_for('admin.manage_events') }}" method="POST" enctype="multipart/form-data" id="eventForm">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="event_id" id="event_id">
             <input type="hidden" name="existing_image_url" id="existing_image_url">
-            
             <input type="hidden" name="utc_date_time" id="utc_date_time">
 
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-1">Event Title</label>
-                <input type="text" name="title" id="form_title" required class="w-full border rounded p-2">
+                <input type="text" name="title" id="form_title" required class="w-full border rounded p-2 focus:ring-red-500 focus:border-red-500">
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-1">Date & Time (Your Local Time)</label>
-                <input type="datetime-local" id="form_local_date" required class="w-full border rounded p-2">
+                <input type="datetime-local" id="form_local_date" required class="w-full border rounded p-2 focus:ring-red-500 focus:border-red-500">
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-1">Location</label>
-                <input type="text" name="location" id="form_location" class="w-full border rounded p-2" placeholder="e.g. Zoom Link or Address">
+                <input type="text" name="location" id="form_location" class="w-full border rounded p-2 focus:ring-red-500 focus:border-red-500" placeholder="e.g. Zoom Link or Address">
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-1">Capacity</label>
-                <input type="number" name="capacity" id="form_capacity" class="w-full border rounded p-2">
+                <input type="number" name="capacity" id="form_capacity" class="w-full border rounded p-2 focus:ring-red-500 focus:border-red-500">
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-1">Description</label>
-                <textarea name="description" id="form_description" rows="4" class="w-full border rounded p-2"></textarea>
+                <textarea name="description" id="form_description" rows="4" class="w-full border rounded p-2 focus:ring-red-500 focus:border-red-500"></textarea>
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-1">Event Image</label>
-                <img id="image_preview" src="" class="hidden w-20 h-20 object-cover rounded mb-2 border">
+                <img id="image_preview" src="" class="hidden w-full h-32 object-cover rounded mb-2 border">
                 <input type="file" name="image_file" id="form_image_file" class="w-full text-sm">
             </div>
 
-            <div class="mb-4">
+            <div class="mb-6">
                 <label class="block text-sm font-medium mb-1">Status</label>
-                <select name="status" id="form_status" class="w-full border rounded p-2">
+                <select name="status" id="form_status" class="w-full border rounded p-2 focus:ring-red-500 focus:border-red-500">
                     <option value="Draft">Save as Draft</option>
                     <option value="Published">Publish Now</option>
                 </select>
             </div>
 
-            <button type="button" onclick="submitEventForm()" class="w-full bg-red-600 text-white font-bold py-2 rounded hover:bg-red-700">Save Event</button>
+            <button type="button" onclick="submitEventForm()" class="w-full bg-red-600 text-white font-bold py-3 rounded-lg hover:bg-red-700 transition shadow-sm text-lg">Save Event</button>
         </form>
     </div>
 
@@ -205,42 +214,41 @@
     }
 
     // 2. Open Edit Modal
-    // 2. Open Edit Modal
-function openEditModal(id, title, desc, loc, cap, img, status, utcDate) {
-    document.getElementById('modalTitle').innerText = "Edit Event";
-    
-    // Use empty string if value is null
-    document.getElementById('event_id').value = id;
-    document.getElementById('form_title').value = title || "";
-    document.getElementById('form_description').value = desc || "";
-    document.getElementById('form_location').value = loc || "";
-    document.getElementById('form_capacity').value = cap || ""; 
-    document.getElementById('form_status').value = status;
-    document.getElementById('existing_image_url').value = img || "";
+    function openEditModal(id, title, desc, loc, cap, img, status, utcDate) {
+        document.getElementById('modalTitle').innerText = "Edit Event";
+        
+        // Use empty string if value is null
+        document.getElementById('event_id').value = id;
+        document.getElementById('form_title').value = title || "";
+        document.getElementById('form_description').value = desc || "";
+        document.getElementById('form_location').value = loc || "";
+        document.getElementById('form_capacity').value = cap || ""; 
+        document.getElementById('form_status').value = status;
+        document.getElementById('existing_image_url').value = img || "";
 
-    // Handle Image Preview
-    const preview = document.getElementById('image_preview');
-    const fileInput = document.getElementById('form_image_file');
-    fileInput.value = ""; // Clear previous file input
+        // Handle Image Preview
+        const preview = document.getElementById('image_preview');
+        const fileInput = document.getElementById('form_image_file');
+        fileInput.value = ""; // Clear previous file input
 
-    if (img) {
-        preview.src = img;
-        preview.classList.remove('hidden');
-    } else {
-        preview.classList.add('hidden');
+        if (img) {
+            preview.src = img;
+            preview.classList.remove('hidden');
+        } else {
+            preview.classList.add('hidden');
+        }
+
+        // Handle Date
+        if (utcDate && utcDate !== "None") {
+            const dateObj = new Date(utcDate + 'Z'); 
+            dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset());
+            document.getElementById('form_local_date').value = dateObj.toISOString().slice(0, 16);
+        } else {
+            document.getElementById('form_local_date').value = "";
+        }
+
+        toggleOffcanvas();
     }
-
-    // Handle Date
-    if (utcDate && utcDate !== "None") {
-        const dateObj = new Date(utcDate + 'Z'); 
-        dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset());
-        document.getElementById('form_local_date').value = dateObj.toISOString().slice(0, 16);
-    } else {
-        document.getElementById('form_local_date').value = "";
-    }
-
-    toggleOffcanvas();
-}
 
     // 3. Create Modal
     function openCreateModal() {
@@ -258,9 +266,23 @@ function openEditModal(id, title, desc, loc, cap, img, status, utcDate) {
         if (menu.classList.contains('translate-x-full')) {
             menu.classList.remove('translate-x-full');
             overlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         } else {
             menu.classList.add('translate-x-full');
             overlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // 5. Sidebar Toggle (Mobile)
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        if (sidebar) {
+            sidebar.classList.toggle('-translate-x-full');
+        }
+        if (overlay) {
+            overlay.classList.toggle('hidden');
         }
     }
 </script>

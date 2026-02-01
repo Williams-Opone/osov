@@ -17,54 +17,55 @@
         .fade-out { opacity: 0; transition: opacity 0.5s ease-out; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased">
+<body class="bg-gray-50 text-gray-800 antialiased overflow-x-hidden">
 
     {% include 'user/header.html' %}
     
-    <section class="relative pt-32 pb-20 bg-gray-900 text-white overflow-hidden">
+    <section class="relative pt-32 pb-24 md:pb-32 bg-gray-900 text-white overflow-hidden">
         <div class="absolute inset-0">
             <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2684&auto=format&fit=crop" alt="Diverse team working together" class="w-full h-full object-cover opacity-20">
             <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/90 to-gray-900"></div>
         </div>
 
         <div class="container mx-auto px-6 relative z-10 text-center">
-            <h5 class="text-red-500 font-bold uppercase tracking-widest mb-4">Get In Touch</h5>
+            <h5 class="text-red-500 font-bold uppercase tracking-widest mb-4 text-sm md:text-base">Get In Touch</h5>
             <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">We want to hear <br>your voice.</h1>
-            <p class="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
                 Whether you have a story idea to pitch, a question about our programs, or want to explore a partnership, we are here to connect.
             </p>
         </div>
     </section>
 
-    <section class="py-20 bg-white relative z-10 -mt-10 rounded-t-[40px]">
+    <section class="py-16 md:py-20 bg-white relative z-10 -mt-10 rounded-t-[30px] md:rounded-t-[40px] shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)]">
         <div class="container mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-20">
                 
-                <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition group">
-                    <div class="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
+                <div class="bg-gray-50 p-6 md:p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition group text-center md:text-left">
+                    <div class="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-2xl mb-6 mx-auto md:mx-0 group-hover:scale-110 transition">
                         <i class="fa-regular fa-envelope"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2">General Inquiries</h3>
-                    <p class="text-gray-600 mb-4 h-12">For questions about events, donations, or general information.</p>
-                    <p class="text-red-600 font-bold hover:underline">info@ourstoryourvoice.org</p>
+                    <p class="text-gray-600 mb-4 h-auto md:h-12 text-sm">For questions about events, donations, or general information.</p>
+                    <a href="mailto:info@ourstoryourvoice.org" class="text-red-600 font-bold hover:underline break-all">info@ourstoryourvoice.org</a>
                 </div>
 
-                <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition group">
-                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
+                <div class="bg-gray-50 p-6 md:p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition group text-center md:text-left">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl mb-6 mx-auto md:mx-0 group-hover:scale-110 transition">
                         <i class="fa-solid fa-feather-pointed"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2">Story Pitches</h3>
-                    <p class="text-gray-600 mb-4 h-12">Have an idea? Send a brief summary to our editorial team.</p>
-                    <p class="text-blue-600 font-bold hover:underline">pitches@ourstoryourvoice.org</p>
+                    <p class="text-gray-600 mb-4 h-auto md:h-12 text-sm">Have an idea? Send a brief summary to our editorial team.</p>
+                    <a href="mailto:pitches@ourstoryourvoice.org" class="text-blue-600 font-bold hover:underline break-all">pitches@ourstoryourvoice.org</a>
                 </div>
 
-                 <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition group">
-                    <div class="w-14 h-14 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
+                <div class="bg-gray-50 p-6 md:p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition group text-center md:text-left">
+                    <div class="w-14 h-14 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center text-2xl mb-6 mx-auto md:mx-0 group-hover:scale-110 transition">
                         <i class="fa-solid fa-location-dot"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2">Visit & Connect</h3>
-                    <p class="text-gray-600 mb-4 h-12">123 Community Hub, Toronto, ON. <br>Follow us online.</p><br>
-                    <div class="flex gap-4 text-gray-500">
+                    <p class="text-gray-600 mb-4 h-auto md:h-12 text-sm">123 Community Hub, Toronto, ON. <br>Follow us online.</p>
+                    <div class="flex gap-4 text-gray-500 justify-center md:justify-start">
                         <a href="https://www.facebook.com/profile.php?id=61586080915674&sk=about" target="_blank" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-red-600 hover:text-white transition-all"><i class="fa-brands fa-facebook-f"></i></a>
                         <a href="https://www.tiktok.com/@ourstories_ourvoice?is_from_webapp=1&sender_device=pc" target="_blank" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-red-600 hover:text-white transition-all"><i class="fa-brands fa-tiktok"></i></a>
                         <a href="https://www.instagram.com/ourstory_ourvoice/" target="_blank" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-red-600 hover:text-white transition-all"><i class="fa-brands fa-instagram"></i></a>
@@ -73,15 +74,15 @@
 
             </div>
 
-            <div class="flex flex-col lg:flex-row gap-16 items-start">
+            <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
                 
-                <div class="lg:w-5/12 top-32 lg:sticky">
+                <div class="w-full lg:w-5/12 lg:sticky lg:top-32">
                     <h2 class="text-3xl font-bold mb-6 text-gray-900">Send us a message directly.</h2>
                     <p class="text-gray-600 text-lg leading-relaxed mb-8">
                         Please use the form to categorize your inquiry so we can route it to the right team member quickly. We aim to respond within 2-3 business days.
                     </p>
                     <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 flex items-start gap-4">
-                        <i class="fa-solid fa-circle-info text-blue-500 text-xl mt-1"></i>
+                        <i class="fa-solid fa-circle-info text-blue-500 text-xl mt-1 shrink-0"></i>
                         <div>
                             <h4 class="font-bold text-blue-900 mb-1">Looking to share a story?</h4>
                             <p class="text-sm text-blue-800">Please select "Pitch a Story Idea" from the Topic dropdown below so our editors see it first!</p>
@@ -89,27 +90,27 @@
                     </div>
                 </div>
 
-                <div class="lg:w-7/12 bg-white p-8 md:p-10 rounded-3xl shadow-xl border border-gray-100">
+                <div class="w-full lg:w-7/12 bg-white p-6 md:p-10 rounded-3xl shadow-xl border border-gray-100">
                     <form action="{{ url_for('main.contact_us') }}" method="POST" class="space-y-6">
                         <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
                         
                         <div id="flash-container">
                             {% with messages = get_flashed_messages(with_categories=true) %}
                             {% if messages %}
-                              <div class="mb-8 max-w-4xl mx-auto">
+                              <div class="mb-8">
                                 {% for category, message in messages %}
                                   <div class="flash-message p-4 rounded-xl shadow-sm border-l-4 flex items-center gap-3 transition-opacity duration-500
                                       {% if category == 'error' %} bg-red-50 border-red-500 text-red-700
                                       {% else %} bg-green-50 border-green-500 text-green-700 {% endif %}">
                                       <i class="fa-solid {% if category == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}"></i>
-                                      {{ message }}
+                                      <p class="text-sm font-medium">{{ message }}</p>
                                   </div>
                                 {% endfor %}
                               </div>
                             {% endif %}
                           {% endwith %}
                         </div>
-              
+                      
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">First Name <span class="text-red-500">*</span></label>
@@ -168,41 +169,38 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold text-lg mb-3 text-gray-900"><i class="fa-regular fa-circle-question text-red-500 mr-2"></i> How do I submit a story?</h4>
+                    <h4 class="font-bold text-lg mb-3 text-gray-900 flex items-center gap-2"><i class="fa-regular fa-circle-question text-red-500"></i> How do I submit a story?</h4>
                     <p class="text-gray-600 text-sm leading-relaxed">We are currently accepting story pitches via the contact form above. Select "Pitch a Story Idea" and give us a brief summary. Our editors review pitches weekly.</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold text-lg mb-3 text-gray-900"><i class="fa-regular fa-circle-question text-red-500 mr-2"></i> Are your events free?</h4>
+                    <h4 class="font-bold text-lg mb-3 text-gray-900 flex items-center gap-2"><i class="fa-regular fa-circle-question text-red-500"></i> Are your events free?</h4>
                     <p class="text-gray-600 text-sm leading-relaxed">Most of our community workshops are free or "pay-what-you-can." Larger galas or fundraising events may require purchased tickets.</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold text-lg mb-3 text-gray-900"><i class="fa-regular fa-circle-question text-red-500 mr-2"></i> Can I volunteer remotely?</h4>
+                    <h4 class="font-bold text-lg mb-3 text-gray-900 flex items-center gap-2"><i class="fa-regular fa-circle-question text-red-500"></i> Can I volunteer remotely?</h4>
                     <p class="text-gray-600 text-sm leading-relaxed">Yes! We often need help with social media, translation, and digital content creation. Mention "Volunteering" in your message.</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold text-lg mb-3 text-gray-900"><i class="fa-regular fa-circle-question text-red-500 mr-2"></i> Is my donation tax-deductible?</h4>
+                    <h4 class="font-bold text-lg mb-3 text-gray-900 flex items-center gap-2"><i class="fa-regular fa-circle-question text-red-500"></i> Is my donation tax-deductible?</h4>
                     <p class="text-gray-600 text-sm leading-relaxed">Yes, OSOV is a registered non-profit. We issue official tax receipts for all donations over $20.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    {%include 'user/footer.html'%}
+    {% include 'user/footer.html' %}
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const flashContainer = document.getElementById('flash-container');
             if (flashContainer) {
-                // Wait 2000ms (2 seconds) then start fade
                 setTimeout(() => {
                     const messages = flashContainer.querySelectorAll('.flash-message');
                     messages.forEach(msg => {
-                        msg.classList.add('opacity-0'); // Uses Tailwind opacity class
-                        
-                        // Remove from DOM after transition finishes (500ms)
+                        msg.classList.add('opacity-0');
                         setTimeout(() => msg.remove(), 500);
                     });
-                }, 2000);
+                }, 4000); // 4 seconds delay
             }
         });
     </script>
