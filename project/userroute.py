@@ -12,7 +12,7 @@ import stripe
 from flask_login import login_user, login_required,current_user
 
 from datetime import date, datetime
-from sqlalchemy import desc
+from sqlalchemy import desc,distinct
 from flask_mail import Message
 from . import mail # Import the mail instance we created above
 from itsdangerous import URLSafeTimedSerializer
