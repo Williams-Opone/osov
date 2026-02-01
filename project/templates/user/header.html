@@ -60,7 +60,7 @@
         </div>
         <div class="flex items-center gap-4">
             
-            <a href="/signin" class="hidden md:block text-sm font-semibold relative group transition-colors
+            <a href="{{url_for('signin')}}" class="hidden md:block text-sm font-semibold relative group transition-colors
             {# 1. Text Color Logic #}
             {% if request.endpoint == 'main.signin' %} text-slate-900 {% else %} text-slate-900 hover:text-red-600 {% endif %}">
              

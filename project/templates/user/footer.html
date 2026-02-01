@@ -19,7 +19,7 @@
                     <li><a href="/about" class="flex items-center gap-2 hover:text-red-500 transition-colors duration-200"><i class="fa-solid fa-chevron-right text-xs opacity-50"></i> About Us</a></li>
                     <li><a href="/mentorship" class="flex items-center gap-2 hover:text-red-500 transition-colors duration-200"><i class="fa-solid fa-chevron-right text-xs opacity-50"></i> Mentorship (EICP)</a></li>
                     <li><a href="/stories" class="flex items-center gap-2 hover:text-red-500 transition-colors duration-200"><i class="fa-solid fa-chevron-right text-xs opacity-50"></i> Our Stories</a></li>
-                    <li><a href="/event" class="flex items-center gap-2 hover:text-red-500 transition-colors duration-200"><i class="fa-solid fa-chevron-right text-xs opacity-50"></i> Upcoming Events</a></li>
+                    <li><a href="{{url_for('events')}}" class="flex items-center gap-2 hover:text-red-500 transition-colors duration-200"><i class="fa-solid fa-chevron-right text-xs opacity-50"></i> Upcoming Events</a></li>
                 </ul>
             </div>
 
@@ -57,12 +57,12 @@
                     <a href="{{url_for('main.privacy')}}" class="hover:text-white transition-colors">Privacy</a>
                     <a href="{{url_for('main.TOS')}}" class="hover:text-white transition-colors">Terms</a>
                     
-                    {% if session.get('user_id') %}
-                        <span class="text-slate-700">|</span> 
-                        <a href="{{ url_for('main.logout') }}" class="text-red-500 hover:text-red-400 font-bold transition-colors flex items-center gap-1">
-                            Logout <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                        </a>
-                    {% endif %}
+                {% if current_user.is_authenticated %}
+                    <span class="text-slate-700">|</span> 
+                    <a href="{{ url_for('main.logout') }}" class="text-red-500 hover:text-red-400 font-bold transition-colors flex items-center gap-1">
+                        Logout <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </a>
+                {% endif %}
                 </div>
             </div>
         </div>

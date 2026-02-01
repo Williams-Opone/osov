@@ -65,7 +65,6 @@ def google_callback():
     user_info = token.get('userinfo')
     
     if not user_info:
-        # Handle error if google returns nothing
         return redirect(url_for('main.google_login'))
 
     user_email = user_info['email']
@@ -75,25 +74,17 @@ def google_callback():
 
     if existing_user:
         # --- SCENARIO A: RETURNING USER ---
-        # The user exists. Log them in directly.
-        session['user_id'] = existing_user.id
+        # FIX: Use Flask-Login
+        login_user(existing_user)
         
-        # Optional: Update their profile pic or name if they changed it on Google
-        # existing_user.profile_pic = user_info.get('picture')
-        # db.session.commit()
-        
-        return redirect(url_for('main.index')) # For debugging
+        # Optional: Update profile pic if needed here
         
     else:
         # --- SCENARIO B: NEW USER ---
-        # The user does not exist. Create them.
-        
-        # Safe name extraction (Google usually provides given_name and family_name)
-        # We fallback to manual splitting only if necessary
+        # Safe name extraction
         first_name = user_info.get('given_name')
         last_name = user_info.get('family_name')
         
-        # Fallback if Google keys are missing
         if not first_name:
             name_parts = user_info.get('name', '').split(' ', 1)
             first_name = name_parts[0]
@@ -103,21 +94,20 @@ def google_callback():
             first_name=first_name,
             last_name=last_name,
             email=user_email
-
-            # Add other defaults like 'is_active=True' etc.
+            # password_hash is None because they use Google
         )
 
         db.session.add(new_user)
-        db.session.commit() # This generates the user.id
+        db.session.commit() 
         
-        # Now log them in
-        session['user_id'] = new_user.id
-        print("New user created and logged in.")
+        # FIX: Use Flask-Login
+        login_user(new_user)
+        print("New user created and logged in via Google.")
 
+    # 3. Handle Redirects (Go to 'next' if it exists, otherwise Home)
     next_url = session.pop('next_url', None)
     
-    # If we have a saved URL, go there. Otherwise, go to index.
-    if next_url:
+    if next_url and next_url.startswith('/'):
         return redirect(next_url)
         
     return redirect(url_for('main.index'))
@@ -313,6 +303,16 @@ def donate(campaign_id=None):
     if campaign_id:
         selected_campaign = Campaign.query.get_or_404(campaign_id)
 
+    # --- NEW: Check for Active Subscription ---
+    active_subscription = None
+    if current_user.is_authenticated:
+        active_subscription = Donation.query.filter_by(
+            user_id=current_user.id,
+            frequency='monthly',
+            status='Active' # We only want active plans
+        ).first()
+    # ------------------------------------------
+
     # 2. HANDLE POST (Processing the payment)
     if request.method == 'POST':
         try:
@@ -331,7 +331,6 @@ def donate(campaign_id=None):
 
             # Dynamic Product Name
             product_name = "Donation to Our Story Our Voice"
-            # If a campaign is selected, append its title to the Stripe receipt
             if selected_campaign:
                 product_name = f"Donation: {selected_campaign.title}"
 
@@ -362,7 +361,6 @@ def donate(campaign_id=None):
                     'guest_name': name,
                     'is_donation': 'true',
                     'frequency': frequency,
-                    # IMPORTANT: Pass the campaign_id to Stripe metadata so we can retrieve it later
                     'campaign_id': campaign_id if campaign_id else '' 
                 },
                 success_url=url_for('main.donation_success', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
@@ -379,7 +377,6 @@ def donate(campaign_id=None):
                 frequency=frequency,
                 reference=checkout_session.id,
                 status='Pending',
-                # Link to Campaign in DB
                 campaign_id=campaign_id 
             )
             db.session.add(new_donation)
@@ -393,44 +390,41 @@ def donate(campaign_id=None):
             return redirect(url_for('main.donate', campaign_id=campaign_id))
 
     # 3. HANDLE GET (Rendering the page)
-    return render_template('user/donatenow.html', campaign=selected_campaign)
+    # UPDATED: Passing 'active_sub' to the template
+    return render_template('user/donatenow.html', 
+                           campaign=selected_campaign, 
+                           active_sub=active_subscription)
 
 
 @main_routes.route('/cancel-subscription/<int:donation_id>', methods=['POST'])
 @login_required
 def cancel_subscription(donation_id):
-    # 1. Get the donation from DB
     donation = Donation.query.get_or_404(donation_id)
-
-    # 2. SECURITY: Ensure the logged-in user actually owns this donation
+    
+    # Security Check
     if donation.user_id != current_user.id:
-        flash('You do not have permission to modify this donation.', 'error')
-        return redirect(url_for('main.donation_history'))
-
-    # 3. Check if it is actually a recurring monthly subscription
-    if donation.frequency != 'monthly' or not donation.stripe_subscription_id:
-        flash('This is not an active subscription.', 'error')
-        return redirect(url_for('main.donation_history'))
+        flash('Unauthorized', 'error')
+        return redirect(url_for('main.donate'))
 
     try:
-        # 4. COMMUNICATE WITH STRIPE
-        # This tells Stripe to stop charging at the end of the current billing cycle
-        stripe.Subscription.modify(
-            donation.stripe_subscription_id,
-            cancel_at_period_end=True
-        )
-
-        # 5. Update Local Database
+        # Cancel at Stripe
+        if donation.stripe_subscription_id:
+            stripe.Subscription.modify(
+                donation.stripe_subscription_id,
+                cancel_at_period_end=True
+            )
+        
+        # Update DB
         donation.status = 'Cancelled'
         db.session.commit()
-
-        flash('Your subscription has been cancelled successfully. No further charges will be made.', 'success')
-
+        flash('Subscription cancelled successfully.', 'success')
+        
     except Exception as e:
-        print(f"Stripe Cancellation Error: {e}")
-        flash('Could not cancel subscription. Please contact support.', 'error')
+        print(f"Stripe Error: {e}")
+        flash('Error cancelling subscription.', 'error')
 
-    return redirect(url_for('main.donation_history'))
+    # UPDATED: Redirects back to the donate page so they see the change immediately
+    return redirect(url_for('main.donate'))
 
 @main_routes.route('/donation/success')
 def donation_success():
@@ -750,7 +744,8 @@ def signup():
             db.session.commit()
             
             # 7. Log them in immediately after signup (Standard UX)
-            session['user_id'] = new_user.id
+            
+            login_user(new_user)
             flash('Account created successfully!', 'success')
             # Check if there is a 'next' parameter in the URL
             next_page = request.args.get('next')
