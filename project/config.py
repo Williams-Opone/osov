@@ -11,7 +11,7 @@ GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:@localhost/osov'
+SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
