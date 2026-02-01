@@ -147,6 +147,26 @@
     </main>
 
     {% include 'user/footer.html' %}
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Find all elements with the class 'flash-message'
+            const messages = document.querySelectorAll('.flash-message');
+    
+            // 2. Set a timeout to run after 2 seconds (2000ms)
+            if (messages.length > 0) {
+                setTimeout(function() {
+                    messages.forEach(function(msg) {
+                        // Start the fade out
+                        msg.style.opacity = '0';
+                        
+                        // Wait for the fade out to finish (0.5s), then remove from DOM
+                        setTimeout(function() {
+                            msg.remove();
+                        }, 500); 
+                    });
+                }, 2000); // <-- Time before fading starts
+            }
+        });
+    </script>
 </body>
 </html>

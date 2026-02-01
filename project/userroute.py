@@ -9,7 +9,7 @@ from email.mime.multipart import MIMEMultipart
 
 import re
 import stripe 
-from flask_login import login_user, login_required,current_user
+from flask_login import login_user, login_required,current_user,logout_user
 
 from datetime import date, datetime
 from sqlalchemy import desc,distinct
@@ -1091,8 +1091,14 @@ def privacy():
     return render_template('user/privacy.html')
 
 @main_routes.route('/logout')
+@login_required
 def logout():
-    user  = session.get('user_id')
-    session.pop('user_id', None)
+    # 1. Log the user out using Flask-Login
+    logout_user()
+    
+    # 2. Show a confirmation message
+    flash('You have been logged out successfully.', 'success')
+    
+    # 3. Redirect to the Home Page
     return redirect(url_for('main.index'))
 

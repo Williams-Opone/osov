@@ -125,20 +125,9 @@
                         </div>
                     </div>
 
-                    {% if app.status == 'Approved' %}
-                        <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 flex flex-col md:flex-row items-center gap-6">
-                            <div class="bg-white p-3 rounded-full shadow-sm text-blue-600">
-                                <i class="fa-solid fa-file-contract text-2xl"></i>
-                            </div>
-                            <div class="flex-grow text-center md:text-left">
-                                <h4 class="font-bold text-slate-900">Sign Memorandum (MOU)</h4>
-                                <p class="text-xs text-slate-500">Please verify the partnership terms sent to your email.</p>
-                            </div>
-                            <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition text-sm shadow-md">
-                                Download MOU
-                            </button>
-                        </div>
-                    {% elif app.status == 'Pending' %}
+                    
+                        
+                    {% if app.status == 'Pending' %}
                          <div class="flex items-start gap-4 p-4 border border-amber-100 bg-amber-50 rounded-xl">
                             <i class="fa-solid fa-circle-info text-amber-500 mt-1"></i>
                             <div>
@@ -151,9 +140,7 @@
                 </div>
             </div>
 
-            <div class="text-center mt-8 text-slate-400 text-sm">
-                Need to update your proposal? <a href="mailto:partnerships@ourstory.com" class="text-slate-600 underline hover:text-blue-600">Contact Partnership Support</a>
-            </div>
+            
         </div>
     </main>
 
