@@ -193,7 +193,7 @@
                 <div class="md:w-5/12 relative">
                     <a href="{{url_for('main.founder')}}">
                         <div class="absolute inset-0 bg-red-600 rounded-3xl transform translate-x-4 translate-y-4"></div>
-                        <img src="/static/mrdax.jpg" alt="Head of Organization" class="rounded-3xl shadow-xl relative z-10 object-cover w-full h-[500px]">
+                        <img src="{{ url_for('static', filename='mrdax.jpg') }}" alt="Head of Organization" class="rounded-3xl shadow-xl relative z-10 object-cover w-full h-[500px]">
                     </a>        
                 </div>
                 
@@ -225,7 +225,7 @@
 
             <div class="relative">
                 <div class="absolute inset-0 bg-red-600 rounded-3xl transform translate-x-2 translate-y-2 md:translate-x-4 md:translate-y-4 -z-10"></div>
-                <img src="/static/ourteam.jpg" alt="Our Story Our Voice Team" class="w-full h-[400px] md:h-[600px] object-cover rounded-3xl shadow-2xl z-10 relative">
+                <img src="{{ url_for('static', filename='ourteam.jpg') }}" alt="Our Story Our Voice Team" class="w-full h-[400px] md:h-[600px] object-cover rounded-3xl shadow-2xl z-10 relative">
             </div>
             <p class="text-gray-500 italic mt-6">Our diverse team collaborating at our annual strategy retreat.</p>
         </div>

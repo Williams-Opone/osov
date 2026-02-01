@@ -141,11 +141,31 @@ def about():
 
 @main_routes.route('/stories')
 def stories():
-    # Fetch all stories ordered by newest first (limit to 9 or however many you want per page)
-    recent_stories = Story.query.order_by(Story.created_at.desc()).limit(9).all()
+    # 1. Check if a category is selected in the URL (e.g. /stories?category=Youth)
+    selected_category = request.args.get('category')
     
-    # We removed 'featured=featured_story' because the HTML doesn't use it anymore
-    return render_template('user/stories.html', stories=recent_stories)
+    # 2. Start the query
+    query = Story.query.filter_by(status='Published') # Only show published ones
+    
+    # 3. Apply Filter if selected
+    if selected_category and selected_category != 'All Stories':
+        query = query.filter(Story.category == selected_category)
+    
+    # 4. Fetch the Results
+    recent_stories = query.order_by(Story.created_at.desc()).limit(9).all()
+
+    # 5. Fetch ALL unique categories from the DB (for the buttons)
+    # This creates a list like ['General', 'Youth Success', 'Immigrant Journeys']
+    categories_query = db.session.query(distinct(Story.category)).filter(Story.status == 'Published').all()
+    # Clean up the list (remove tuples)
+    categories = [c[0] for c in categories_query if c[0]]
+
+    return render_template(
+        'user/stories.html', 
+        stories=recent_stories, 
+        categories=categories,
+        current_category=selected_category
+    )
 
 @main_routes.route('/story/<slug>')
 def story_detail(slug):
@@ -375,6 +395,43 @@ def donate(campaign_id=None):
     # 3. HANDLE GET (Rendering the page)
     return render_template('user/donatenow.html', campaign=selected_campaign)
 
+
+@main_routes.route('/cancel-subscription/<int:donation_id>', methods=['POST'])
+@login_required
+def cancel_subscription(donation_id):
+    # 1. Get the donation from DB
+    donation = Donation.query.get_or_404(donation_id)
+
+    # 2. SECURITY: Ensure the logged-in user actually owns this donation
+    if donation.user_id != current_user.id:
+        flash('You do not have permission to modify this donation.', 'error')
+        return redirect(url_for('main.donation_history'))
+
+    # 3. Check if it is actually a recurring monthly subscription
+    if donation.frequency != 'monthly' or not donation.stripe_subscription_id:
+        flash('This is not an active subscription.', 'error')
+        return redirect(url_for('main.donation_history'))
+
+    try:
+        # 4. COMMUNICATE WITH STRIPE
+        # This tells Stripe to stop charging at the end of the current billing cycle
+        stripe.Subscription.modify(
+            donation.stripe_subscription_id,
+            cancel_at_period_end=True
+        )
+
+        # 5. Update Local Database
+        donation.status = 'Cancelled'
+        db.session.commit()
+
+        flash('Your subscription has been cancelled successfully. No further charges will be made.', 'success')
+
+    except Exception as e:
+        print(f"Stripe Cancellation Error: {e}")
+        flash('Could not cancel subscription. Please contact support.', 'error')
+
+    return redirect(url_for('main.donation_history'))
+
 @main_routes.route('/donation/success')
 def donation_success():
     session_id = request.args.get('session_id')
@@ -390,19 +447,23 @@ def donation_success():
         donation = Donation.query.filter_by(reference=session_id).first()
         
         if donation:
-            # 1. Mark as Success
-            donation.status = 'Success'
+            # --- START OF UPDATED LOGIC ---
             
-            # --- INSERTED CODE STARTS HERE ---
-            # 2. Check if this was a recurring subscription
-            if session.get('subscription'):
-                donation.stripe_subscription_id = session.get('subscription')
-                donation.stripe_customer_id = session.get('customer')
-                # Optional: You can force the frequency to 'monthly' here just to be safe
-                donation.frequency = 'monthly' 
-            # --- INSERTED CODE ENDS HERE ---
+            # Check if Stripe created a subscription ID
+            sub_id = session.get('subscription')
 
-            # 3. Save EVERYTHING at once
+            if sub_id:
+                # CASE 1: It is a Recurring Subscription
+                donation.status = 'Active'  # Use 'Active' for subscriptions
+                donation.stripe_subscription_id = sub_id
+                donation.stripe_customer_id = session.get('customer')
+                donation.frequency = 'monthly' # Ensure consistency
+            else:
+                # CASE 2: It is a One-Time Donation
+                donation.status = 'Success'
+
+            # --- END OF UPDATED LOGIC ---
+
             db.session.commit()
             
             return render_template('user/donation_success.html', amount=donation.amount)
@@ -542,9 +603,11 @@ def mentorship_success():
 
 @main_routes.route('/signin', methods=['GET', 'POST'])
 def signin():
-    # 1. FIX: Only run logic if the user clicked "Submit"
+    # If user is already logged in, send them home immediately
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+
     if request.method == 'POST':
-        
         email = request.form.get('email')
         pwd = request.form.get('pwd')
 
@@ -554,27 +617,23 @@ def signin():
         
         existing_user = User.query.filter_by(email=email).first()
 
-        # 2. FIX: Check if user exists AND has a password (avoids Google account crash)
-        if existing_user and existing_user.password_hash:
+        # 1. VERIFY USER AND PASSWORD (Using your Model's method)
+        # Use .check_password() instead of importing check_password_hash here
+        if existing_user and existing_user.password_hash and existing_user.check_password(pwd):
             
-            if check_password_hash(existing_user.password_hash, pwd):
-# A. Log them in
-                login_user(existing_user)
-                
-                # B. CHECK FOR 'NEXT' URL
-                next_page = request.args.get('next')
+            # A. Login Success
+            login_user(existing_user)
+            
+            # B. Handle "Next" URL
+            next_page = request.args.get('next')
+            if not next_page or not next_page.startswith('/'):
+                next_page = url_for('main.index')
+            
+            return redirect(next_page)
         
-                # 2. VALIDATE IT (Security check)
-                # If 'next' exists AND it starts with '/', go there.
-                # Otherwise, go to home.
-                if next_page and next_page.startswith('/'):
-                    return redirect(next_page)
-                else:
-                    return redirect(url_for('main.index'))      
-        # 3. FIX: Generic error message for security
+        # 2. LOGIN FAILED
         flash('Invalid Email or Password', 'error')
 
-    # GET request just shows the page
     return render_template('user/signin.html')
 
 @main_routes.route('/forgot-password', methods=['GET', 'POST'])

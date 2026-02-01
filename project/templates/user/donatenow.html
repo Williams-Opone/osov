@@ -2,317 +2,118 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donate - Our Story Our Voice</title>
-    
+    <title>My Donation History - Our Story Our Voice</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
-
     <style>
         body { font-family: 'Inter', sans-serif; }
-        h1, h2, h3, h4, h5 { font-family: 'Poppins', sans-serif; }
-        
-        /* Custom Button Styles for Selection */
-        .amount-btn { transition: all 0.2s ease; }
-        
-        .amount-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        
-        .amount-btn.selected { 
-            background-color: #FEF2F2; /* red-50 */
-            border-color: #DC2626; /* red-600 */
-            color: #DC2626; 
-            box-shadow: 0 0 0 1px #DC2626;
-        }
-
-        /* Frequency Toggle Animation */
-        .freq-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .freq-btn.selected { 
-            background-color: white; 
-            color: #111827; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
-        }
+        h1, h2 { font-family: 'Poppins', sans-serif; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased selection:bg-red-100 selection:text-red-900">
+<body class="bg-gray-50 text-gray-800">
 
     {% include 'user/header.html' %}
 
-    <section class="min-h-screen pt-32 pb-24 bg-gray-900 relative overflow-hidden isolate">
-        
-        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-[600px] h-[600px] bg-red-600/20 rounded-full blur-3xl -z-10"></div>
-        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-3xl -z-10"></div>
-
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="flex flex-col lg:flex-row gap-16 items-start justify-center">
-                
-                <div class="lg:w-5/12 text-white pt-4">
-                    
-                    {% if campaign %}
-                        <a href="{{ url_for('main.campaign_list') }}" class="group inline-flex items-center gap-2 mb-8 text-sm font-semibold text-gray-400 hover:text-white transition-colors">
-                            <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-red-600 transition">
-                                <i class="fa-solid fa-arrow-left text-xs"></i>
-                            </div>
-                            Back to All Campaigns
-                        </a>
-
-                        <div class="inline-block bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-6">
-                            Specific Cause
-                        </div>
-
-                        <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6 tracking-tight">
-                            {{ campaign.title }}
-                        </h1>
-                        
-                        <p class="text-lg text-gray-300 mb-10 leading-relaxed font-light">
-                            {{ campaign.description }}
-                        </p>
-                        
-                        
-
-                    {% else %}
-                        <div class="inline-block bg-white/10 border border-white/20 text-gray-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-6">
-                            Support The Mission
-                        </div>
-
-                        <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6 tracking-tight">
-                            Power the stories that <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">shape our nation.</span>
-                        </h1>
-                        
-                        <p class="text-lg text-gray-300 mb-8 leading-relaxed font-light border-l-4 border-red-600 pl-6">
-                            Your contribution isn't just a donation; it's a microphone for marginalized voices. It funds equipment, training workshops, and platforms that ensure Canada's rich mosaic is truly heard.
-                        </p>
-                    {% endif %}
-
-                    <div class="flex items-start gap-4 text-sm text-gray-400 bg-gray-800/40 p-5 rounded-2xl border border-gray-700/50 backdrop-blur-sm mt-8">
-                        <div class="bg-gray-700 p-2 rounded-lg text-red-500">
-                            <i class="fa-solid fa-shield-heart text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold text-white text-base">Secure & Transparent Giving</p>
-                            <p class="mt-1 leading-relaxed opacity-80">We are a registered non-profit. Payments are processed securely via Stripe. Official tax receipts are issued annually.</p>
-                        </div>
-                    </div>
+    <div class="container mx-auto px-6 py-24 min-h-screen">
+        <div class="max-w-4xl mx-auto">
+            
+            <div class="mb-10 flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Donation History</h1>
+                    <p class="text-gray-500 mt-2">Manage your contributions and subscriptions.</p>
                 </div>
+                <a href="{{ url_for('main.donate') }}" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-full transition shadow-lg text-sm">
+                    Make New Donation
+                </a>
+            </div>
 
-                <div class="lg:w-6/12 w-full relative">
-                    <div class="absolute -inset-4 bg-gradient-to-r from-red-600 to-blue-600 rounded-[2rem] opacity-20 blur-xl"></div>
-                    
-                    <div class="bg-white rounded-[2rem] shadow-2xl p-8 md:p-10 w-full relative border border-gray-100">
-                        
-                        <div class="flex justify-between items-center mb-8 border-b border-gray-100 pb-6">
-                            <h2 class="text-2xl font-bold text-gray-900">Make a Contribution</h2>
-                            <div class="flex items-center gap-2 text-xs font-semibold text-green-700 bg-green-50 px-3 py-1.5 rounded-full border border-green-200">
-                                <i class="fa-solid fa-lock"></i> SSL Secure
-                            </div>
-                        </div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="mb-6 p-4 rounded-xl text-sm font-medium flex items-center gap-3
+                    {% if category == 'error' %} bg-red-50 text-red-700 border border-red-200 
+                    {% else %} bg-green-50 text-green-700 border border-green-200 {% endif %}">
+                    <i class="fa-solid {% if category == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}"></i>
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
 
-                        {% with messages = get_flashed_messages(with_categories=true) %}
-                          {% if messages %}
-                            {% for category, message in messages %}
-                              <div class="mb-6 p-4 rounded-xl text-sm font-medium flex items-center gap-3
-                                {% if category == 'error' %} bg-red-50 text-red-700 border border-red-200 
-                                {% else %} bg-green-50 text-green-700 border border-green-200 {% endif %}">
-                                <i class="fa-solid {% if category == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}"></i>
-                                {{ message }}
-                              </div>
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                {% if donations %}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Amount</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Type</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for don in donations %}
+                            <tr class="hover:bg-gray-50/50 transition">
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    {{ don.created_at.strftime('%b %d, %Y') }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="font-bold text-gray-900">${{ don.amount }}</span> <span class="text-xs text-gray-400">{{ don.currency }}</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    {% if don.frequency == 'monthly' %}
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                                            <i class="fa-solid fa-arrows-rotate text-[10px]"></i> Monthly
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">
+                                            One-time
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {% if don.status == 'Success' or don.status == 'Active' %}
+                                        <span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-md">Active</span>
+                                    {% elif don.status == 'Cancelled' %}
+                                        <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md">Cancelled</span>
+                                    {% else %}
+                                        <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-md">{{ don.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    {% if don.frequency == 'monthly' and (don.status == 'Success' or don.status == 'Active') %}
+                                        <form action="{{ url_for('main.cancel_subscription', donation_id=don.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel your monthly donation?');">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="text-xs font-bold text-red-600 hover:text-red-800 border border-red-200 hover:bg-red-50 px-3 py-1.5 rounded-lg transition">
+                                                Cancel Plan
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <span class="text-gray-300 text-xl">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
                             {% endfor %}
-                          {% endif %}
-                        {% endwith %}
-
-                        <form method="POST" action="{{ request.path }}" id="donateForm">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                            <input type="hidden" name="amount" id="finalAmount" value="50">
-                            <input type="hidden" name="currency" value="CAD">
-                            <input type="hidden" name="frequency" id="frequencyInput" value="onetime">
-
-                            <div class="bg-gray-100 p-1.5 rounded-xl mb-8 flex relative">
-                                <button type="button" onclick="setFrequency('monthly')" id="btn-monthly" class="freq-btn flex-1 py-3.5 rounded-lg text-sm font-bold text-gray-500 relative z-10">
-                                    Monthly <span class="hidden sm:inline font-normal text-xs ml-1 opacity-75">(Recommended)</span>
-                                </button>
-                                <button type="button" onclick="setFrequency('onetime')" id="btn-onetime" class="freq-btn flex-1 py-3.5 rounded-lg text-sm font-bold text-gray-900 bg-white shadow-sm selected relative z-10">
-                                    One-Time
-                                </button>
-                            </div>
-
-                            <div class="mb-8">
-                                <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Select Amount (CAD)</p>
-                                <div class="grid grid-cols-3 gap-4 mb-4">
-                                    <button type="button" onclick="selectAmount(25)" class="amount-btn border-2 border-gray-100 rounded-xl py-4 font-bold text-xl text-gray-700 bg-white" data-amount="25">
-                                        $25
-                                        <span class="block text-[10px] font-medium text-gray-400 mt-1 uppercase tracking-wide">Materials</span>
-                                    </button>
-                                    <button type="button" onclick="selectAmount(50)" class="amount-btn border-2 border-red-600 rounded-xl py-4 font-bold text-xl text-red-600 bg-red-50 selected" data-amount="50">
-                                        $50
-                                        <span class="block text-[10px] font-medium text-red-400 mt-1 uppercase tracking-wide">Workshop</span>
-                                    </button>
-                                    <button type="button" onclick="selectAmount(100)" class="amount-btn border-2 border-gray-100 rounded-xl py-4 font-bold text-xl text-gray-700 bg-white" data-amount="100">
-                                        $100
-                                        <span class="block text-[10px] font-medium text-gray-400 mt-1 uppercase tracking-wide">Project</span>
-                                    </button>
-                                </div>
-                                
-                                <div class="relative group">
-                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                                        <span class="text-gray-400 font-bold group-focus-within:text-gray-900 transition-colors">$</span>
-                                    </div>
-                                    <input type="number" id="customAmountInput" placeholder="Enter custom amount" 
-                                        class="w-full pl-8 pr-4 py-4 rounded-xl border-2 border-gray-100 focus:border-gray-900 focus:ring-0 outline-none transition font-semibold text-gray-900 placeholder-gray-400 bg-gray-50 focus:bg-white" 
-                                        oninput="setCustomAmount(this.value)">
-                                </div>
-                            </div>
-
-                            <div class="mb-8 space-y-4">
-                                {% if not current_user.is_authenticated %}
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Full Name</label>
-                                            <input type="text" name="guest_name" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-gray-900 focus:ring-0 outline-none transition bg-gray-50 focus:bg-white" placeholder="Jane Doe">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Email Address</label>
-                                            <input type="email" name="guest_email" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-gray-900 focus:ring-0 outline-none transition bg-gray-50 focus:bg-white" placeholder="jane@example.com">
-                                        </div>
-                                    </div>
-                                {% else %}
-                                    <div class="bg-blue-50/50 p-4 rounded-xl flex items-center gap-4 border border-blue-100">
-                                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-lg">
-                                            {{ current_user.first_name[0] }}
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-500 font-medium">Logged in as</p>
-                                            <p class="text-base text-gray-900 font-bold">{{ current_user.first_name }} {{ current_user.last_name }}</p>
-                                            <p class="text-xs text-blue-600 font-medium">{{ current_user.email }}</p>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <div class="flex flex-col gap-4">
-                                <button type="submit" id="submitBtn" class="w-full bg-gray-900 hover:bg-black text-white text-lg font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex justify-between items-center group">
-                                    <span>Donate Now</span>
-                                    <span class="bg-white/20 px-3 py-1 rounded-lg text-sm font-mono group-hover:bg-white/30 transition" id="btnAmountDisplay">$50.00 CAD</span>
-                                </button>
-                            
-                                {% if current_user.is_authenticated %}
-                                    <a href="{{ url_for('main.donation_history') }}" class="w-full text-center text-sm font-bold text-gray-400 hover:text-gray-600 transition py-2">
-                                        <i class="fa-solid fa-clock-rotate-left mr-2"></i> View My Donation History
-                                    </a>
-                                {% endif %}
-                            </div>
-                            
-                        </form>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
+                {% else %}
+                    <div class="text-center py-16">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400 text-2xl">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900">No donations found</h3>
+                        <p class="text-gray-500 mb-6 text-sm">You haven't made any contributions yet.</p>
+                        <a href="{{ url_for('main.donate') }}" class="text-red-600 font-bold hover:underline">Make your first donation</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
-    </section>
-
-    <section class="py-24 bg-white border-t border-gray-100">
-        <div class="container mx-auto px-6">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-red-500 font-bold text-sm uppercase tracking-widest">Transparency</span>
-                <h2 class="text-3xl md:text-4xl font-bold mt-2 mb-6 text-gray-900">Where Your Money Goes</h2>
-                <p class="text-gray-500">We believe in complete transparency. Here is how we utilize every dollar to maximize impact.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:shadow-lg transition-shadow duration-300 text-center group">
-                    <div class="w-16 h-16 mx-auto bg-white shadow-sm text-red-600 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fa-solid fa-video"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-900">Equipment & Access</h3>
-                    <p class="text-gray-500 leading-relaxed text-sm">Providing cameras, microphones, and editing software to communities who lack access to professional tools.</p>
-                </div>
-                <div class="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:shadow-lg transition-shadow duration-300 text-center group">
-                    <div class="w-16 h-16 mx-auto bg-white shadow-sm text-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fa-solid fa-chalkboard-user"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-900">Training & Mentorship</h3>
-                    <p class="text-gray-500 leading-relaxed text-sm">Funding workshops led by industry professionals to teach storytelling and media literacy skills.</p>
-                </div>
-                <div class="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:shadow-lg transition-shadow duration-300 text-center group">
-                    <div class="w-16 h-16 mx-auto bg-white shadow-sm text-orange-600 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fa-solid fa-bullhorn"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-900">Amplification</h3>
-                    <p class="text-gray-500 leading-relaxed text-sm">Supporting the distribution of stories through podcasts, online galleries, and public screening events.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
 
     {% include 'user/footer.html' %}
-
-    <script>
-        // 1. Handle Frequency Toggle
-        function setFrequency(freq) {
-            document.getElementById('frequencyInput').value = freq;
-            
-            const btnMonthly = document.getElementById('btn-monthly');
-            const btnOnetime = document.getElementById('btn-onetime');
-
-            // Reset classes
-            [btnMonthly, btnOnetime].forEach(btn => {
-                btn.classList.remove('selected', 'bg-white', 'shadow-sm', 'text-gray-900');
-                btn.classList.add('text-gray-500');
-            });
-
-            // Apply Active State
-            const activeBtn = freq === 'monthly' ? btnMonthly : btnOnetime;
-            activeBtn.classList.add('selected', 'bg-white', 'shadow-sm', 'text-gray-900');
-            activeBtn.classList.remove('text-gray-500');
-        }
-
-        // 2. Handle Amount Selection
-        function selectAmount(amount) {
-            document.getElementById('finalAmount').value = amount;
-            document.getElementById('customAmountInput').value = ''; 
-            
-            // Animate Button Text
-            const display = document.getElementById('btnAmountDisplay');
-            display.style.opacity = '0';
-            setTimeout(() => {
-                display.innerText = `$${amount}.00 CAD`;
-                display.style.opacity = '1';
-            }, 200);
-
-            // Visual Update
-            let buttons = document.querySelectorAll('.amount-btn');
-            buttons.forEach(btn => {
-                if(parseInt(btn.dataset.amount) === amount) {
-                    // Selected Style
-                    btn.classList.add('selected');
-                    btn.classList.remove('border-gray-100', 'bg-white', 'text-gray-700');
-                    // Add specific styling for selected state (red border/text defined in CSS)
-                } else {
-                    // Deselected Style
-                    btn.classList.remove('selected');
-                    btn.classList.add('border-gray-100', 'bg-white', 'text-gray-700');
-                }
-            });
-        }
-
-        // 3. Handle Custom Amount Typing
-        function setCustomAmount(val) {
-            // Deselect all buttons
-            document.querySelectorAll('.amount-btn').forEach(btn => {
-                btn.classList.remove('selected');
-                btn.classList.add('border-gray-100', 'bg-white', 'text-gray-700');
-            });
-
-            const display = document.getElementById('btnAmountDisplay');
-            
-            if (val && val > 0) {
-                document.getElementById('finalAmount').value = val;
-                display.innerText = `$${val}.00 CAD`;
-            } else {
-                document.getElementById('finalAmount').value = 50;
-                display.innerText = `$50.00 CAD`;
-            }
-        }
-    </script>
 </body>
 </html>
