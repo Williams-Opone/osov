@@ -883,67 +883,96 @@ def event_detail(event_id):
 # THE RSVP ACTION (You need this to make the button work)
 @main_routes.route('/event/<int:event_id>/rsvp', methods=['POST'])
 def rsvp_event(event_id):
+    # 1. Get Event
     event = Event.query.get_or_404(event_id)
     
+    # 2. Get Data from Form
     data = request.form
-    email = data.get('email')
     
-    # 1. Duplicate Check
+    # 3. Determine User vs Guest
     if current_user.is_authenticated:
-        existing = EventRSVP.query.filter_by(event_id=event.id, user_id=current_user.id).first()
-        if existing:
-            return redirect(url_for('main.event_detail', event_id=event_id, rsvp_success='true', ticket_id=existing.ticket_id))
+        user_id = current_user.id
+        email = current_user.email
+        first_name = current_user.first_name
+        last_name = current_user.last_name
+    else:
+        user_id = None
+        email = data.get('email')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
 
-    # 2. Generate Ticket ID
-    ticket_id = str(uuid.uuid4())[:8].upper()
+    # 4. Duplicate Check (Works for both Users AND Guests now)
+    # Check if this email has already RSVP'd for this specific event
+    existing_rsvp = EventRSVP.query.filter_by(event_id=event_id).filter(
+        (EventRSVP.user_id == user_id) if user_id else (EventRSVP.guest_email == email)
+    ).first()
 
-    # 3. Save to DB
+    if existing_rsvp:
+        flash('You are already registered for this event.', 'info')
+        # Redirect to modal with existing ticket
+        return redirect(url_for('main.event_detail', event_id=event_id, rsvp_success='true', ticket_id=existing_rsvp.ticket_id))
+
+    # 5. Generate Unique Ticket ID
+    ticket_code = str(uuid.uuid4())[:8].upper()
+
+    # 6. Save to DB
     new_rsvp = EventRSVP(
         event_id=event.id,
-        user_id=current_user.id if current_user.is_authenticated else None,
-        first_name=data.get('first_name'),
-        last_name=data.get('last_name'),
-        email=email,
+        user_id=user_id,
+        guest_email=email,
+        # Save full name for guests if needed, or split fields
+        guest_name=f"{first_name} {last_name}".strip(),
+        ticket_id=ticket_code,
+        # Optional fields from your form
         company=data.get('company'),
-        how_heard=data.get('how_heard'),
-        ticket_id=ticket_id
+        how_heard=data.get('how_heard')
     )
-    db.session.add(new_rsvp)
-    db.session.commit()
-    print("--- EMAIL DEBUG ---")
-    print(f"Server: {current_app.config.get('MAIL_SERVER')}")
-    print(f"User: {current_app.config.get('MAIL_USERNAME')}") 
-    # Do NOT print the password, just check if it exists
-    print(f"Password set? {'Yes' if current_app.config.get('MAIL_PASSWORD') else 'NO'}")
-    print("-------------------")
-    # 4. Send Ticket Email
+
     try:
-        msg = Message(
-            subject=f"Your Ticket: {event.title}",
-            sender=current_app.config['MAIL_USERNAME'],
-            recipients=[email]
-        )
-        msg.html = f"""
-        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee;">
-            <h2 style="color: #333;">You're Confirmed!</h2>
-            <p>Hi {data.get('first_name')}, your spot for <strong>{event.title}</strong> is reserved.</p>
+        db.session.add(new_rsvp)
+        db.session.commit()
+
+        # --- 7. SEND EMAIL (Hostinger Logic) ---
+        try:
+            msg = Message(
+                subject=f"Your Ticket: {event.title}",
+                recipients=[email],
+                sender=current_app.config.get('MAIL_DEFAULT_SENDER') # Uses config
+            )
             
-            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; margin: 20px 0; border-radius: 8px; text-align: center;">
-                <p style="margin:0; font-size: 14px; color: #166534;">YOUR TICKET ID</p>
-                <p style="margin: 5px 0 0 0; font-size: 24px; font-weight: bold; letter-spacing: 2px; color: #15803d;">{ticket_id}</p>
+            # HTML Email Body (Your nice design)
+            msg.html = f"""
+            <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #333;">You're Confirmed!</h2>
+                <p>Hi {first_name}, your spot for <strong>{event.title}</strong> is reserved.</p>
+                
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; margin: 20px 0; border-radius: 8px; text-align: center;">
+                    <p style="margin:0; font-size: 14px; color: #166534;">YOUR TICKET ID</p>
+                    <p style="margin: 5px 0 0 0; font-size: 24px; font-weight: bold; letter-spacing: 2px; color: #15803d;">{ticket_code}</p>
+                </div>
+
+                <p><strong>Date:</strong> {event.date_time.strftime('%B %d, %Y at %I:%M %p')}</p>
+                <p><strong>Location:</strong> {event.location}</p>
+                <hr style="border: 0; border-top: 1px solid #eee;">
+                <p style="font-size: 12px; color: #666;">Please show this email at the entrance.</p>
             </div>
+            """
+            
+            mail.send(msg)
+            print(f"Email sent successfully to {email}")
 
-            <p><strong>Date:</strong> {event.date_time.strftime('%B %d, %Y at %I:%M %p')}</p>
-            <p><strong>Location:</strong> {event.location}</p>
-            <hr>
-            <p style="font-size: 12px; color: #666;">Please show this email at the entrance.</p>
-        </div>
-        """
-        mail.send(msg)
+        except Exception as e:
+            # We catch email errors so the user still gets their ticket on screen
+            print(f"Email failed to send: {e}")
+        # ---------------------------------------
+
+        return redirect(url_for('main.event_detail', event_id=event_id, rsvp_success='true', ticket_id=ticket_code))
+
     except Exception as e:
-        print(f"RSVP Email Error: {e}")
-
-    return redirect(url_for('main.event_detail', event_id=event_id, rsvp_success='true', ticket_id=ticket_id))    
+        db.session.rollback()
+        print(f"Database Error: {e}")
+        flash('An error occurred while registering. Please try again.', 'error')
+        return redirect(url_for('main.event_detail', event_id=event_id))    
 
 
 
