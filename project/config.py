@@ -19,11 +19,11 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 MAIL_SERVER = "smtp.hostinger.com"
 MAIL_PORT = 465  # Switch to 465 (SSL)
 MAIL_USE_SSL = True  # Enable SSL
-MAIL_USE_TLS = False # Disable TLS
+
 MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
 MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 MAIL_DEFAULT_SENDER = os.environ.get('MAIL_USERNAME')
-
+   
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
 

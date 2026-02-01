@@ -14,13 +14,13 @@ from flask_login import login_user, login_required,current_user
 from datetime import date, datetime
 from sqlalchemy import desc,distinct
 from flask_mail import Message
-from . import mail # Import the mail instance we created above
+ 
 from itsdangerous import URLSafeTimedSerializer
 
 from flask import render_template,Blueprint,url_for,redirect,session,request,flash,current_app,abort
 from werkzeug.security import generate_password_hash , check_password_hash
 from .model import User,VolunteerApplication,MentorshipApplication,PartnerApplication,Event,EventRSVP,Story,Donation,NewsletterSubscriber,Campaign
-from .extension import db
+from .extension import db,mail
 
 
 from . import oauth  # <--- IMPORT OAUTH FROM YOUR __INIT__ FILE
