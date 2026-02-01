@@ -2,146 +2,94 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Upcoming Events | Our Story Our Voice</title>
+    <title>Stories of Resilience | Our Story Our Voice</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Inter', sans-serif; } h1,h2,h3 { font-family: 'Poppins', sans-serif; }</style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;700;800&family=Merriweather:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+        .serif { font-family: 'Merriweather', serif; } /* For excerpts */
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+<body class="bg-slate-50 text-slate-800 antialiased">
 
     {% include 'user/header.html' %}
 
-    <section class="bg-slate-900 text-white py-20 relative overflow-hidden">
-        <div class="absolute inset-0 bg-blue-600 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
-        <div class="container mx-auto px-6 relative z-10 text-center">
-            <span class="text-red-500 font-bold tracking-widest uppercase text-sm mb-2 block">Community Gatherings</span>
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Connect, Learn, & Celebrate</h1>
-            <p class="text-xl text-gray-300 max-w-2xl mx-auto">
-                Join our workshops, cultural festivals, and mentorship meetups. Space is limited, so reserve your spot today.
+    <div class="bg-white border-b border-gray-100 pt-32 pb-12">
+        <div class="container mx-auto px-6 text-center">
+            <span class="text-red-500 font-bold tracking-widest uppercase text-xs mb-2 block">The Journal</span>
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Voices of Our Community</h1>
+            <p class="text-slate-500 max-w-2xl mx-auto text-lg">
+                Real stories of migration, adaptation, and triumph from the people of "Our Story Our Voice."
             </p>
+            
+            <div class="flex flex-wrap justify-center gap-2 mt-8">
+                <a href="#" class="px-5 py-2 rounded-full bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition">All Stories</a>
+                <a href="#" class="px-5 py-2 rounded-full bg-white border border-gray-200 text-slate-600 text-sm font-medium hover:border-red-500 hover:text-red-600 transition">Immigrant Journeys</a>
+                <a href="#" class="px-5 py-2 rounded-full bg-white border border-gray-200 text-slate-600 text-sm font-medium hover:border-red-500 hover:text-red-600 transition">Youth Success</a>
+                <a href="#" class="px-5 py-2 rounded-full bg-white border border-gray-200 text-slate-600 text-sm font-medium hover:border-red-500 hover:text-red-600 transition">Community News</a>
+            </div>
         </div>
-    </section>
+    </div>
 
-    <main class="container mx-auto px-6 py-16 flex-grow">
-        
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            <div class="mb-8 max-w-4xl mx-auto">
-              {% for category, message in messages %}
-                <div class="p-4 rounded-xl shadow-sm border-l-4 flex items-center gap-3
-                    {% if category == 'error' %} bg-red-50 border-red-500 text-red-700
-                    {% else %} bg-green-50 border-green-500 text-green-700 {% endif %}">
-                    <i class="fa-solid {% if category == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}"></i>
-                    {{ message }}
-                </div>
-              {% endfor %}
-            </div>
-          {% endif %}
-        {% endwith %}
+    <main class="container mx-auto px-6 py-12">
 
-        {% if events %}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {% for event in events %}
-                    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                        <a href="{{ url_for('main.event_detail', event_id=event.id) }}">
-                        <div class="h-48 bg-gray-200 relative">
-                            <div class="absolute top-4 left-4 bg-white rounded-xl shadow-md p-2 text-center min-w-[60px]">
-                                <span class="block text-red-600 font-bold text-xs uppercase">{{ event.date_time.strftime('%b') }}</span>
-                                <span class="block text-gray-900 font-bold text-xl">{{ event.date_time.strftime('%d') }}</span>
-                            </div>
-                            
-                            <img src="{{ event.image_url }}" alt="{{ event.title }}" class="w-full h-full object-cover">
-                        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for story in stories %}
+            <article class="flex flex-col group h-full">
+                <a href="{{ url_for('main.story_detail', slug=story.slug) }}" class="block rounded-2xl overflow-hidden mb-4 relative h-64 shadow-md group-hover:shadow-xl transition">
+                    <img src="{{ story.image_url }}" alt="{{ story.title }}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                    <span class="absolute bottom-4 left-4 bg-white/90 backdrop-blur text-slate-900 text-xs font-bold px-3 py-1 rounded">
+                        {{ story.category }}
+                    </span>
+                </a>
 
-                        <div class="p-6 flex-grow flex flex-col">
-                            <div class="flex items-center text-xs text-gray-500 mb-3 gap-3">
-                                <span class="flex items-center gap-1"><i class="fa-regular fa-clock text-red-500"></i> {{ event.date_time.strftime('%I:%M %p') }}</span>
-                                <span class="flex items-center gap-1"><i class="fa-solid fa-location-dot text-red-500"></i> {{ event.location }}</span>
-                            </div>
-
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ event.title }}</h3>
-                            <p class="text-gray-600 text-sm mb-6 line-clamp-3">
-                                {{ event.description }}
-                            </p>
-
-                            <div class="mt-auto">
-                                {% set taken = event.rsvps|length %}
-
-                                {% set cap = event.capacity %}
-
-                                {% set percent = (taken / cap * 100) %}
-                                {# Calculate percentage, but default to 0 if capacity is missing to avoid errors #}
-                                {% set percent = (taken / cap * 100) if cap > 0 else 0 %}
-                                
-                                {# UX Fix: If there is at least 1 person registered, make sure the bar is at least 1% wide so it's visible #}
-                                {% if taken > 0 and percent < 1 %}
-                                    {% set percent = 1 %}
-                                {% endif %}
-                                
-                                <div class="flex justify-between text-xs font-bold mb-1">
-                                    <span class="text-gray-500">{{ taken }} / {{ cap }} Registered</span>
-                                    {% if percent >= 100 %}
-                                        <span class="text-red-600">FULL</span>
-                                    {% elif percent > 80 %}
-                                        <span class="text-orange-500">Filling Fast!</span>
-                                    {% else %}
-                                        <span class="text-green-600">Spots Available</span>
-                                    {% endif %}
-                                </div>
-                                <div class="w-full bg-gray-100 rounded-full h-2 mb-6">
-                                    <div class="h-2 rounded-full transition-all duration-1000
-                                        {% if percent >= 100 %} bg-red-500 
-                                        {% elif percent > 80 %} bg-orange-400 
-                                        {% else %} bg-green-500 {% endif %}" 
-                                        style="width: {{ percent }}% "></div>
-                                </div>
-
-                                {% if current_user.is_authenticated %}
-                                    
-                                {% if event.id in my_rsvp_ids %}
-                                <form method="POST" action="{{ url_for('main.unrsvp_event', event_id=event.id) }}">
-                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                    <button type="submit" class="w-full py-3 rounded-xl bg-green-50 text-green-700 font-bold border border-green-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition group flex items-center justify-center gap-2">
-                                        <span class="group-hover:hidden"><i class="fa-solid fa-circle-check"></i> Registered</span>
-                                        <span class="hidden group-hover:inline"><i class="fa-solid fa-circle-xmark"></i> Cancel RSVP</span>
-                                    </button>
-                                </form>
-                            
-                            {% elif percent >= 100 %}
-                                <button disabled class="w-full py-3 rounded-xl bg-gray-100 text-gray-400 font-bold cursor-not-allowed">
-                                    Event Full
-                                </button>
-                            
-                            {% else %}
-                            <a href="{{ url_for('main.event_detail', event_id=event.id) }}" 
-                                class="block w-full text-center py-2.5 px-4 rounded-lg border-2 border-slate-900 text-slate-900 font-bold hover:bg-slate-50 transition duration-300">
-                                View Details
-                            </a>
-                                
-                            {% endif %}
-
-                                {% else %}
-                                    <a href="{{ url_for('main.signin', next=request.path) }}" class="block w-full text-center py-3 rounded-xl border-2 border-slate-900 text-slate-900 font-bold hover:bg-slate-900 hover:text-white transition">
-                                        Sign in to RSVP
-                                    </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </a>
+                <div class="flex flex-col flex-grow">
+                    <div class="text-xs text-slate-500 mb-2 flex items-center gap-2">
+                        <i class="fa-regular fa-calendar"></i> {{ story.created_at.strftime('%B %d, %Y') }}
                     </div>
-                {% endfor %}
-            </div>
-        
-        {% else %}
-            <div class="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
-                <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400 text-3xl">
-                    <i class="fa-regular fa-calendar-xmark"></i>
+                    
+                    <a href="{{ url_for('main.story_detail', slug=story.slug) }}">
+                        <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-red-600 transition">
+                            {{ story.title }}
+                        </h3>
+                    </a>
+                    
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3 serif flex-grow">
+                        {{ story.summary }}
+                    </p>
+
+                    <div class="flex items-center justify-between border-t border-gray-100 pt-4 mt-auto">
+                        <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">
+                                {{ story.author.first_name[0] }}
+                            </div>
+                            <span class="text-xs text-slate-500 font-medium">{{ story.author.first_name }}</span>
+                        </div>
+                        <a href="{{ url_for('main.story_detail', slug=story.slug) }}" class="text-xs font-bold text-red-600 hover:text-red-800 uppercase tracking-wide flex items-center gap-1">
+                            Read Story <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900">No Upcoming Events</h3>
-                <p class="text-gray-500 mt-2">Check back later or subscribe to our newsletter for updates.</p>
-            </div>
+            </article>
+            {% else %}
+                <div class="col-span-full text-center py-20">
+                    <div class="inline-block p-6 rounded-full bg-slate-50 mb-4">
+                        <i class="fa-solid fa-feather text-4xl text-slate-300"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">No stories yet</h3>
+                    <p class="text-slate-500">Check back later for updates from our team.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if stories|length >= 9 %}
+        <div class="text-center mt-16">
+            <button class="px-8 py-3 bg-white border border-gray-300 text-slate-700 font-bold rounded-full hover:bg-slate-50 hover:text-slate-900 transition shadow-sm">
+                Load More Stories
+            </button>
+        </div>
         {% endif %}
 
     </main>

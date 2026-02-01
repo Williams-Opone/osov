@@ -141,16 +141,11 @@ def about():
 
 @main_routes.route('/stories')
 def stories():
-    # 1. Get the one "Featured" story
-    featured_story = Story.query.filter_by(is_featured=True).order_by(Story.created_at.desc()).first()
+    # Fetch all stories ordered by newest first (limit to 9 or however many you want per page)
+    recent_stories = Story.query.order_by(Story.created_at.desc()).limit(9).all()
     
-    # 2. Get the rest (excluding the featured one if it exists)
-    if featured_story:
-        recent_stories = Story.query.filter(Story.id != featured_story.id).order_by(Story.created_at.desc()).limit(9).all()
-    else:
-        recent_stories = Story.query.order_by(Story.created_at.desc()).limit(9).all()
-        
-    return render_template('user/stories.html', featured=featured_story, stories=recent_stories)
+    # We removed 'featured=featured_story' because the HTML doesn't use it anymore
+    return render_template('user/stories.html', stories=recent_stories)
 
 @main_routes.route('/story/<slug>')
 def story_detail(slug):

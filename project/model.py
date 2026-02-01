@@ -77,7 +77,7 @@ class Story(db.Model):
     # Metadata
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     category = db.Column(db.String(50), default='General')
-    is_featured = db.Column(db.Boolean, default=False)
+    
     
     # --- NEW FIELDS FOR IMAGE FEATURES ---
     # Status options: 'Draft', 'Published', 'Scheduled'
