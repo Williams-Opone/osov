@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from flask_login import current_user
 # 1. Import extensions (Removed 'cloudinary' from this list)
 from .extension import db, csrf, oauth, mail, login_manager
+from . import config
 from .model import UserRole
 
 load_dotenv()
@@ -12,7 +13,7 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
     
-    app.config.from_pyfile('config.py', silent=True)
+    app.config.from_object(config)
     
     # Initialize Extensions
     csrf.init_app(app)

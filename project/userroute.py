@@ -192,6 +192,10 @@ def story_detail(slug):
 
 @main_routes.route('/contact', methods=['GET', 'POST'])
 def contact_us():
+    print("--- DEBUGGING EMAIL CONFIG ---")
+    print(f"Mail Server: {current_app.config.get('MAIL_SERVER')}")
+    print(f"Mail User: {current_app.config.get('MAIL_USERNAME')}")
+    print(f"Mail Port: {current_app.config.get('MAIL_PORT')}")
     if request.method == 'POST':
         # 1. Get Data
         f_name = request.form.get('first_name')
