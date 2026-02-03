@@ -697,7 +697,7 @@ def reset_password(token):
 
     return render_template('user/reset_password.html', token=token)
 
-@main_routes.route('/signup', methods=['GET', 'POST'])
+@main_routes.route('/signup/', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         # 1. Get Data
@@ -770,7 +770,7 @@ def signup():
     return render_template('user/signup.html')
 
 
-@main_routes.route('/volunteer/status')
+@main_routes.route('/volunteer/status/')
 @login_required
 def application_status():
     user_id = session.get('user_id')
@@ -786,12 +786,12 @@ def application_status():
         
     return render_template('user/application_status.html', application=application, current_user=User.query.get(user_id))
 
-@main_routes.route('/volunteer/success')
+@main_routes.route('/volunteer/success/')
 @login_required
 def volunteer_success():
     return render_template('user/volunteersuccess.html')
 
-@main_routes.route('/volunteer', methods=['GET', 'POST'])
+@main_routes.route('/volunteer/', methods=['GET', 'POST'])
 @login_required
 def volunteer():
     # 1. Check for existing application
@@ -858,7 +858,7 @@ def volunteer():
     # 4. Render Form (Only reached if no existing app and request is GET)
     return render_template('user/volunteer.html')
 
-@main_routes.route('/events',methods= ['GET','POST'])
+@main_routes.route('/events/',methods= ['GET','POST'])
 def events():
     # 1. Fetch Upcoming Events (Sorted by soonest first)
     upcoming_events = Event.query.all()
@@ -871,7 +871,7 @@ def events():
 
     return render_template('user/events.html', events=upcoming_events, my_rsvp_ids=my_rsvp_ids)
 
-@main_routes.route('/event/<int:event_id>')
+@main_routes.route('/event/<int:event_id>/')
 def event_detail(event_id):
     event = Event.query.get_or_404(event_id)
     
@@ -885,8 +885,13 @@ def event_detail(event_id):
     return render_template('user/event_detail.html', event=event, is_registered=is_registered)
 
 # THE RSVP ACTION (You need this to make the button work)
-@main_routes.route('/event/<int:event_id>/rsvp', methods=['POST'])
+@main_routes.route('/event/<int:event_id>/rsvp/', methods=['GET','POST'])
 def rsvp_event(event_id):
+
+    if request.method == 'GET':
+        # If someone accidentally lands here via GET, send them back to the event page
+        return redirect(url_for('main.event_detail', event_id=event_id))
+    
     # 1. Get Event
     event = Event.query.get_or_404(event_id)
     
@@ -980,7 +985,7 @@ def rsvp_event(event_id):
 
 
 
-@main_routes.route('/events/unrsvp/<int:event_id>', methods=['POST'])
+@main_routes.route('/events/unrsvp/<int:event_id>/', methods=['POST'])
 @login_required
 def unrsvp_event(event_id):
     # 1. Fetch Event & RSVP
