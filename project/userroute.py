@@ -498,6 +498,7 @@ def apply_mentorship():
 
     if request.method == 'POST':
         track = request.form.get('program_track')
+        system_email = current_app.config['MAIL_USERNAME'] # Standardized sender
         
         # Base Application
         new_app = MentorshipApplication(
@@ -506,27 +507,80 @@ def apply_mentorship():
             goals=request.form.get('goals')
         )
         
+        # Track-specific detail string for the email
+        track_details_html = ""
+
         # CONDITIONAL LOGIC: Only save relevant fields based on track
         if track == 'youth_school':
             new_app.child_first_name = request.form.get('child_fname')
             new_app.child_last_name = request.form.get('child_lname')
             new_app.guardian_name = request.form.get('guardian_name')
-            
             new_app.grade_level = request.form.get('grade_level')
             new_app.school_name = request.form.get('school_name')
             new_app.parent_email = request.form.get('parent_email')
             
+            track_name = "Youth & School Program"
+            track_details_html = f"<p><strong>Child:</strong> {new_app.child_first_name} {new_app.child_last_name}</p>"
+
         elif track == 'idp_reintegration':
             new_app.vocational_interest = request.form.get('vocational_interest')
             new_app.business_idea = request.form.get('business_idea')
+            
+            track_name = "IDP Reintegration"
+            track_details_html = f"<p><strong>Interest:</strong> {new_app.vocational_interest}</p>"
 
         try:
             db.session.add(new_app)
             db.session.commit()
+
+            # --- DUAL EMAIL LOGIC ---
+            
+            # EMAIL 1: TO ADMIN (New Application Alert)
+            admin_msg = Message(
+                subject=f"New Mentorship Application: {track_name}",
+                sender=system_email,
+                recipients=['info@ourstoryourvoice.org', 'oponeboboola@gmail.com'],
+                reply_to=current_user.email
+            )
+            admin_msg.html = f"<h3>New Mentorship Lead</h3><p>User {current_user.email} applied for {track_name}.</p>"
+
+            # EMAIL 2: TO USER (Confirmation)
+            user_msg = Message(
+                subject=f"Application Received: {track_name}",
+                sender=system_email,
+                recipients=[current_user.email]
+            )
+            user_msg.html = f"""
+            <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 12px;">
+                <h2 style="color: #4F46E5;">Application Received! 🎓</h2>
+                <p>Hi {current_user.first_name},</p>
+                <p>Thank you for applying to the <strong>{track_name}</strong>. We've received your details and our mentors will review your goals shortly.</p>
+                
+                <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                    {track_details_html}
+                    <p><strong>Status:</strong> Pending Review</p>
+                </div>
+
+                <p>We aim to respond to all applications within 10 business days.</p>
+                <hr style="border: 0; border-top: 1px solid #eee;">
+                <p style="font-size: 12px; color: #666;">The Our Story Our Voice Team</p>
+            </div>
+            """
+
+            try:
+                mail.send(admin_msg)
+                mail.send(user_msg)
+                print(f"✅ Mentorship emails sent to {current_user.email}")
+            except Exception as mail_err:
+                # Catching mail errors so the successful DB entry still redirects
+                print(f"❌ MENTORSHIP EMAIL FAILED: {mail_err}")
+
             flash('Application received! We will review it shortly.', 'success')
-            return redirect(url_for('main.mentorship_success')) # Create this route next
+            return redirect(url_for('main.mentorship_success'))
+
         except Exception as e:
             db.session.rollback()
+            print(f"❌ DB ERROR: {e}")
             flash('Error submitting application.', 'error')
 
     return render_template('user/mentorship_form.html')
@@ -534,12 +588,10 @@ def apply_mentorship():
 @main_routes.route('/partner/apply', methods=['GET', 'POST'])
 @login_required
 def apply_partner():
-    # 1. DUPLICATE CHECK: Has this user already applied?
+    # 1. DUPLICATE CHECK
     existing_app = PartnerApplication.query.filter_by(user_id=current_user.id).first()
     
     if existing_app:
-        # If they already applied, show them their status (reuse the mentorship status logic or a new page)
-        # For now, let's redirect to a status page specific for partners
         return render_template('user/partner_status.html', app=existing_app)
 
     if request.method == 'POST':
@@ -549,6 +601,8 @@ def apply_partner():
         website = request.form.get('website')
         p_type = request.form.get('partnership_type')
         proposal = request.form.get('proposal')
+        
+        system_email = current_app.config['MAIL_USERNAME'] # Standardized sender
 
         # 3. Validation
         if not all([org_name, org_type, p_type, proposal]):
@@ -570,15 +624,62 @@ def apply_partner():
             db.session.add(new_partner)
             db.session.commit()
             
-            # Generate URL *before* flashing to catch errors early
-            target_url = url_for('main.partner_success') 
-            
+            # --- EMAIL 1: TO ADMIN (New Proposal Alert) ---
+            admin_msg = Message(
+                subject=f"New Partnership Proposal: {org_name}",
+                sender=system_email,
+                recipients=['info@ourstoryourvoice.org', 'oponeboboola@gmail.com'],
+                reply_to=current_user.email
+            )
+            admin_msg.html = f"""
+            <div style="font-family: sans-serif; padding: 20px; background-color: #f8fafc;">
+                <h2>New Partnership Application 🤝</h2>
+                <p><strong>Organization:</strong> {org_name} ({org_type})</p>
+                <p><strong>Partner Type:</strong> {p_type}</p>
+                <p><strong>Website:</strong> {website}</p>
+                <p><strong>Applicant:</strong> {current_user.first_name} {current_user.last_name}</p>
+                <hr>
+                <p><strong>Proposal Details:</strong></p>
+                <div style="background: #fff; padding: 15px; border-left: 4px solid #4F46E5;">
+                    {proposal}
+                </div>
+            </div>
+            """
+
+            # --- EMAIL 2: TO USER (Confirmation) ---
+            user_msg = Message(
+                subject="Partnership Proposal Received - Our Story Our Voice",
+                sender=system_email,
+                recipients=[current_user.email]
+            )
+            user_msg.html = f"""
+            <div style="font-family: sans-serif; padding: 20px; max-width: 600px; border: 1px solid #e2e8f0; border-radius: 12px;">
+                <h2 style="color: #1e293b;">Thank You for Reaching Out!</h2>
+                <p>Hi {current_user.first_name},</p>
+                <p>We've successfully received your partnership proposal for <strong>{org_name}</strong>.</p>
+                <p>Our team reviews all applications to ensure they align with our mission. You can expect to hear from us within 5-7 business days regarding the next steps.</p>
+                <div style="margin-top: 20px; padding: 15px; background-color: #f1f5f9; border-radius: 8px;">
+                    <p style="margin: 0; font-size: 14px;"><strong>Application Status:</strong> Pending Review</p>
+                </div>
+                <p style="margin-top: 20px; font-size: 12px; color: #64748b;">Best regards,<br>The OSOV Partnership Team</p>
+            </div>
+            """
+
+            # 5. Send Emails
+            try:
+                mail.send(admin_msg)
+                mail.send(user_msg)
+                print(f"✅ Partnership emails sent for {org_name}")
+            except Exception as mail_err:
+                # Catch email failures so the DB record remains
+                print(f"❌ PARTNERSHIP EMAIL FAILED: {mail_err}")
+
             flash('Partnership proposal received! We will contact you shortly.', 'success')
-            return redirect(target_url)
+            return redirect(url_for('main.partner_success'))
             
         except Exception as e:
             db.session.rollback()
-            print(f"Error: {e}") # Check your terminal, I bet it says 'BuildError'
+            print(f"❌ Database Error: {e}")
             flash('An error occurred. Please try again.', 'error')
             return render_template('user/partner_form.html')
         
@@ -587,6 +688,48 @@ def apply_partner():
 @main_routes.route('/partner/success')
 @login_required
 def partner_success():
+    # 1. Fetch the user's latest application
+    application = PartnerApplication.query.filter_by(user_id=current_user.id).order_by(PartnerApplication.created_at.desc()).first()
+    
+    if application:
+        system_email = current_app.config['MAIL_USERNAME'] # Using your verified Hostinger email
+        
+        # --- EMAIL: PARTNER APPROVAL/WELCOME ---
+        msg = Message(
+            subject="Partnership Approved - Our Story Our Voice",
+            sender=system_email,
+            recipients=[current_user.email]
+        )
+        
+        # Using the fields from your PartnerApplication model
+        msg.html = f"""
+        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; max-width: 600px;">
+            <h2 style="color: #10b981;">Partnership Approved! 🎉</h2>
+            <p>Hi {current_user.first_name},</p>
+            <p>We are thrilled to inform you that your partnership application for <strong>{application.org_name}</strong> has been approved.</p>
+            
+            <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <p style="margin: 0;"><strong>Partnership Type:</strong> {application.partnership_type}</p>
+                <p style="margin: 5px 0 0 0;"><strong>Status:</strong> Active</p>
+            </div>
+
+            <p>We look forward to collaborating with you on your proposal: <em>"{application.proposal_details[:100]}..."</em></p>
+            
+            <p>Our team will reach out shortly with the next steps and onboarding materials.</p>
+            
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+            <p style="font-size: 12px; color: #64748b;">The Our Story Our Voice Team</p>
+        </div>
+        """
+
+        try:
+            # We wrap this in a try block so if the email fails, 
+            # the user still sees the success page.
+            mail.send(msg)
+            print(f"✅ Approval email sent to {current_user.email}")
+        except Exception as e:
+            print(f"❌ Failed to send approval email: {e}")
+
     return render_template('user/partner_success.html')
 
 @main_routes.route('/mentorship/status')
@@ -639,29 +782,58 @@ def forgot_password():
     if request.method == 'POST':
         email = request.form.get('email')
         user = User.query.filter_by(email=email).first()
+        system_email = current_app.config['MAIL_USERNAME'] # Standardizing the sender
 
         if user:
-            # Generate a token valid for 1800 seconds (30 mins)
-            print(user)
+            # Generate a token valid for 30 mins
             token = s.dumps(email, salt='password-reset-salt')
             
             # Create the Link
             link = url_for('main.reset_password', token=token, _external=True)
             
-            # SEND EMAIL (Or print to console for testing)
-            msg = Message('Password Reset Request', sender='info@ourstoryourvoice.org', recipients=[email])
-            msg.body = f'Click the link to reset your password: {link}'
+            # --- EMAIL 1: TO USER (The Reset Link) ---
+            user_msg = Message(
+                subject='Password Reset Request - Our Story Our Voice', 
+                sender=system_email, # Matches SMTP account to avoid 550 errors
+                recipients=[email]
+            )
             
+            # HTML version for better UX
+            user_msg.html = f"""
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 8px; max-width: 500px;">
+                <h2 style="color: #333;">Reset Your Password</h2>
+                <p>Hello,</p>
+                <p>We received a request to reset your password for your account at <strong>Our Story Our Voice</strong>.</p>
+                <div style="margin: 30px 0; text-align: center;">
+                    <a href="{link}" style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Reset Password</a>
+                </div>
+                <p style="font-size: 12px; color: #666;">This link will expire in 30 minutes. If you did not request this, please ignore this email.</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                <p style="font-size: 11px; color: #999;">If the button doesn't work, copy and paste this link into your browser: <br>{link}</p>
+            </div>
+            """
+            
+            # --- EMAIL 2: TO ADMIN (Security Alert) ---
+            admin_msg = Message(
+                subject=f"Security Alert: Password Reset Requested",
+                sender=system_email,
+                recipients=['info@ourstoryourvoice.org', 'oponeboboola@gmail.com']
+            )
+            admin_msg.body = f"A password reset link was generated for: {email}"
+
             try:
-                mail.send(msg)
+                mail.send(user_msg)
+                mail.send(admin_msg) # Keep yourself notified of security events
                 flash('Check your email for a password reset link.', 'info')
             except Exception as e:
-                print(e)
-                flash('Error sending email. Check console.', 'error')
-                # FOR TESTING ONLY: Print link to console so you can click it
-                print(f"TESTING LINK: {link}") 
+                # Log the specific error for debugging
+                print(f"❌ PASSWORD RESET EMAIL FAILED: {str(e)}")
+                # Still print link to console for your development testing
+                print(f"DEBUGGING LINK: {link}") 
+                flash('There was an error sending the reset email. Please try again later.', 'error')
+        
         else:
-            # Security: Don't tell them if the email doesn't exist to prevent fishing
+            # Security: Don't confirm if the email exists
             flash('If that email exists, we have sent a link.', 'info')
             
         return redirect(url_for('main.signin'))
@@ -885,11 +1057,9 @@ def event_detail(event_id):
     return render_template('user/event_detail.html', event=event, is_registered=is_registered)
 
 # THE RSVP ACTION (You need this to make the button work)
-@main_routes.route('/event/<int:event_id>/rsvp/', methods=['GET','POST'])
+@main_routes.route('/event/<int:event_id>/rsvp/', methods=['GET', 'POST'])
 def rsvp_event(event_id):
-
     if request.method == 'GET':
-        # If someone accidentally lands here via GET, send them back to the event page
         return redirect(url_for('main.event_detail', event_id=event_id))
     
     # 1. Get Event
@@ -897,6 +1067,7 @@ def rsvp_event(event_id):
     
     # 2. Get Data from Form
     data = request.form
+    system_email = current_app.config['MAIL_USERNAME']
     
     # 3. Determine User vs Guest
     if current_user.is_authenticated:
@@ -910,18 +1081,16 @@ def rsvp_event(event_id):
         first_name = data.get('first_name')
         last_name = data.get('last_name')
 
-    # 4. Duplicate Check (Works for both Users AND Guests now)
-    # Check if this email has already RSVP'd for this specific event
+    # 4. Duplicate Check
     existing_rsvp = EventRSVP.query.filter_by(event_id=event_id).filter(
         (EventRSVP.user_id == user_id) if user_id else (EventRSVP.guest_email == email)
     ).first()
 
     if existing_rsvp:
         flash('You are already registered for this event.', 'info')
-        # Redirect to modal with existing ticket
         return redirect(url_for('main.event_detail', event_id=event_id, rsvp_success='true', ticket_id=existing_rsvp.ticket_id))
 
-    # 5. Generate Unique Ticket ID
+    # 5. Generate Ticket ID
     ticket_code = str(uuid.uuid4())[:8].upper()
 
     # 6. Save to DB
@@ -929,10 +1098,8 @@ def rsvp_event(event_id):
         event_id=event.id,
         user_id=user_id,
         guest_email=email,
-        # Save full name for guests if needed, or split fields
         guest_name=f"{first_name} {last_name}".strip(),
         ticket_id=ticket_code,
-        # Optional fields from your form
         company=data.get('company'),
         how_heard=data.get('how_heard')
     )
@@ -941,45 +1108,64 @@ def rsvp_event(event_id):
         db.session.add(new_rsvp)
         db.session.commit()
 
-        # --- 7. SEND EMAIL (Hostinger Logic) ---
-        try:
-            msg = Message(
-                subject=f"Your Ticket: {event.title}",
-                recipients=[email],
-                sender=current_app.config.get('MAIL_DEFAULT_SENDER') # Uses config
-            )
-            
-            # HTML Email Body (Your nice design)
-            msg.html = f"""
-            <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; max-width: 600px; margin: 0 auto;">
-                <h2 style="color: #333;">You're Confirmed!</h2>
-                <p>Hi {first_name}, your spot for <strong>{event.title}</strong> is reserved.</p>
-                
-                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; margin: 20px 0; border-radius: 8px; text-align: center;">
-                    <p style="margin:0; font-size: 14px; color: #166534;">YOUR TICKET ID</p>
-                    <p style="margin: 5px 0 0 0; font-size: 24px; font-weight: bold; letter-spacing: 2px; color: #15803d;">{ticket_code}</p>
-                </div>
-
-                <p><strong>Date:</strong> {event.date_time.strftime('%B %d, %Y at %I:%M %p')}</p>
-                <p><strong>Location:</strong> {event.location}</p>
-                <hr style="border: 0; border-top: 1px solid #eee;">
-                <p style="font-size: 12px; color: #666;">Please show this email at the entrance.</p>
+        # --- 7. DUAL EMAIL LOGIC (Matches Contact Form) ---
+        
+        # EMAIL 1: TO ADMIN (Notification)
+        admin_msg = Message(
+            subject=f"New RSVP: {event.title}",
+            sender=system_email,
+            recipients=['info@ourstoryourvoice.org', 'oponeboboola@gmail.com'],
+            reply_to=email
+        )
+        admin_msg.html = f"""
+        <div style="font-family: sans-serif; padding: 20px; background-color: #f3f4f6;">
+            <div style="background-color: #fff; padding: 20px; border-radius: 10px;">
+                <h2>New Event Registration! 🎟️</h2>
+                <p><strong>Attendee:</strong> {first_name} {last_name}</p>
+                <p><strong>Email:</strong> {email}</p>
+                <p><strong>Event:</strong> {event.title}</p>
+                <p><strong>Ticket ID:</strong> {ticket_code}</p>
+                <p><strong>Source:</strong> {data.get('how_heard')}</p>
             </div>
-            """
-            
-            mail.send(msg)
-            print(f"Email sent successfully to {email}")
+        </div>
+        """
 
+        # EMAIL 2: TO USER (The Ticket)
+        user_msg = Message(
+            subject=f"Your Ticket: {event.title}",
+            sender=system_email,
+            recipients=[email]
+        )
+        user_msg.html = f"""
+        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #333;">You're Confirmed!</h2>
+            <p>Hi {first_name}, your spot for <strong>{event.title}</strong> is reserved.</p>
+            
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; margin: 20px 0; border-radius: 8px; text-align: center;">
+                <p style="margin:0; font-size: 14px; color: #166534;">YOUR TICKET ID</p>
+                <p style="margin: 5px 0 0 0; font-size: 24px; font-weight: bold; letter-spacing: 2px; color: #15803d;">{ticket_code}</p>
+            </div>
+
+            <p><strong>Date:</strong> {event.date_time.strftime('%B %d, %Y at %I:%M %p')}</p>
+            <p><strong>Location:</strong> {event.location}</p>
+            <hr style="border: 0; border-top: 1px solid #eee;">
+            <p style="font-size: 12px; color: #666;">Please show this email at the entrance.</p>
+        </div>
+        """
+
+        try:
+            mail.send(admin_msg)
+            mail.send(user_msg)
+            print(f"✅ RSVP Emails sent successfully to {email} and Admin")
         except Exception as e:
-            # We catch email errors so the user still gets their ticket on screen
-            print(f"Email failed to send: {e}")
-        # ---------------------------------------
+            # We catch email errors so the user still gets their ticket on the UI
+            print(f"❌ RSVP EMAIL FAILED: {e}")
 
         return redirect(url_for('main.event_detail', event_id=event_id, rsvp_success='true', ticket_id=ticket_code))
 
     except Exception as e:
         db.session.rollback()
-        print(f"Database Error: {e}")
+        print(f"❌ Database Error: {e}")
         flash('An error occurred while registering. Please try again.', 'error')
         return redirect(url_for('main.event_detail', event_id=event_id))    
 
@@ -992,50 +1178,72 @@ def unrsvp_event(event_id):
     event = Event.query.get_or_404(event_id)
     rsvp = EventRSVP.query.filter_by(user_id=current_user.id, event_id=event_id).first()
     
-    if rsvp:
-        # 2. Capture email BEFORE deleting the record
-        recipient_email = rsvp.email 
-        
-        try:
-            # 3. Delete from DB
-            db.session.delete(rsvp)
-            db.session.commit()
-            
-            # 4. Prepare Email
-            msg = Message(
-                subject=f"Cancellation Confirmed: {event.title}",
-                sender=current_app.config['MAIL_USERNAME'],
-                recipients=[recipient_email]
-            )
-            
-            msg.html = f"""
-            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-                <h2 style="color: #d32f2f;">Registration Cancelled</h2>
-                <p>Hi {current_user.first_name},</p>
-                <p>This email confirms that you have successfully <strong>cancelled your reservation</strong> for:</p>
-                
-                <div style="background-color: #f9fafb; padding: 15px; margin: 15px 0; border-left: 4px solid #d32f2f;">
-                    <p style="margin: 0; font-weight: bold;">{event.title}</p>
-                    <p style="margin: 5px 0 0 0; color: #666;">{event.date_time.strftime('%B %d, %Y')}</p>
-                </div>
-
-                <p>Your spot has been released to other attendees.</p>
-                <p style="font-size: 12px; color: #888; margin-top: 20px;">The Our Story Our Voice Team</p>
-            </div>
-            """
-            
-            # 5. Send
-            mail.send(msg)
-            print(f"✅ Un-RSVP Email sent to {recipient_email}")
-            flash('Registration cancelled successfully.', 'info')
-
-        except Exception as e:
-            # Log the error but don't crash the user
-            print(f"❌ Email Failed: {e}")
-            flash('Registration cancelled, but email confirmation failed.', 'warning')
-            
-    else:
+    if not rsvp:
         flash('You were not registered for this event.', 'error')
+        return redirect(url_for('main.event_detail', event_id=event_id))
+
+    # 2. Capture data before deleting
+    recipient_email = rsvp.guest_email if rsvp.guest_email else current_user.email
+    system_email = current_app.config['MAIL_USERNAME']
+    first_name = current_user.first_name
+
+    try:
+        # 3. Delete from DB
+        db.session.delete(rsvp)
+        db.session.commit()
+
+        # --- EMAIL 1: TO ADMIN (Notification) ---
+        admin_msg = Message(
+            subject=f"Cancellation: {event.title}",
+            sender=system_email,
+            recipients=['info@ourstoryourvoice.org', 'oponeboboola@gmail.com'],
+            reply_to=recipient_email
+        )
+        admin_msg.html = f"""
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb;">
+            <h2>Event Cancellation 🚨</h2>
+            <p><strong>User:</strong> {first_name} {current_user.last_name}</p>
+            <p><strong>Event:</strong> {event.title}</p>
+            <p><strong>Date:</strong> {event.date_time.strftime('%B %d, %Y')}</p>
+            <p>The spot has been released back to the public.</p>
+        </div>
+        """
+
+        # --- EMAIL 2: TO USER (Confirmation) ---
+        user_msg = Message(
+            subject=f"Cancellation Confirmed: {event.title}",
+            sender=system_email,
+            recipients=[recipient_email]
+        )
+        user_msg.html = f"""
+        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+            <h2 style="color: #d32f2f;">Registration Cancelled</h2>
+            <p>Hi {first_name},</p>
+            <p>This confirms that you have successfully <strong>cancelled your reservation</strong> for:</p>
+            <div style="background-color: #f9fafb; padding: 15px; margin: 15px 0; border-left: 4px solid #d32f2f;">
+                <p style="margin: 0; font-weight: bold;">{event.title}</p>
+                <p style="margin: 5px 0 0 0; color: #666;">{event.date_time.strftime('%B %d, %Y')}</p>
+            </div>
+            <p>Your spot has been released. We hope to see you at a future event!</p>
+            <p style="font-size: 12px; color: #888; margin-top: 20px;">The Our Story Our Voice Team</p>
+        </div>
+        """
+
+        # 4. Attempt to Send Both
+        try:
+            mail.send(admin_msg)
+            mail.send(user_msg)
+            print(f"✅ Cancellation emails sent for {event.title}")
+        except Exception as e:
+            print(f"❌ EMAIL FAILED: {str(e)}")
+            # We don't flash an error here because the DB deletion was successful
+
+        flash('Registration cancelled successfully.', 'info')
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ Database Error: {e}")
+        flash('An error occurred during cancellation. Please try again.', 'error')
         
     return redirect(url_for('main.event_detail', event_id=event_id))
 

@@ -4,3 +4,4 @@ instance/
 __pycache__/
 *.pyc
 .DS_Store
+project/client_secret.json
