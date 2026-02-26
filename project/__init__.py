@@ -3,6 +3,7 @@ import cloudinary
 from flask import Flask,request,render_template,flash
 from dotenv import load_dotenv
 from flask_login import current_user
+from werkzeug.middleware.proxy_fix import ProxyFix # 1. ADD THIS IMPORT
 # 1. Import extensions (Removed 'cloudinary' from this list)
 from .extension import db, csrf, oauth, mail, login_manager
 from . import config
@@ -13,6 +14,8 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
     
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
+
     app.config.from_object(config)
     
     # Initialize Extensions
