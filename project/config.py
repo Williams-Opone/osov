@@ -8,7 +8,13 @@ load_dotenv() # Load variables from .env if it exists
 # config.py
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
-
+SQLALCHEMY_ENGINE_OPTIONS = {
+    # 1. Ping the database before every query to ensure the connection is alive
+    "pool_pre_ping": True,
+    
+    # 2. Automatically recycle (refresh) connections older than 5 minutes (300 seconds)
+    "pool_recycle": 300,
+}   
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
