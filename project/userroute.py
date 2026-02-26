@@ -817,7 +817,7 @@ def forgot_password():
             admin_msg = Message(
                 subject=f"Security Alert: Password Reset Requested",
                 sender=system_email,
-                recipients=['info@ourstoryourvoice.org', 'oponeboboola@gmail.com']
+                recipients=['info@ourstoryourvoice.org']
             )
             admin_msg.body = f"A password reset link was generated for: {email}"
 
