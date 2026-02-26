@@ -785,6 +785,7 @@ def forgot_password():
         system_email = current_app.config['MAIL_USERNAME'] # Standardizing the sender
 
         if user:
+            s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
             # Generate a token valid for 30 mins
             token = s.dumps(email, salt='password-reset-salt')
             
