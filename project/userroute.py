@@ -280,12 +280,16 @@ def contact_us():
             mail.send(user_msg)  # Send to them
             
             flash('Message sent successfully! Check your inbox for a confirmation.', 'success')
-            return redirect(url_for('main.contact_us'))
+            
+            # FIX: Add _anchor='contact-form' 
+            return redirect(url_for('main.contact_us', _anchor='contact-form'))
             
         except Exception as e:
             print(f"❌ EMAIL FAILED: {str(e)}")
             flash('There was an issue sending your message. Please try again later.', 'error')
-            return redirect(url_for('main.contact_us'))
+            
+            # FIX: Add _anchor='contact-form' here too!
+            return redirect(url_for('main.contact_us', _anchor='contact-form'))
 
     return render_template('user/contact.html')
 
