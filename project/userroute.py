@@ -822,42 +822,92 @@ def signin():
 
 @main_routes.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
+    print("--- DEBUGGING FORGOT PASSWORD CONFIG ---")
+    print(f"Mail Server: {current_app.config.get('MAIL_SERVER')}")
+    print(f"Mail User: {current_app.config.get('MAIL_USERNAME')}")
+    
     if request.method == 'POST':
         email = request.form.get('email')
         user = User.query.filter_by(email=email).first()
-        system_email = current_app.config['MAIL_USERNAME'] # Standardizing the sender
+        system_email = current_app.config['MAIL_USERNAME'] 
 
         if user:
+            # Generate the secure token
             s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
-            # Generate a token valid for 30 mins
             token = s.dumps(email, salt='password-reset-salt')
-            
-            # Create the Link
             link = url_for('main.reset_password', token=token, _external=True)
             
-            # --- EMAIL 1: TO USER (The Reset Link) ---
+            # --- BRAND STYLING ---
+            brand_orange = "#EA580C" 
+            light_orange = "#FFF7ED" 
+            logo_url = "https://osov-zg9q-73mqbqvkq-oponeboboola-3463s-projects.vercel.app/static/logoest.svg"
+            
+            # Get the user's name safely
+            first_name = user.first_name if user.first_name else "there"
+
+            # --- EMAIL 1: TO USER (Branded Reset Link) ---
             user_msg = Message(
                 subject='Password Reset Request - Our Story Our Voice', 
-                sender=system_email, # Matches SMTP account to avoid 550 errors
+                sender=system_email, 
                 recipients=[email]
             )
             
-            # HTML version for better UX
+            # 1. Plain text fallback (CRITICAL for bypassing spam filters)
+            user_msg.body = f"Hi {first_name},\n\nWe received a request to reset your password for your account at Our Story Our Voice. Copy and paste the link below into your browser to reset it:\n\n{link}\n\nThis link will expire in 30 minutes. If you did not request this, please ignore this email.\n\nBest regards,\nThe OSOV Team"
+            
+            # 2. Beautiful HTML version
             user_msg.html = f"""
-            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 8px; max-width: 500px;">
-                <h2 style="color: #333;">Reset Your Password</h2>
-                <p>Hello,</p>
-                <p>We received a request to reset your password for your account at <strong>Our Story Our Voice</strong>.</p>
-                <div style="margin: 30px 0; text-align: center;">
-                    <a href="{link}" style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Reset Password</a>
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {{ font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f9fafb; margin: 0; padding: 40px 20px; -webkit-font-smoothing: antialiased; }}
+                    .wrapper {{ width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }}
+                    .header {{ text-align: center; padding: 40px 20px 30px; border-bottom: 4px solid {brand_orange}; }}
+                    .logo {{ max-height: 60px; width: auto; }}
+                    .body-content {{ padding: 40px 30px; color: #374151; line-height: 1.7; font-size: 16px; }}
+                    .greeting {{ font-size: 22px; font-weight: 700; color: #111827; margin-top: 0; margin-bottom: 20px; }}
+                    .highlight-box {{ background-color: {light_orange}; border-radius: 8px; padding: 20px; margin: 30px 0; text-align: center; border: 1px solid #FFEDD5; }}
+                    .button-container {{ text-align: center; margin: 35px 0; }}
+                    .btn {{ background-color: {brand_orange}; color: #ffffff !important; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 16px; }}
+                    .footer {{ background-color: {brand_orange}; color: #ffffff; text-align: center; padding: 30px 20px; font-size: 14px; }}
+                    .footer a {{ color: #ffffff; text-decoration: underline; font-weight: bold; }}
+                </style>
+            </head>
+            <body>
+                <div class="wrapper">
+                    <div class="header">
+                        <img class="logo" src="{logo_url}" alt="Our Story Our Voice Logo">
+                    </div>
+                    
+                    <div class="body-content">
+                        <h1 class="greeting">Hi {first_name},</h1>
+                        <p>We received a request to reset the password for your account at <strong>Our Story Our Voice</strong>. If you made this request, simply click the button below to set a new password:</p>
+                        
+                        <div class="button-container">
+                            <a href="{link}" class="btn">Reset Password</a>
+                        </div>
+                        
+                        <div class="highlight-box">
+                            <p style="margin: 0; color: #9A3412; font-weight: 500;">For your security, this link will expire in exactly 30 minutes.</p>
+                        </div>
+                        
+                        <p>If you did not request a password reset, you can safely ignore this email. Your account remains secure.</p>
+                        
+                        <p style="font-size: 12px; color: #9CA3AF; margin-top: 30px; text-align: center;">If the button doesn't work, copy and paste this link into your browser:<br><br>{link}</p>
+                    </div>
+                    
+                    <div class="footer">
+                        <p style="margin: 0;">&copy; 2026 Our Story Our Voice. All rights reserved.</p>
+                        <p style="margin-top: 10px; margin-bottom: 0;"><a href="https://ourstoryourvoice.org">Visit our website</a></p>
+                    </div>
                 </div>
-                <p style="font-size: 12px; color: #666;">This link will expire in 30 minutes. If you did not request this, please ignore this email.</p>
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-                <p style="font-size: 11px; color: #999;">If the button doesn't work, copy and paste this link into your browser: <br>{link}</p>
-            </div>
+            </body>
+            </html>
             """
             
-            # --- EMAIL 2: TO ADMIN (Security Alert) ---
+            # --- EMAIL 2: TO ADMIN (Security Alert - Plain Text is fine here) ---
             admin_msg = Message(
                 subject=f"Security Alert: Password Reset Requested",
                 sender=system_email,
@@ -865,14 +915,15 @@ def forgot_password():
             )
             admin_msg.body = f"A password reset link was generated for: {email}"
 
+            # Attempt to Send Both
             try:
                 mail.send(user_msg)
-                mail.send(admin_msg) # Keep yourself notified of security events
+                mail.send(admin_msg) 
                 flash('Check your email for a password reset link.', 'info')
+                
             except Exception as e:
                 # Log the specific error for debugging
                 print(f"❌ PASSWORD RESET EMAIL FAILED: {str(e)}")
-                # Still print link to console for your development testing
                 print(f"DEBUGGING LINK: {link}") 
                 flash('There was an error sending the reset email. Please try again later.', 'error')
         
