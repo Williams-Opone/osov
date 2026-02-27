@@ -196,6 +196,7 @@ def contact_us():
     print(f"Mail Server: {current_app.config.get('MAIL_SERVER')}")
     print(f"Mail User: {current_app.config.get('MAIL_USERNAME')}")
     print(f"Mail Port: {current_app.config.get('MAIL_PORT')}")
+    
     if request.method == 'POST':
         # 1. Get Data
         f_name = request.form.get('first_name')
@@ -205,12 +206,19 @@ def contact_us():
         msg_content = request.form.get('message')
 
         system_email = current_app.config['MAIL_USERNAME']
+        
+        # Define brand colors for consistency
+        brand_orange = "#EA580C" # A modern, vibrant orange (Tailwind Orange-600)
+        light_orange = "#FFF7ED" # Very soft orange background for callouts
+        
+        # INSERT YOUR LOGO URL HERE (Must be a direct link to an image, e.g., from Cloudinary or your static folder)
+        logo_url = "https://osov-zg9q-73mqbqvkq-oponeboboola-3463s-projects.vercel.app/static/logoest.svg" 
 
-        # --- EMAIL 1: TO ADMIN (The HTML Layout) ---
+        # --- EMAIL 1: TO ADMIN (Updated to Orange Theme) ---
         admin_msg = Message(
             subject=f"New Inquiry: {topic}", 
             sender=system_email, 
-            recipients=['info@ourstoryourvoice.org', 'oponeboboola@gmail.com'], # Sends to Info AND You
+            recipients=['info@ourstoryourvoice.org'],
             reply_to=user_email
         )
 
@@ -220,58 +228,93 @@ def contact_us():
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
-                body {{ font-family: Arial, sans-serif; background-color: #f3f4f6; color: #111827; }}
-                .container {{ max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }}
-                .header {{ background-color: #ffffff; padding: 30px; text-align: center; border-bottom: 1px solid #eee; }}
-                .content {{ padding: 40px; }}
+                body {{ font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f3f4f6; color: #111827; margin: 0; padding: 20px; }}
+                .container {{ max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }}
+                .header {{ background-color: #ffffff; padding: 25px; text-align: center; border-bottom: 3px solid {brand_orange}; }}
+                .content {{ padding: 35px; }}
                 .label {{ font-size: 11px; font-weight: 700; text-transform: uppercase; color: #9CA3AF; display: block; margin-top: 20px; }}
                 .value {{ font-size: 16px; font-weight: 500; color: #333; }}
-                .msg-box {{ background-color: #f9fafb; padding: 20px; border-left: 4px solid #4F46E5; margin-top: 10px; font-style: italic; }}
+                .msg-box {{ background-color: #f9fafb; padding: 20px; border-left: 4px solid {brand_orange}; margin-top: 10px; font-style: italic; color: #4B5563; }}
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h2>New Website Inquiry 🚀</h2>
+                    <h2 style="margin: 0; color: #111827;">New Website Inquiry 🚀</h2>
                 </div>
                 <div class="content">
                     <span class="label">From</span>
                     <div class="value">{f_name} {l_name}</div>
 
                     <span class="label">Email</span>
-                    <div class="value"><a href="mailto:{user_email}">{user_email}</a></div>
+                    <div class="value"><a href="mailto:{user_email}" style="color: {brand_orange};">{user_email}</a></div>
 
                     <span class="label">Topic</span>
                     <div class="value">{topic}</div>
 
                     <span class="label">Message</span>
                     <div class="msg-box">"{msg_content}"</div>
-                    
-                    <br>
-                    
                 </div>
             </div>
         </body>
         </html>
         """
 
-        # --- EMAIL 2: TO USER (Confirmation) ---
+        # --- EMAIL 2: TO USER (Branded, Attractive HTML Confirmation) ---
         user_msg = Message(
             subject=f"We received your message - Our Story Our Voice",
             sender=system_email,
-            recipients=[user_email] # Send to the user
+            recipients=[user_email]
         )
         
-        user_msg.body = f"""
-        Hi {f_name},
+        # Fallback plain text for email clients that block HTML
+        user_msg.body = f"Hi {f_name},\n\nThank you for contacting Our Story Our Voice. We have received your message regarding '{topic}'. We aim to respond within 2-3 business days.\n\nBest regards,\nThe OSOV Team"
 
-        Thank you for contacting Our Story Our Voice. 
-        
-        We have received your message regarding "{topic}" and our team will review it shortly. We aim to respond within 2-3 business days.
-
-        Best regards,
-        The OSOV Team
-        www.ourstoryourvoice.org
+        # The beautiful HTML version
+        user_msg.html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body {{ font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f9fafb; margin: 0; padding: 40px 20px; -webkit-font-smoothing: antialiased; }}
+                .wrapper {{ width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }}
+                .header {{ text-align: center; padding: 40px 20px 30px; border-bottom: 4px solid {brand_orange}; }}
+                .logo {{ max-height: 60px; width: auto; }}
+                .body-content {{ padding: 40px 30px; color: #374151; line-height: 1.7; font-size: 16px; }}
+                .greeting {{ font-size: 22px; font-weight: 700; color: #111827; margin-top: 0; margin-bottom: 20px; }}
+                .highlight-box {{ background-color: {light_orange}; border-radius: 8px; padding: 20px; margin: 30px 0; text-align: center; border: 1px solid #FFEDD5; }}
+                .highlight-box p {{ margin: 0; color: #9A3412; font-weight: 500; }}
+                .footer {{ background-color: {brand_orange}; color: #ffffff; text-align: center; padding: 30px 20px; font-size: 14px; }}
+                .footer a {{ color: #ffffff; text-decoration: underline; font-weight: bold; }}
+            </style>
+        </head>
+        <body>
+            <div class="wrapper">
+                <div class="header">
+                    <img class="logo" src="{logo_url}" alt="Our Story Our Voice Logo">
+                </div>
+                
+                <div class="body-content">
+                    <h1 class="greeting">Hi {f_name},</h1>
+                    <p>Thank you for reaching out to <strong>Our Story Our Voice</strong>. This email is just to let you know that we have successfully received your message.</p>
+                    
+                    <div class="highlight-box">
+                        <p>We are reviewing your inquiry regarding <strong>"{topic}"</strong> and will get back to you within 2-3 business days.</p>
+                    </div>
+                    
+                    <p>If you have any additional details to add, feel free to reply directly to this email.</p>
+                    
+                    <p style="margin-top: 40px; margin-bottom: 0;">Warm regards,<br><strong>The OSOV Team</strong></p>
+                </div>
+                
+                <div class="footer">
+                    <p style="margin: 0;">&copy; 2026 Our Story Our Voice. All rights reserved.</p>
+                    <p style="margin-top: 10px; margin-bottom: 0;"><a href="https://ourstoryourvoice.org">Visit our website</a></p>
+                </div>
+            </div>
+        </body>
+        </html>
         """
 
         # 4. Attempt to Send Both
@@ -280,15 +323,11 @@ def contact_us():
             mail.send(user_msg)  # Send to them
             
             flash('Message sent successfully! Check your inbox for a confirmation.', 'success')
-            
-            # FIX: Add _anchor='contact-form' 
             return redirect(url_for('main.contact_us', _anchor='contact-form'))
             
         except Exception as e:
             print(f"❌ EMAIL FAILED: {str(e)}")
             flash('There was an issue sending your message. Please try again later.', 'error')
-            
-            # FIX: Add _anchor='contact-form' here too!
             return redirect(url_for('main.contact_us', _anchor='contact-form'))
 
     return render_template('user/contact.html')
