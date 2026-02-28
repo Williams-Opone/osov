@@ -14,6 +14,23 @@ load_dotenv()
 
 def create_app():
     app = Flask(__name__)
+    # Load the base config first
+    app.config.from_object(config)
+
+    # Now override/clean the URI for the TiDB Cloud + Vercel environment
+    raw_uri = app.config.get('SQLALCHEMY_DATABASE_URI')
+    if raw_uri and '?' in raw_uri:
+        app.config['SQLALCHEMY_DATABASE_URI'] = raw_uri.split('?')[0]
+
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        "connect_args": {
+            "ssl": {
+                "ca": "/etc/ssl/certs/ca-certificates.crt", 
+                "check_hostname": True
+            }
+        }
+    }
+
     
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
