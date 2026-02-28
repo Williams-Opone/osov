@@ -57,18 +57,17 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
+   
     # Google OAuth Registration
-    with open('client_secret.json') as f:
-        google_data = json.load(f)['web'] # Use 'web' or 'installed' depending on your file structure
-
     oauth.register(
-        name='google',
-        client_id=google_data['client_id'],
-        client_secret=google_data['client_secret'],
-        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-        client_kwargs={'scope': 'openid email profile'}
+    name='google',
+    client_id=os.environ.get('GOOGLE_CLIENT_ID'),
+    client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    client_kwargs={'scope': 'openid email profile'}
     )
 
+    
     # Register Blueprints
     from .userroute import main_routes
     app.register_blueprint(main_routes)    
