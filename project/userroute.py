@@ -48,24 +48,24 @@ def internal_server_error(e):
 
 @main_routes.route('/login/google')
 def google_login():
-    # 1. SAVE THE GOAL
-    # We look for 'next' in the URL (e.g., /login/google?next=/volunteer)
+    # 1. Capture the destination (e.g., /volunteer/)
     next_page = request.args.get('next')
+    
+    # 2. Store it in the session vault so it survives the trip to Google
     if next_page:
         session['next_url'] = next_page
+    else:
+        session['next_url'] = url_for('main.index')
 
-    # Check if we are on Vercel
+    # 3. Determine the Redirect URI
+    # If on Vercel, we use the specific URL registered in Google Console
     if os.environ.get('VERCEL'):
-        # Force the redirect to your FIXED production domain
-        # Replace 'your-main-domain.vercel.app' with your actual production URL
         redirect_uri = "https://osov-zg9q-b0016b9ad-oponeboboola-3463s-projects.vercel.app/auth/callback"
     else:
+        # Local development uses 127.0.0.1 or localhost
         redirect_uri = url_for('main.google_callback', _external=True)
 
-    # 2. PROCEED TO GOOGLE
-    redirect_uri = url_for('main.google_callback', _external=True)
-    
-    print(f"DEBUG: Redirect URI is {redirect_uri}") # Check this against Google Console!    
+    print(f"DEBUG: Sending to Google with Redirect URI: {redirect_uri}")
     return oauth.google.authorize_redirect(redirect_uri)
 
 @main_routes.route('/auth/callback')
@@ -75,23 +75,18 @@ def google_callback():
     user_info = token.get('userinfo')
     
     if not user_info:
-        return redirect(url_for('main.google_login'))
+        flash("Google authentication failed.", "error")
+        return redirect(url_for('main.signin'))
 
     user_email = user_info['email']
 
-    # 2. CHECK DATABASE: Does this user exist?
+    # 2. Database Logic: Login or Register
     existing_user = User.query.filter_by(email=user_email).first()
 
     if existing_user:
-        # --- SCENARIO A: RETURNING USER ---
-        # FIX: Use Flask-Login
         login_user(existing_user)
-        
-        # Optional: Update profile pic if needed here
-        
     else:
-        # --- SCENARIO B: NEW USER ---
-        # Safe name extraction
+        # Create New User
         first_name = user_info.get('given_name')
         last_name = user_info.get('family_name')
         
@@ -104,23 +99,20 @@ def google_callback():
             first_name=first_name,
             last_name=last_name,
             email=user_email
-            # password_hash is None because they use Google
         )
-
         db.session.add(new_user)
         db.session.commit() 
-        
-        # FIX: Use Flask-Login
         login_user(new_user)
-        print("New user created and logged in via Google.")
 
-    # 3. Handle Redirects (Go to 'next' if it exists, otherwise Home)
-    next_url = session.pop('next_url', None)
-    
-    if next_url and next_url.startswith('/'):
-        return redirect(next_url)
-        
-    return redirect(url_for('main.index'))
+    # 3. The "Next" Redirect Logic
+    # Pull the destination from the session vault
+    next_url = session.pop('next_url', url_for('main.index'))
+
+    # Security Check: Prevent "Open Redirect" attacks by ensuring path starts with /
+    if not next_url or not next_url.startswith('/'):
+        next_url = url_for('main.index')
+
+    return redirect(next_url)
 
 
 @main_routes.route('/',methods = ['GET','POST'])
@@ -222,7 +214,7 @@ def contact_us():
         light_orange = "#FFF7ED" # Very soft orange background for callouts
         
         # INSERT YOUR LOGO URL HERE (Must be a direct link to an image, e.g., from Cloudinary or your static folder)
-        logo_url = "https://osov-zg9q-73mqbqvkq-oponeboboola-3463s-projects.vercel.app/static/logoest.svg" 
+        logo_url = "https://osov-zg9q-pu9l1yuuk-oponeboboola-3463s-projects.vercel.app/static/logoest.svg" 
 
         # --- EMAIL 1: TO ADMIN (Updated to Orange Theme) ---
         admin_msg = Message(

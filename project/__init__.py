@@ -72,12 +72,15 @@ def create_app():
     
     @login_manager.unauthorized_handler
     def handle_needs_login():
+        # 1. If they were trying to access an admin page, send them to Admin Sign-in
         if request.endpoint and request.endpoint.startswith('admin.'):
             return redirect(url_for('admin.adminsignin')) 
         
-        # FIX: Pass the current page (request.path) as the 'next' argument
+        # 2. Otherwise, capture the full path (including query params) 
+        # and send them to the main Sign-in page
+        next_url = request.full_path 
         flash("Please log in to access this page.", "error")
-        return redirect(url_for('main.signin', next=request.path))
+        return redirect(url_for('main.signin', next=next_url))
 
     from .model import User
 
