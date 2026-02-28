@@ -54,6 +54,14 @@ def google_login():
     if next_page:
         session['next_url'] = next_page
 
+    # Check if we are on Vercel
+    if os.environ.get('VERCEL'):
+        # Force the redirect to your FIXED production domain
+        # Replace 'your-main-domain.vercel.app' with your actual production URL
+        redirect_uri = "https://osov-zg9q-b0016b9ad-oponeboboola-3463s-projects.vercel.app/auth/callback"
+    else:
+        redirect_uri = url_for('main.google_callback', _external=True)
+
     # 2. PROCEED TO GOOGLE
     redirect_uri = url_for('main.google_callback', _external=True)
     
