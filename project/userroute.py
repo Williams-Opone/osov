@@ -60,7 +60,7 @@ def google_login():
     # 3. Determine the Redirect URI
     # If on Vercel, we use the specific URL registered in Google Console
     if os.environ.get('VERCEL'):
-        redirect_uri = "https://osov-zg9q-b0016b9ad-oponeboboola-3463s-projects.vercel.app/auth/callback"
+        redirect_uri = "https://osov-zg9q-git-main-oponeboboola-3463s-projects.vercel.app/auth/callback"
     else:
         # Local development uses 127.0.0.1 or localhost
         redirect_uri = url_for('main.google_callback', _external=True)
@@ -214,7 +214,7 @@ def contact_us():
         light_orange = "#FFF7ED" # Very soft orange background for callouts
         
         # INSERT YOUR LOGO URL HERE (Must be a direct link to an image, e.g., from Cloudinary or your static folder)
-        logo_url = "https://osov-zg9q-pu9l1yuuk-oponeboboola-3463s-projects.vercel.app/static/logoest.svg" 
+        logo_url = "https://osov-zg9q-git-main-oponeboboola-3463s-projects.vercel.app/static/logoest.svg" 
 
         # --- EMAIL 1: TO ADMIN (Updated to Orange Theme) ---
         admin_msg = Message(
@@ -842,7 +842,7 @@ def forgot_password():
             # --- BRAND STYLING ---
             brand_orange = "#EA580C" 
             light_orange = "#FFF7ED" 
-            logo_url = "https://osov-zg9q-73mqbqvkq-oponeboboola-3463s-projects.vercel.app/static/logoest.svg"
+            logo_url = "https://osov-zg9q-git-main-oponeboboola-3463s-projects.vercel.app/static/logoest.svg"
             
             # Get the user's name safely
             first_name = user.first_name if user.first_name else "there"
