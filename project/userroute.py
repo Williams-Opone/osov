@@ -56,6 +56,8 @@ def google_login():
 
     # 2. PROCEED TO GOOGLE
     redirect_uri = url_for('main.google_callback', _external=True)
+    
+    print(f"DEBUG: Redirect URI is {redirect_uri}") # Check this against Google Console!    
     return oauth.google.authorize_redirect(redirect_uri)
 
 @main_routes.route('/auth/callback')

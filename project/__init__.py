@@ -2,6 +2,7 @@ import os
 import cloudinary
 from flask import Flask,request,render_template,flash
 from dotenv import load_dotenv
+import json
 from flask_login import current_user
 from werkzeug.middleware.proxy_fix import ProxyFix # 1. ADD THIS IMPORT
 # 1. Import extensions (Removed 'cloudinary' from this list)
@@ -57,10 +58,13 @@ def create_app():
         return User.query.get(int(user_id))
 
     # Google OAuth Registration
+    with open('client_secret.json') as f:
+        google_data = json.load(f)['web'] # Use 'web' or 'installed' depending on your file structure
+
     oauth.register(
         name='google',
-        client_id=app.config.get('GOOGLE_CLIENT_ID'),         
-        client_secret=app.config.get('GOOGLE_CLIENT_SECRET'), 
+        client_id=google_data['client_id'],
+        client_secret=google_data['client_secret'],
         server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
         client_kwargs={'scope': 'openid email profile'}
     )
