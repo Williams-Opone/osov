@@ -70,7 +70,17 @@ def google_login():
 
 @main_routes.route('/auth/callback')
 def google_callback():
-    # 1. Get info from Google
+    # 1. Capture the destination from the session vault immediately
+    # Using .pop() ensures the redirect 'memory' is cleared after this attempt
+    next_url = session.pop('next_url', None)
+
+    # 2. Early Exit: If user is already logged in, just send them where they wanted to go
+    if current_user.is_authenticated:
+        if next_url and next_url.startswith('/'):
+            return redirect(next_url)
+        return redirect(url_for('main.index'))
+
+    # 3. Get identity info from Google
     token = oauth.google.authorize_access_token()
     user_info = token.get('userinfo')
     
@@ -80,16 +90,18 @@ def google_callback():
 
     user_email = user_info['email']
 
-    # 2. Database Logic: Login or Register
+    # 4. Database Logic: Login or Register
     existing_user = User.query.filter_by(email=user_email).first()
 
     if existing_user:
+        # Scenario A: Returning User
         login_user(existing_user)
     else:
-        # Create New User
+        # Scenario B: New User Creation
         first_name = user_info.get('given_name')
         last_name = user_info.get('family_name')
         
+        # Fallback for name extraction if Google doesn't provide split fields
         if not first_name:
             name_parts = user_info.get('name', '').split(' ', 1)
             first_name = name_parts[0]
@@ -104,10 +116,7 @@ def google_callback():
         db.session.commit() 
         login_user(new_user)
 
-    # 3. The "Next" Redirect Logic
-    # Pull the destination from the session vault
-    next_url = session.pop('next_url', url_for('main.index'))
-
+    # 5. Final Redirect Logic
     # Security Check: Prevent "Open Redirect" attacks by ensuring path starts with /
     if not next_url or not next_url.startswith('/'):
         next_url = url_for('main.index')
@@ -1060,7 +1069,7 @@ def application_status():
 def volunteer_success():
     return render_template('user/volunteersuccess.html')
 
-@main_routes.route('/volunteer/', methods=['GET', 'POST'])
+@main_routes.route('/volunteer', methods=['GET', 'POST'])
 @login_required
 def volunteer():
     # 1. Check for existing application

@@ -26,10 +26,11 @@
             <div>
                 <h3 class="text-white font-bold text-lg mb-6 tracking-wide">Get Involved</h3>
                 <ul class="space-y-4 text-sm font-medium text-slate-400 inline-block text-left">
-                    <li><a href="{{ url_for('main.google_login', next=request.args.get('next')) }}" 
-                        class="hidden lg:block text-sm font-semibold text-slate-900 hover:text-red-600 transition-colors">
-                         Sign In with Google
-                     </a></li>
+                    <li>
+                        <a href="{{ url_for('main.volunteer') }}" class="flex items-center gap-2 hover:text-red-500 transition-colors duration-200">
+                            <i class="fa-solid fa-hand-holding-heart text-xs opacity-50"></i> Become a Volunteer
+                        </a>
+                    </li>
                     <li><a href="{{url_for('main.campaign_list')}}" class="flex items-center gap-2 hover:text-red-500 transition-colors duration-200"><i class="fa-solid fa-heart text-xs opacity-50"></i> Donate Now</a></li>
                     <li><a href="{{url_for('main.apply_partner')}}" class="flex items-center gap-2 hover:text-red-500 transition-colors duration-200"><i class="fa-solid fa-handshake text-xs opacity-50"></i> Partner with Us</a></li>
                     <li><a href="{{url_for('main.contact_us')}} " class="flex items-center gap-2 hover:text-red-500 transition-colors duration-200"><i class="fa-solid fa-envelope text-xs opacity-50"></i> Contact Support</a></li>
