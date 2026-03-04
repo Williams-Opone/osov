@@ -50,7 +50,7 @@ def internal_server_error(e):
 def google_login():
     # 1. Capture the destination (e.g., /volunteer/)
     next_page = request.args.get('next')
-    
+    print(f"DEBUG 1: google_login received next={next_page}") # Check this!
     # 2. Store it in the session vault so it survives the trip to Google
     if next_page:
         session['next_url'] = next_page
@@ -73,7 +73,7 @@ def google_callback():
     # 1. Capture the destination from the session vault immediately
     # Using .pop() ensures the redirect 'memory' is cleared after this attempt
     next_url = session.pop('next_url', None)
-
+    print(f"DEBUG 2: google_callback retrieved next_url={next_url}")
     # 2. Early Exit: If user is already logged in, just send them where they wanted to go
     if current_user.is_authenticated:
         if next_url and next_url.startswith('/'):
