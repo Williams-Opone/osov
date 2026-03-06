@@ -78,7 +78,7 @@ def create_app():
         
         # 2. Otherwise, capture the full path (including query params) 
         # and send them to the main Sign-in page
-        next_url = request.full_path 
+        next_url = request.path 
         flash("Please log in to access this page.", "error")
         return redirect(url_for('main.signin', next=next_url))
 
