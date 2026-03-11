@@ -67,7 +67,7 @@
                     {% endwith %}
                 </div>
 
-                <a href="{{ url_for('main.google_login', next=request.args.get('next')) }}" class="w-full flex justify-center items-center gap-3 bg-white border border-gray-300 rounded-xl py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition shadow-sm">
+                <a href="{{ url_for('main.google_login', next=request.args.get('next', '')) }}" class="w-full flex justify-center items-center gap-3 bg-white border border-gray-300 rounded-xl py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition shadow-sm">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
                     Sign in with Google
                 </a>

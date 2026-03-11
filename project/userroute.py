@@ -48,39 +48,34 @@ def internal_server_error(e):
 
 @main_routes.route('/login/google')
 def google_login():
-    # 1. Capture the destination (e.g., /volunteer/)
+    # Flask-Login puts the destination in ?next=
+    # Your signin page should forward it to this route as ?next= too
     next_page = request.args.get('next')
-    print(f"DEBUG 1: google_login received next={next_page}") # Check this!
-    # 2. Store it in the session vault so it survives the trip to Google
+    print(f"DEBUG 1: google_login received next={next_page}")
+    
     if next_page:
         session['next_url'] = next_page
-    else:
+    elif 'next_url' not in session:
+        # Only set default if nothing is stored yet
         session['next_url'] = url_for('main.index')
 
-    # 3. Determine the Redirect URI
-    # If on Vercel, we use the specific URL registered in Google Console
     if os.environ.get('VERCEL'):
         redirect_uri = "https://ourstoryourvoice.vercel.app/auth/callback"
     else:
-        # Local development uses 127.0.0.1 or localhost
         redirect_uri = url_for('main.google_callback', _external=True)
 
-    print(f"DEBUG: Sending to Google with Redirect URI: {redirect_uri}")
     return oauth.google.authorize_redirect(redirect_uri)
 
 @main_routes.route('/auth/callback')
 def google_callback():
-    # 1. Capture the destination from the session vault immediately
-    # Using .pop() ensures the redirect 'memory' is cleared after this attempt
-    next_url = session.pop('next_url', None)
-    print(f"DEBUG 2: google_callback retrieved next_url={next_url}")
-    # 2. Early Exit: If user is already logged in, just send them where they wanted to go
+    # DON'T pop next_url here yet — handle auth first
+    
     if current_user.is_authenticated:
+        next_url = session.pop('next_url', url_for('main.index'))
         if next_url and next_url.startswith('/'):
             return redirect(next_url)
         return redirect(url_for('main.index'))
 
-    # 3. Get identity info from Google
     token = oauth.google.authorize_access_token()
     user_info = token.get('userinfo')
     
@@ -89,19 +84,14 @@ def google_callback():
         return redirect(url_for('main.signin'))
 
     user_email = user_info['email']
-
-    # 4. Database Logic: Login or Register
     existing_user = User.query.filter_by(email=user_email).first()
 
     if existing_user:
-        # Scenario A: Returning User
         login_user(existing_user)
     else:
-        # Scenario B: New User Creation
         first_name = user_info.get('given_name')
         last_name = user_info.get('family_name')
         
-        # Fallback for name extraction if Google doesn't provide split fields
         if not first_name:
             name_parts = user_info.get('name', '').split(' ', 1)
             first_name = name_parts[0]
@@ -113,11 +103,13 @@ def google_callback():
             email=user_email
         )
         db.session.add(new_user)
-        db.session.commit() 
+        db.session.commit()
         login_user(new_user)
 
-    # 5. Final Redirect Logic
-    # Security Check: Prevent "Open Redirect" attacks by ensuring path starts with /
+    # NOW retrieve next_url after login is complete
+    next_url = session.pop('next_url', url_for('main.index'))
+    print(f"DEBUG 2: Redirecting to next_url={next_url}")
+    
     if not next_url or not next_url.startswith('/'):
         next_url = url_for('main.index')
 
