@@ -76,7 +76,7 @@
                     {% endwith %}
                 </div>
 
-                <a href="{{ url_for('main.google_login', next=request.args.get('next')) }}" class="w-full flex justify-center items-center gap-3 bg-white border border-gray-300 rounded-xl py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition shadow-sm">
+                <a href="{{ url_for('main.google_login', next=request.args.get('next', '')) }}" class="w-full flex justify-center items-center gap-3 bg-white border border-gray-300 rounded-xl py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition shadow-sm">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5">
                     Sign up with Google
                 </a>
@@ -86,7 +86,7 @@
                     <div class="relative flex justify-center text-xs uppercase tracking-wide font-bold"><span class="px-2 bg-white text-gray-400">Or continue with email</span></div>
                 </div>
 
-                <form class="space-y-5" method="post" action="">
+                <form class="space-y-5" method="post" action="{{ url_for('main.signup', next=request.args.get('next', '')) }}">
                     <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
                     
                     <div class="grid grid-cols-2 gap-4">
