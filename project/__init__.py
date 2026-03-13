@@ -1,12 +1,9 @@
 import os
 import cloudinary
-from flask import Flask,request,render_template,flash
+from flask import Flask, request, render_template, flash
 from dotenv import load_dotenv
-import json
 from flask_login import current_user
-from flask_session import Session
-from werkzeug.middleware.proxy_fix import ProxyFix # 1. ADD THIS IMPORT
-# 1. Import extensions (Removed 'cloudinary' from this list)
+from werkzeug.middleware.proxy_fix import ProxyFix
 from .extension import db, csrf, oauth, mail, login_manager
 from . import config
 from .model import UserRole
@@ -15,11 +12,9 @@ load_dotenv()
 
 def create_app():
     app = Flask(__name__)
-    # 1. Load base settings (like SECRET_KEY)
     app.config.from_object(config)
 
-    # 2. Get and Fix the URI
-    # Even if config.py or Vercel Env Vars have the wrong driver, this fixes it.
+    # Fix the URI
     uri = os.environ.get('SQLALCHEMY_DATABASE_URI', "")
     
     if uri.startswith("mysql://"):
@@ -27,13 +22,12 @@ def create_app():
     elif uri.startswith("mysql+mysqlconnector://"):
         uri = uri.replace("mysql+mysqlconnector://", "mysql+pymysql://", 1)
         
-    # Strip string-based SSL params to prevent "TypeError: argument 18 must be bool"
     if '?' in uri:
         uri = uri.split('?')[0]
         
     app.config['SQLALCHEMY_DATABASE_URI'] = uri
 
-    # 3. Explicit PyMySQL SSL Config (The TiDB Requirement)
+    # TiDB SSL Config
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
         "connect_args": {
             "ssl": {
@@ -43,11 +37,9 @@ def create_app():
         }
     }
 
-    # 4. Standard Vercel Proxy Setup
+    # Vercel Proxy Setup
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
-    
-    
     # Initialize Extensions
     csrf.init_app(app)
     db.init_app(app)
@@ -55,35 +47,23 @@ def create_app():
     login_manager.init_app(app)
     oauth.init_app(app)
 
-    # Mail Config
-    
-    
+    # Secret Key
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev_default_key')
-    app.config["SESSION_TYPE"] = "sqlalchemy"
-    app.config["SESSION_SQLALCHEMY"] = db
-    app.config["SESSION_SQLALCHEMY_TABLE"] = "flask_sessions"  # add this line
-    Session(app)
 
-
-    # 2. CONFIGURE CLOUDINARY HERE (And nowhere else)
-    # Ensure these keys match your .env file exactly!
+    # Cloudinary Config
     cloudinary.config(
-        cloud_name = os.environ.get('cloud_name'), 
-        api_key = os.environ.get('api_key'), 
-        api_secret = os.environ.get('api_secret')
+        cloud_name=os.environ.get('cloud_name'), 
+        api_key=os.environ.get('api_key'), 
+        api_secret=os.environ.get('api_secret')
     )
 
     # Login Manager Setup
-    from flask import request, redirect, url_for 
+    from flask import redirect, url_for 
     
     @login_manager.unauthorized_handler
     def handle_needs_login():
-        # 1. If they were trying to access an admin page, send them to Admin Sign-in
         if request.endpoint and request.endpoint.startswith('admin.'):
             return redirect(url_for('admin.adminsignin')) 
-        
-        # 2. Otherwise, capture the full path (including query params) 
-        # and send them to the main Sign-in page
         next_url = request.path 
         flash("Please log in to access this page.", "error")
         return redirect(url_for('main.signin', next=next_url))
@@ -94,17 +74,18 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-   
-    # Google OAuth Registration
+    # Google OAuth Registration with PKCE (fixes the state mismatch error on Vercel)
     oauth.register(
-    name='google',
-    client_id=os.environ.get('GOOGLE_CLIENT_ID'),
-    client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
-    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-    client_kwargs={'scope': 'openid email profile'}
+        name='google',
+        client_id=os.environ.get('GOOGLE_CLIENT_ID'),
+        client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
+        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+        client_kwargs={
+            'scope': 'openid email profile',
+            'code_challenge_method': 'S256'
+        }
     )
 
-    
     # Register Blueprints
     from .userroute import main_routes
     app.register_blueprint(main_routes)    
@@ -112,7 +93,7 @@ def create_app():
     from .adminroute import admin_route
     app.register_blueprint(admin_route)    
 
-    # Register Error Handlers
+    # Error Handlers
     @app.errorhandler(404)
     def page_not_found(e):
         return render_template('error/404.html'), 404
@@ -135,28 +116,16 @@ app = create_app()
 
 @app.before_request
 def check_maintenance():
-    # 1. Allow Static Files (CSS/JS/Images)
     if request.path.startswith('/static'):
         return None
-        
-    # 2. Allow Admin & Auth Routes (So you don't lock yourself out!)
     if request.path.startswith('/admin') or request.path.startswith('/auth'):
         return None
-        
-    # 3. Check Database for Maintenance Mode
     from .model import SiteConfig
     is_down = SiteConfig.is_maintenance_mode()
-    
-    # 4. If ON, block access
     if is_down:
-        # If user is NOT logged in -> Show Maintenance
         if not current_user.is_authenticated:
             return render_template('error/maintenance.html'), 503
-            
-        # OPTIONAL: If user IS logged in but is NOT staff -> Show Maintenance
-        # (Remove this block if you want normal users to stay logged in during maintenance)
         if current_user.role == UserRole.USER:
-             return render_template('error/maintenance.html'), 503
+            return render_template('error/maintenance.html'), 503
 
-
-from project import config, userroute,adminroute,model,extension
+from project import config, userroute, adminroute, model, extension
