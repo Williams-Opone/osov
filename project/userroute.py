@@ -48,35 +48,33 @@ def internal_server_error(e):
 
 @main_routes.route('/login/google')
 def google_login():
-    # Flask-Login puts the destination in ?next=
-    # Your signin page should forward it to this route as ?next= too
-    next_page = request.args.get('next')
-    print(f"DEBUG 1: google_login received next={next_page}")
-    
-    if next_page:
-        session['next_url'] = next_page
-    elif 'next_url' not in session:
-        # Only set default if nothing is stored yet
-        session['next_url'] = url_for('main.index')
+    next_page = request.args.get('next', url_for('main.index'))
 
     if os.environ.get('VERCEL'):
         redirect_uri = "https://ourstoryourvoice.vercel.app/auth/callback"
     else:
         redirect_uri = url_for('main.google_callback', _external=True)
 
-    return oauth.google.authorize_redirect(redirect_uri)
+    response = oauth.google.authorize_redirect(redirect_uri)
+    
+    # Store next_url in a cookie instead of session
+    response.set_cookie('next_url', next_page, httponly=True, samesite='Lax')
+    
+    return response
+
 
 @main_routes.route('/auth/callback')
 def google_callback():
-    # DON'T pop next_url here yet — handle auth first
-    
     if current_user.is_authenticated:
-        next_url = session.pop('next_url', url_for('main.index'))
-        if next_url and next_url.startswith('/'):
-            return redirect(next_url)
-        return redirect(url_for('main.index'))
+        next_url = request.cookies.get('next_url', url_for('main.index'))
+        return redirect(next_url)
 
-    token = oauth.google.authorize_access_token()
+    try:
+        token = oauth.google.authorize_access_token()
+    except Exception as e:
+        flash("Google authentication failed. Please try again.", "error")
+        return redirect(url_for('main.signin'))
+    
     user_info = token.get('userinfo')
     
     if not user_info:
@@ -106,15 +104,15 @@ def google_callback():
         db.session.commit()
         login_user(new_user)
 
-    # NOW retrieve next_url after login is complete
-    next_url = session.pop('next_url', url_for('main.index'))
-    print(f"DEBUG 2: Redirecting to next_url={next_url}")
+    next_url = request.cookies.get('next_url', url_for('main.index'))
     
     if not next_url or not next_url.startswith('/'):
         next_url = url_for('main.index')
 
-    return redirect(next_url)
-
+    response = redirect(next_url)
+    # Clear the cookie after use
+    response.delete_cookie('next_url')
+    return response
 
 @main_routes.route('/',methods = ['GET','POST'])
 def index():

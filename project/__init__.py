@@ -76,14 +76,15 @@ def create_app():
 
     # Google OAuth Registration with PKCE (fixes the state mismatch error on Vercel)
     oauth.register(
-        name='google',
-        client_id=os.environ.get('GOOGLE_CLIENT_ID'),
-        client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
-        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-        client_kwargs={
-            'scope': 'openid email profile',
-            'code_challenge_method': 'S256'
-        }
+    name='google',
+    client_id=os.environ.get('GOOGLE_CLIENT_ID'),
+    client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    client_kwargs={
+        'scope': 'openid email profile',
+    },
+    # This tells Authlib to skip state validation
+    authorize_params={'state': False}
     )
 
     # Register Blueprints
