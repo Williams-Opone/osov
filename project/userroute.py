@@ -46,6 +46,8 @@ def internal_server_error(e):
     # It's good practice to have a generic 500 page too
     return render_template('error/500.html'), 500
 
+import secrets
+
 @main_routes.route('/login/google')
 def google_login():
     next_page = request.args.get('next', url_for('main.index'))
@@ -55,10 +57,14 @@ def google_login():
     else:
         redirect_uri = url_for('main.google_callback', _external=True)
 
-    response = oauth.google.authorize_redirect(redirect_uri)
+    # Generate state manually
+    state = secrets.token_urlsafe(32)
     
-    # Store next_url in a cookie instead of session
-    response.set_cookie('next_url', next_page, httponly=True, samesite='Lax')
+    response = oauth.google.authorize_redirect(redirect_uri, state=state)
+    
+    # Store both state and next_url in cookies
+    response.set_cookie('oauth_state', state, httponly=True, samesite='Lax', max_age=300)
+    response.set_cookie('next_url', next_page, httponly=True, samesite='Lax', max_age=300)
     
     return response
 
@@ -68,6 +74,14 @@ def google_callback():
     if current_user.is_authenticated:
         next_url = request.cookies.get('next_url', url_for('main.index'))
         return redirect(next_url)
+
+    # Validate state manually from cookie
+    state_in_cookie = request.cookies.get('oauth_state')
+    state_in_request = request.args.get('state')
+    
+    if not state_in_cookie or state_in_cookie != state_in_request:
+        flash("Authentication failed. Please try again.", "error")
+        return redirect(url_for('main.signin'))
 
     try:
         token = oauth.google.authorize_access_token()
@@ -105,12 +119,11 @@ def google_callback():
         login_user(new_user)
 
     next_url = request.cookies.get('next_url', url_for('main.index'))
-    
     if not next_url or not next_url.startswith('/'):
         next_url = url_for('main.index')
 
     response = redirect(next_url)
-    # Clear the cookie after use
+    response.delete_cookie('oauth_state')
     response.delete_cookie('next_url')
     return response
 

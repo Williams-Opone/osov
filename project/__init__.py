@@ -82,9 +82,7 @@ def create_app():
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
     client_kwargs={
         'scope': 'openid email profile',
-    },
-    # This tells Authlib to skip state validation
-    authorize_params={'state': False}
+    }
     )
 
     # Register Blueprints
