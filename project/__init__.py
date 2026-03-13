@@ -4,6 +4,7 @@ from flask import Flask,request,render_template,flash
 from dotenv import load_dotenv
 import json
 from flask_login import current_user
+from flask_session import Session
 from werkzeug.middleware.proxy_fix import ProxyFix # 1. ADD THIS IMPORT
 # 1. Import extensions (Removed 'cloudinary' from this list)
 from .extension import db, csrf, oauth, mail, login_manager
@@ -56,8 +57,12 @@ def create_app():
 
     # Mail Config
     
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev_default_key')
     
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev_default_key')
+    app.config["SESSION_TYPE"] = "sqlalchemy"
+    app.config["SESSION_SQLALCHEMY"] = db
+    Session(app)
+
 
     # 2. CONFIGURE CLOUDINARY HERE (And nowhere else)
     # Ensure these keys match your .env file exactly!
