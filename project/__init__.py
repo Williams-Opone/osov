@@ -61,6 +61,7 @@ def create_app():
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev_default_key')
     app.config["SESSION_TYPE"] = "sqlalchemy"
     app.config["SESSION_SQLALCHEMY"] = db
+    app.config["SESSION_SQLALCHEMY_TABLE"] = "flask_sessions"  # add this line
     Session(app)
 
 
