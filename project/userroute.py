@@ -50,82 +50,59 @@ import secrets
 
 @main_routes.route('/login/google')
 def google_login():
-    next_page = request.args.get('next', url_for('main.index'))
+    # 1. Capture 'next' destination
+    next_page = request.args.get('next')
+    
+    # 2. Store in Session (Now reliable thanks to our __init__.py fix)
+    session['next_url'] = next_page if next_page else url_for('main.index')
 
+    # 3. Determine Redirect URI
     if os.environ.get('VERCEL'):
         redirect_uri = "https://ourstoryourvoice.vercel.app/auth/callback"
     else:
         redirect_uri = url_for('main.google_callback', _external=True)
 
-    # Generate state manually
-    state = secrets.token_urlsafe(32)
-    
-    response = oauth.google.authorize_redirect(redirect_uri, state=state)
-    
-    # Store both state and next_url in cookies
-    response.set_cookie('oauth_state', state, httponly=True, samesite='Lax', max_age=300)
-    response.set_cookie('next_url', next_page, httponly=True, samesite='Lax', max_age=300)
-    
-    return response
+    # 4. Authlib handles state generation and saving automatically
+    return oauth.google.authorize_redirect(redirect_uri)
 
 
 @main_routes.route('/auth/callback')
 def google_callback():
-    if current_user.is_authenticated:
-        next_url = request.cookies.get('next_url', url_for('main.index'))
-        return redirect(next_url)
+    # 1. Pull next_url from session immediately
+    next_url = session.pop('next_url', url_for('main.index'))
 
-    # Validate state manually from cookie
-    state_in_cookie = request.cookies.get('oauth_state')
-    state_in_request = request.args.get('state')
-    
-    if not state_in_cookie or state_in_cookie != state_in_request:
-        flash("Authentication failed. Please try again.", "error")
-        return redirect(url_for('main.signin'))
-
+    # 2. Authlib automatically validates the state from the session
     try:
         token = oauth.google.authorize_access_token()
     except Exception as e:
-        flash("Google authentication failed. Please try again.", "error")
+        print(f"OAuth Error: {e}")
+        flash("Authentication failed. Please try again.", "error")
         return redirect(url_for('main.signin'))
-    
+
     user_info = token.get('userinfo')
-    
     if not user_info:
         flash("Google authentication failed.", "error")
         return redirect(url_for('main.signin'))
 
+    # 3. User Logic (Keep your existing logic here)
     user_email = user_info['email']
     existing_user = User.query.filter_by(email=user_email).first()
 
     if existing_user:
         login_user(existing_user)
     else:
-        first_name = user_info.get('given_name')
-        last_name = user_info.get('family_name')
-        
-        if not first_name:
-            name_parts = user_info.get('name', '').split(' ', 1)
-            first_name = name_parts[0]
-            last_name = name_parts[1] if len(name_parts) > 1 else ''
-
+        # ... your user creation code ...
         new_user = User(
-            first_name=first_name,
-            last_name=last_name,
+            first_name=user_info.get('given_name', user_info.get('name', '').split(' ')[0]),
+            last_name=user_info.get('family_name', ''),
             email=user_email
         )
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
 
-    next_url = request.cookies.get('next_url', url_for('main.index'))
-    if not next_url or not next_url.startswith('/'):
-        next_url = url_for('main.index')
-
-    response = redirect(next_url)
-    response.delete_cookie('oauth_state')
-    response.delete_cookie('next_url')
-    return response
+    # 4. Final Redirect
+    return redirect(next_url)
 
 @main_routes.route('/',methods = ['GET','POST'])
 def index():
