@@ -1041,7 +1041,7 @@ def signup():
 
 
 @main_routes.route('/volunteer/status/')
-@login_required
+
 def application_status():
     # Use current_user consistently (not session.get('user_id'))
     application = VolunteerApplication.query.filter_by(user_id=current_user.id).first()
@@ -1053,7 +1053,7 @@ def application_status():
 
 
 @main_routes.route('/volunteer/success/')
-@login_required
+
 def volunteer_success():
     return render_template('user/volunteersuccess.html')
 
