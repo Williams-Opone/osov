@@ -134,29 +134,35 @@
                         <h2 class="text-lg font-bold text-gray-900 mb-6">Security Settings</h2>
                     
                         <div class="space-y-8">
-                            <form method="POST">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="action" value="change_password">
-                                
-                                <h3 class="text-sm font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Change Password</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div class="md:col-span-2">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-                                        <input type="password" name="current_password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                                        <input type="password" name="new_password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-                                        <input type="password" name="confirm_password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                    </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                                <div class="relative">
+                                    <input type="password" name="current_password" required class="password-input w-full px-3 py-2 border border-gray-300 rounded-lg text-sm pr-10">
+                                    <button type="button" class="toggle-password absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-gray-600">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
                                 </div>
-                                <div class="mt-4 text-right">
-                                    <button type="submit" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition w-full sm:w-auto">Update Password</button>
+                            </div>
+                        
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                                <div class="relative">
+                                    <input type="password" name="new_password" required class="password-input w-full px-3 py-2 border border-gray-300 rounded-lg text-sm pr-10">
+                                    <button type="button" class="toggle-password absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-gray-600">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
                                 </div>
-                            </form>
+                            </div>
+                        
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                                <div class="relative">
+                                    <input type="password" name="confirm_password" required class="password-input w-full px-3 py-2 border border-gray-300 rounded-lg text-sm pr-10">
+                                    <button type="button" class="toggle-password absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-gray-600">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
                             
                             <div>
                                 <h3 class="text-sm font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Active Session</h3>
@@ -241,6 +247,25 @@
                 overlay.classList.toggle('hidden');
             }
         }
+    </script>
+    <script>
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                // Find the input field relative to this button
+                const input = this.parentElement.querySelector('.password-input');
+                const icon = this.querySelector('i');
+    
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = "password";
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
     </script>
 </body>
 </html>
