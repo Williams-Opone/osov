@@ -55,7 +55,9 @@ def google_login():
     
     # 2. Store in Session (Now reliable thanks to our __init__.py fix)
     session['next_url'] = next_page if next_page else url_for('main.index')
-
+    print(f"[LOGIN] Session ID: {request.cookies.get('session')}")
+    print(f"[LOGIN] Setting next_url: {session.get('next_url')}")
+    print(f"[LOGIN] Full session data: {dict(session)}")
     # 3. Determine Redirect URI
     if os.environ.get('VERCEL'):
         redirect_uri = "https://ourstoryourvoice.vercel.app/auth/callback"
@@ -68,6 +70,10 @@ def google_login():
 
 @main_routes.route('/auth/callback')
 def google_callback():
+    # DEBUG: Log what we receive
+    print(f"[CALLBACK] Session ID: {request.cookies.get('session')}")
+    print(f"[CALLBACK] Session data: {dict(session)}")
+    print(f"[CALLBACK] next_url from session: {session.get('next_url')}")
     # 1. Pull next_url from session immediately
     next_url = session.pop('next_url', url_for('main.index'))
 
