@@ -1,6 +1,6 @@
 import os
 import cloudinary
-from flask import Flask, request, render_template, flash
+from flask import Flask, request, render_template, flash,session 
 from dotenv import load_dotenv
 from flask_login import current_user
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -27,10 +27,16 @@ def create_app():
     # 3. SECURE SESSION COOKIES
     # These settings prevent the 'Missing state value' error
     app.config.update(
-        SESSION_COOKIE_SECURE=True,    # Required for Vercel's HTTPS
-        SESSION_COOKIE_HTTPONLY=True,  # Security best practice
-        SESSION_COOKIE_SAMESITE='Lax'  # Critical for Google OAuth redirects
+        SESSION_COOKIE_SECURE=True,           # Required for Vercel's HTTPS
+        SESSION_COOKIE_HTTPONLY=True,         # Security best practice  
+        SESSION_COOKIE_SAMESITE='Lax',        # Critical for Google OAuth redirects
+        PERMANENT_SESSION_LIFETIME=600,       # 10 minutes (in seconds)
+        SESSION_TYPE='filesystem'             # Explicitly set session type
     )
+
+    @app.before_request
+    def make_session_permanent():
+        session.permanent = True
 
     # 4. DATABASE URI & TiDB SSL CONFIG
     uri = os.environ.get('SQLALCHEMY_DATABASE_URI', "")

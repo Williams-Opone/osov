@@ -1,12 +1,13 @@
 import os
 from dotenv import load_dotenv # Import this
-import urllib.parse
 # Load variables from .env file
 import smtplib
 import uuid
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
+import json
+import base64
+from urllib.parse import unquote
 import re
 import stripe 
 from flask_login import login_user, login_required,current_user,logout_user
@@ -50,34 +51,41 @@ import secrets
 
 @main_routes.route('/login/google')
 def google_login():
-    # 1. Capture 'next' destination
-    next_page = request.args.get('next')
+    next_page = request.args.get('next', url_for('main.index'))
     
-    # 2. Store in Session (Now reliable thanks to our __init__.py fix)
-    session['next_url'] = next_page if next_page else url_for('main.index')
-    print(f"[LOGIN] Session ID: {request.cookies.get('session')}")
-    print(f"[LOGIN] Setting next_url: {session.get('next_url')}")
-    print(f"[LOGIN] Full session data: {dict(session)}")
-    # 3. Determine Redirect URI
+    # Encode next_url into OAuth state parameter
+    state_data = base64.urlsafe_b64encode(
+        json.dumps({'next': next_page}).encode()
+    ).decode().rstrip('=')
+    
+    # Fix: NO trailing space after /callback
     if os.environ.get('VERCEL'):
         redirect_uri = "https://ourstoryourvoice.vercel.app/auth/callback"
     else:
         redirect_uri = url_for('main.google_callback', _external=True)
-
-    # 4. Authlib handles state generation and saving automatically
-    return oauth.google.authorize_redirect(redirect_uri)
+    
+    return oauth.google.authorize_redirect(redirect_uri, state=state_data)
 
 
 @main_routes.route('/auth/callback')
 def google_callback():
-    # DEBUG: Log what we receive
-    print(f"[CALLBACK] Session ID: {request.cookies.get('session')}")
-    print(f"[CALLBACK] Session data: {dict(session)}")
-    print(f"[CALLBACK] next_url from session: {session.get('next_url')}")
-    # 1. Pull next_url from session immediately
-    next_url = session.pop('next_url', url_for('main.index'))
-
-    # 2. Authlib automatically validates the state from the session
+    # Extract next_url from state before anything else
+    next_url = url_for('main.index')  # default
+    
+    state_param = request.args.get('state', '')
+    if state_param:
+        try:
+            # Add padding back for base64
+            padding = 4 - len(state_param) % 4
+            if padding != 4:
+                state_param += '=' * padding
+            
+            state_data = json.loads(base64.urlsafe_b64decode(state_param).decode())
+            next_url = state_data.get('next', url_for('main.index'))
+        except Exception as e:
+            print(f"State decode error: {e}")
+    
+    # Now handle the OAuth token
     try:
         token = oauth.google.authorize_access_token()
     except Exception as e:
@@ -90,14 +98,13 @@ def google_callback():
         flash("Google authentication failed.", "error")
         return redirect(url_for('main.signin'))
 
-    # 3. User Logic (Keep your existing logic here)
+    # User Logic (your existing code)
     user_email = user_info['email']
     existing_user = User.query.filter_by(email=user_email).first()
 
     if existing_user:
         login_user(existing_user)
     else:
-        # ... your user creation code ...
         new_user = User(
             first_name=user_info.get('given_name', user_info.get('name', '').split(' ')[0]),
             last_name=user_info.get('family_name', ''),
@@ -107,7 +114,6 @@ def google_callback():
         db.session.commit()
         login_user(new_user)
 
-    # 4. Final Redirect
     return redirect(next_url)
 
 @main_routes.route('/',methods = ['GET','POST'])
