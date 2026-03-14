@@ -1043,23 +1043,20 @@ def signup():
 @main_routes.route('/volunteer/status/')
 @login_required
 def application_status():
-    user_id = session.get('user_id')
-    if not user_id:
-        return redirect(url_for('main.signin'))
-
-    # Fetch the application to show details
-    application = VolunteerApplication.query.filter_by(user_id=user_id).first()
+    # Use current_user consistently (not session.get('user_id'))
+    application = VolunteerApplication.query.filter_by(user_id=current_user.id).first()
     
-    # If they haven't applied yet, send them to the apply page
     if not application:
         return redirect(url_for('main.volunteer'))
         
-    return render_template('user/application_status.html', application=application, current_user=User.query.get(user_id))
+    return render_template('user/application_status.html', application=application)
+
 
 @main_routes.route('/volunteer/success/')
 @login_required
 def volunteer_success():
     return render_template('user/volunteersuccess.html')
+
 
 @main_routes.route('/volunteer', methods=['GET', 'POST'])
 @login_required
@@ -1070,11 +1067,7 @@ def volunteer():
     if existing_volunteer:
         return redirect(url_for('main.application_status'))
 
-    # 2. OPTIMIZATION: Check for existing application IMMEDIATELY
-    # Do this before checking POST/GET. If they applied, kick them out nicely.
-    
-
-    # 3. Handle Form Submission
+    # 2. Handle Form Submission
     if request.method == 'POST':
         phone = request.form.get('phone')
         country = request.form.get('country')
@@ -1115,7 +1108,6 @@ def volunteer():
             db.session.add(new_volunteer)
             db.session.commit()
             
-            # Success!
             return redirect(url_for('main.volunteer_success'))
 
         except ValueError:
@@ -1125,9 +1117,7 @@ def volunteer():
             print(f"Database Error: {e}")
             flash('An error occurred.', 'error')
 
-    # 4. Render Form (Only reached if no existing app and request is GET)
     return render_template('user/volunteer.html')
-
 @main_routes.route('/events/',methods= ['GET','POST'])
 def events():
     # 1. Fetch Upcoming Events (Sorted by soonest first)
