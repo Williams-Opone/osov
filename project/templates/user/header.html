@@ -62,9 +62,10 @@
                 <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
             </div>
             <a href="{{ url_for('main.index') }}" class="hover:text-red-600 py-2 border-b border-gray-50">Home</a>
-            <a href="{{ url_for('main.about') }}" class="hover:text-red-600 py-2 border-b border-gray-50">About</a>
+            
             <a href="{{ url_for('main.mentorship') }}" class="hover:text-red-600 py-2 border-b border-gray-50">Programs (EICP)</a>
             <a href="{{ url_for('main.stories') }}" class="hover:text-red-600 py-2 border-b border-gray-50">Stories</a>
+            <a href="{{ url_for('main.about') }}" class="hover:text-red-600 py-2 border-b border-gray-50">About</a>
             <a href="{{ url_for('main.events') }}" class="hover:text-red-600 py-2 border-b border-gray-50">Events</a>
             <a href="{{ url_for('main.google_login', next=request.args.get('next')) }}" class="text-red-600 font-bold py-2">Sign In</a>
         </div>
