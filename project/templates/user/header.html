@@ -72,3 +72,30 @@
         </div>
     </div>
 </nav>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuIcon = document.getElementById('menuIcon');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            // Use a more reliable way to toggle
+            window.toggleMobileMenu = function() {
+                if (mobileMenu.classList.contains('hidden')) {
+                    // Open Menu
+                    mobileMenu.classList.remove('hidden');
+                    menuIcon.classList.remove('fa-bars');
+                    menuIcon.classList.add('fa-xmark');
+                    
+                    // Optional: Add a smooth fade-in effect via JS
+                    mobileMenu.style.opacity = "0";
+                    setTimeout(() => {
+                        mobileMenu.style.opacity = "1";
+                    }, 10);
+                } else {
+                    // Close Menu
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.classList.remove('fa-xmark');
+                    menuIcon.classList.add('fa-bars');
+                }
+            };
+        });
+    </script>
