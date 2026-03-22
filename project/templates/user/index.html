@@ -171,89 +171,43 @@
     </section>
     <section class="py-20 bg-slate-900 text-white overflow-hidden">
         <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-                <div class="text-left">
-                    <h2 class="text-3xl md:text-5xl font-black mb-4">Bringing African <span class="text-red-600">Culture</span> to Life</h2>
-                    <p class="text-slate-400 max-w-2xl">Explore our latest stories, journeys, and deep dives into the heart of the continent.</p>
+            <div class="flex items-end justify-between mb-12">
+                <div>
+                    <h2 class="text-3xl md:text-5xl font-black mb-4 tracking-tight">Bringing African <span class="text-red-600">Culture</span> to Life</h2>
+                    <p class="text-slate-400">The latest visual narratives from Dax Oyibo.</p>
                 </div>
-                <a href="https://youtube.com/@DaxOyibo" target="_blank" class="hidden md:flex items-center gap-2 text-red-500 font-bold hover:text-red-400 transition">
-                    Visit Channel <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                </a>
+                <div class="flex gap-4">
+                    <button id="slidePrev" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-red-600 transition-all">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button id="slideNext" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-red-600 transition-all">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
             </div>
-            
-            <div class="flex flex-nowrap overflow-x-auto gap-6 pb-8 snap-x scrollbar-hide">
-                
-                <div class="flex-none w-[300px] md:w-[450px] snap-start group">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-video bg-black">
-                        <img src="https://img.youtube.com/vi/Z9FKTYm0AjQ/maxresdefault.jpg" alt="Temptation" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <a href="https://www.youtube.com/watch?v=Z9FKTYm0AjQ" target="_blank" class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-play text-white text-xl ml-1"></i>
-                            </a>
-                        </div>
-                        <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-slate-900 to-transparent">
-                            <p class="text-red-500 font-bold text-[10px] uppercase tracking-widest mb-1">New Release</p>
-                            <h3 class="text-lg font-bold truncate">Temptation (Official Music Video)</h3>
+    
+            <div class="relative overflow-hidden">
+                <div id="sliderTrack" class="flex transition-transform duration-500 ease-out">
+                    {% for video in videos %}
+                    <div class="flex-none w-full md:w-1/2 lg:w-1/3 p-3">
+                        <div class="group relative rounded-2xl overflow-hidden bg-black aspect-video border border-white/5 shadow-2xl">
+                            <img src="{{ video.thumb }}" alt="{{ video.title }}" 
+                                 class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700">
+                            
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <a href="https://www.youtube.com/watch?v={{ video.id }}" target="_blank" 
+                                   class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-xl transform scale-90 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300">
+                                    <i class="fa-solid fa-play text-white text-xl ml-1"></i>
+                                </a>
+                            </div>
+    
+                            <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-slate-900 to-transparent">
+                                <h3 class="text-lg font-bold truncate">{{ video.title }}</h3>
+                            </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-    
-                <div class="flex-none w-[300px] md:w-[450px] snap-start group">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-video bg-black">
-                        <img src="https://img.youtube.com/vi/RJ9lfl4F87Y/maxresdefault.jpg" alt="Warriors Quest" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <a href="https://www.youtube.com/watch?v=RJ9lfl4F87Y" target="_blank" class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-play text-white text-xl ml-1"></i>
-                            </a>
-                        </div>
-                        <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-slate-900 to-transparent">
-                            <h3 class="text-lg font-bold truncate">The 900 AD Warriors' Quest (Ep.2)</h3>
-                        </div>
-                    </div>
-                </div>
-    
-                <div class="flex-none w-[300px] md:w-[450px] snap-start group">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-video bg-black">
-                        <img src="https://img.youtube.com/vi/-kA2ReyByZU/maxresdefault.jpg" alt="Problem" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <a href="https://www.youtube.com/watch?v=-kA2ReyByZU" target="_blank" class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-play text-white text-xl ml-1"></i>
-                            </a>
-                        </div>
-                        <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-slate-900 to-transparent">
-                            <h3 class="text-lg font-bold truncate">You're The Problem</h3>
-                        </div>
-                    </div>
-                </div>
-    
-                <div class="flex-none w-[300px] md:w-[450px] snap-start group">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-video bg-black">
-                        <img src="https://img.youtube.com/vi/5xz1gjQm_C4/maxresdefault.jpg" alt="Good Idea" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <a href="https://www.youtube.com/watch?v=5xz1gjQm_C4" target="_blank" class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-play text-white text-xl ml-1"></i>
-                            </a>
-                        </div>
-                        <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-slate-900 to-transparent">
-                            <h3 class="text-lg font-bold truncate">Good Idea (Official Video)</h3>
-                        </div>
-                    </div>
-                </div>
-    
-                <div class="flex-none w-[300px] md:w-[450px] snap-start group">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-video bg-black">
-                        <img src="https://img.youtube.com/vi/oamoR0YC1Sw/maxresdefault.jpg" alt="Sweetie" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <a href="https://www.youtube.com/watch?v=oamoR0YC1Sw" target="_blank" class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-play text-white text-xl ml-1"></i>
-                            </a>
-                        </div>
-                        <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-slate-900 to-transparent">
-                            <h3 class="text-lg font-bold truncate">Sweetie (Visualizer)</h3>
-                        </div>
-                    </div>
-                </div>
-    
             </div>
         </div>
     </section>

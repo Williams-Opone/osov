@@ -15,7 +15,7 @@ from flask_login import login_user, login_required,current_user,logout_user
 from datetime import date, datetime
 from sqlalchemy import desc,distinct
 from flask_mail import Message
- 
+from googleapiclient.discovery import build
 from itsdangerous import URLSafeTimedSerializer
 
 from flask import render_template,Blueprint,url_for,redirect,session,request,flash,current_app,abort
@@ -48,6 +48,32 @@ def internal_server_error(e):
     return render_template('error/500.html'), 500
 
 import secrets
+
+def get_osov_videos():
+    api_key = os.getenv('YOUTUBE_API_KEY')
+    # Dax Oyibo's Channel ID
+    channel_id = os.getenv('channel_id')
+    
+    youtube = build('youtube', 'v3', developerKey=api_key)
+    
+    # Fetching the 5 most recent videos
+    request = youtube.search().list(
+        part="snippet",
+        channelId=channel_id,
+        maxResults=5,
+        order="date",
+        type="video"
+    )
+    response = request.execute()
+    
+    videos = []
+    for item in response.get('items', []):
+        videos.append({
+            'title': item['snippet']['title'],
+            'id': item['id']['videoId'],
+            'thumb': item['snippet']['thumbnails']['high']['url']
+        })
+    return videos
 
 @main_routes.route('/login/google')
 def google_login():
@@ -122,7 +148,8 @@ def index():
     upcoming_events = Event.query.order_by(Event.date_time.desc()).limit(3).all()
     # explicit join condition
     stories = Story.query.join(User).order_by(Story.created_at.desc()).limit(10).all()
-    return render_template('user/index.html',stories=stories,events=upcoming_events)
+    videos = get_osov_videos()
+    return render_template('user/index.html',stories=stories,events=upcoming_events,videos=videos)
 
 @main_routes.route('/about', methods = ['POST','GET'])
 def about():
