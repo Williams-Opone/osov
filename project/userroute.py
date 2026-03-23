@@ -54,7 +54,7 @@ def get_osov_videos():
     # Dax Oyibo's Channel ID
     channel_id = os.getenv('channel_id')
     
-    youtube = build('youtube', 'v3', developerKey=api_key)
+    youtube = build('youtube', 'v3', developerKey=api_key, discoveryServiceUrl=False)
     
     # Fetching the 5 most recent videos
     request = youtube.search().list(
