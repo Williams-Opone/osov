@@ -3,6 +3,7 @@ from dotenv import load_dotenv # Import this
 # Load variables from .env file
 import smtplib
 import uuid
+import time
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import json
@@ -49,51 +50,52 @@ def internal_server_error(e):
 
 import secrets
 
+# These stay outside the function to "remember" the data
+VIDEO_CACHE = []
+CACHE_EXPIRY = 0 
+
 def get_osov_videos():
-    # 1. Pull credentials from .env
+    global VIDEO_CACHE, CACHE_EXPIRY
+    
+    # 1. Check if we have valid data in our "memory"
+    if VIDEO_CACHE and time.time() < CACHE_EXPIRY:
+        print("DEBUG: Saving quota! Using cached videos.")
+        return VIDEO_CACHE
+
     api_key = os.getenv('YOUTUBE_API_KEY')
-    channel_id = os.getenv('CHANNEL_ID') # Should be UC6yGfS-nQOVd8rmk-4fjdMA
-
-    # DEBUG SECTION - Check your logs for these!
-    if not api_key:
-        print("DEBUG: API Key is MISSING")
-    else:
-        print(f"DEBUG: API Key exists (Starts with: {api_key[:5]}...)")
-
-    if not channel_id:
-        print("DEBUG: Channel ID is MISSING")
-    else:
-        print(f"DEBUG: Channel ID exists: {channel_id}")
+    channel_id = os.getenv('CHANNEL_ID')
+    
+    # The 'UU' trick to get the uploads playlist
+    playlist_id = 'UU' + channel_id[2:] if channel_id.startswith('UC') else channel_id
 
     try:
-        # 2. Build service without the 'file_cache' warning
         youtube = build('youtube', 'v3', developerKey=api_key, static_discovery=True)
         
-        # 3. Request the 5 latest videos
-        request = youtube.search().list(
+        # This only costs 1 unit!
+        request = youtube.playlistItems().list(
             part="snippet",
-            channelId=channel_id,
-            maxResults=5,
-            order="date",
-            type="video"
+            playlistId=playlist_id,
+            maxResults=5
         )
         response = request.execute()
 
-        # 4. Clean the data so the HTML doesn't break
-        videos = []
+        formatted_videos = []
         for item in response.get('items', []):
-            videos.append({
-                'id': item['id']['videoId'],
+            formatted_videos.append({
+                'id': item['snippet']['resourceId']['videoId'],
                 'title': item['snippet']['title'],
                 'thumb': item['snippet']['thumbnails']['high']['url']
             })
         
-        print(f"SUCCESS: Fetched {len(videos)} videos.")
-        return videos
+        # Store in memory for 1 hour (3600 seconds)
+        VIDEO_CACHE = formatted_videos
+        CACHE_EXPIRY = time.time() + 3600
+        
+        return formatted_videos
 
     except Exception as e:
         print(f"YOUTUBE API ERROR: {e}")
-        return []
+        return VIDEO_CACHE # If API fails, show the last successful list
 @main_routes.route('/login/google')
 def google_login():
     next_page = request.args.get('next', url_for('main.index'))
