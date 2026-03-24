@@ -67,6 +67,7 @@ def get_osov_videos():
             order="date",
             type="video"
         )
+        
         # 1. Execute the request
         response = request.execute()
         
@@ -79,7 +80,8 @@ def get_osov_videos():
                 'thumb': item['snippet']['thumbnails']['high']['url']
             })
             
-        return formatted_videos # Return the clean list of dicts
+        # This MUST be lined up with the 'for' above it
+        return formatted_videos 
 
     except Exception as e:
         print(f"YouTube API Error: {e}")
@@ -157,8 +159,8 @@ def index():
     upcoming_events = Event.query.order_by(Event.date_time.desc()).limit(3).all()
     # explicit join condition
     stories = Story.query.join(User).order_by(Story.created_at.desc()).limit(10).all()
-    videos = get_osov_videos()
-    return render_template('user/index.html',stories=stories,events=upcoming_events,videos=videos)
+    latest_vids = get_osov_videos()
+    return render_template('user/index.html',stories=stories,events=upcoming_events,videos=latest_vids)
 
 @main_routes.route('/about', methods = ['POST','GET'])
 def about():
