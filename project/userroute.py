@@ -54,12 +54,9 @@ def get_osov_videos():
     channel_id = os.getenv('CHANNEL_ID')
     
     if not api_key:
-        # Senior dev move: Always log if your env vars are missing!
         print("CRITICAL: YOUTUBE_API_KEY is null")
         return []
 
-    # FIX: Use static_discovery=True. 
-    # This prevents the 'file_cache' warning AND fixes the TypeError.
     youtube = build('youtube', 'v3', developerKey=api_key, static_discovery=True)
     
     try:
@@ -70,11 +67,23 @@ def get_osov_videos():
             order="date",
             type="video"
         )
-        return request.execute()
+        # 1. Execute the request
+        response = request.execute()
+        
+        # 2. Extract ONLY the items and format them for your HTML
+        formatted_videos = []
+        for item in response.get('items', []):
+            formatted_videos.append({
+                'id': item['id']['videoId'],
+                'title': item['snippet']['title'],
+                'thumb': item['snippet']['thumbnails']['high']['url']
+            })
+            
+        return formatted_videos # Return the clean list of dicts
+
     except Exception as e:
         print(f"YouTube API Error: {e}")
         return []
-
 @main_routes.route('/login/google')
 def google_login():
     next_page = request.args.get('next', url_for('main.index'))
