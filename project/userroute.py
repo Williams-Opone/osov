@@ -60,12 +60,7 @@ def get_osov_videos():
 
     # FIX: Use static_discovery=True. 
     # This prevents the 'file_cache' warning AND fixes the TypeError.
-    youtube = build(
-        'youtube', 
-        'v3', 
-        developerKey=api_key, 
-        static_discovery=True
-    )
+    youtube = build('youtube', 'v3', developerKey=api_key, static_discovery=True)
     
     try:
         request = youtube.search().list(
