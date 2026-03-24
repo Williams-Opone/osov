@@ -212,15 +212,15 @@
     <section id="stories" class="py-16 md:py-20 relative group/section bg-white overflow-hidden">
         <div class="container mx-auto px-6">
             
-            <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
                 <div class="max-w-xl">
-                    <span class="text-red-600 font-bold tracking-widest uppercase text-xs mb-2 block">Our Voices</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Featured Stories</h2>
-                    <p class="text-slate-500 text-base md:text-lg">Real experiences from real people. Dive into the narratives that connect us all.</p>
+                    <span class="text-red-600 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 block">Our Voices</span>
+                    <h2 class="text-2xl md:text-4xl font-bold text-slate-900 mb-3 md:mb-4">Featured Stories</h2>
+                    <p class="text-slate-500 text-sm md:text-lg leading-relaxed">Real experiences from real people. Dive into the narratives that connect us all.</p>
                 </div>
                 
-                <a href="/stories" class="hidden lg:flex items-center gap-2 text-slate-900 font-bold hover:text-red-600 transition">
-                    View All Stories <i class="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform"></i>
+                <a href="/stories" class="flex items-center gap-2 text-red-600 md:text-slate-900 font-bold hover:text-red-600 transition text-sm md:text-base">
+                    View All Stories <i class="fa-solid fa-arrow-right-long transition-transform group-hover/section:translate-x-1"></i>
                 </a>
             </div>
             
@@ -235,10 +235,10 @@
                 </button>
     
                 <div class="overflow-hidden px-2 py-4 -mx-2">
-                    <div id="sliderTrack" class="flex transition-transform duration-500 ease-out will-change-transform">
+                    <div id="sliderTrack" class="flex transition-transform duration-500 ease-out will-change-transform touch-pan-x">
                         {% if stories %}
                             {% for s in stories %}
-                                <div class="w-full md:w-1/2 lg:w-1/3 flex-none px-3 md:px-4">
+                                <div class="w-[85%] md:w-1/2 lg:w-1/3 flex-none px-3 md:px-4">
                                     <a href="{{ url_for('main.story_detail', slug=s.slug) }}" class="block h-full">
                                         <article class="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col">
                                             <div class="relative overflow-hidden h-56 md:h-64">
@@ -364,113 +364,153 @@
         </div>
     </section>
 
-    <section class="flex flex-col lg:flex-row min-h-[auto] lg:min-h-[600px]">
-        <div class="lg:w-1/2 bg-slate-900 text-white p-12 lg:p-24 flex flex-col justify-center relative overflow-hidden">
-            <div class="absolute inset-0 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');"></div>
+    <section class="flex flex-col lg:flex-row min-h-0 lg:min-h-[600px]">
+        <div class="lg:w-1/2 bg-slate-900 text-white p-10 sm:p-16 lg:p-24 flex flex-col justify-center relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');"></div>
             <div class="relative z-10 max-w-xl mx-auto lg:mx-0">
-                <div class="w-12 h-1 bg-red-600 mb-8"></div>
-                <h2 class="text-3xl md:text-5xl font-bold mb-6 leading-tight">Moving to a new country shouldn't mean <span class="text-gray-400">losing your voice.</span></h2>
-                <p class="text-lg text-gray-400 leading-relaxed mb-8">For thousands of immigrant youth in Calgary, the reality is isolation. Language barriers, cultural shock, and a lack of mentorship create a gap that talent often falls through.</p>
-                <div class="flex flex-wrap gap-4 text-sm font-bold text-gray-500 uppercase tracking-widest">
+                <div class="w-10 md:w-12 h-1 bg-red-600 mb-6 md:mb-8"></div>
+                
+                <h2 class="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 md:mb-6 leading-tight">
+                    Moving to a new country shouldn't mean <span class="text-gray-400">losing your voice.</span>
+                </h2>
+                
+                <p class="text-base md:text-lg text-gray-400 leading-relaxed mb-6 md:mb-8">
+                    For thousands of immigrant youth in Calgary, the reality is isolation. Language barriers, cultural shock, and a lack of mentorship create a gap that talent often falls through.
+                </p>
+                
+                <div class="flex flex-wrap gap-3 md:gap-4 text-[10px] md:text-sm font-bold text-gray-500 uppercase tracking-widest">
                     <span>Isolation</span> • <span>Barriers</span> • <span>Silence</span>
                 </div>
             </div>
         </div>
-        <div class="lg:w-1/2 bg-red-600 text-white p-12 lg:p-24 flex flex-col justify-center relative overflow-hidden">
-            <div class="absolute inset-0 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+    
+        <div class="lg:w-1/2 bg-red-600 text-white p-10 sm:p-16 lg:p-24 flex flex-col justify-center relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
             <div class="relative z-10 max-w-xl mx-auto lg:mx-0">
-                <div class="w-12 h-1 bg-white mb-8"></div>
-                <h2 class="text-3xl md:text-5xl font-bold mb-6 leading-tight">We build the bridge to <span class="text-red-200">belonging.</span></h2>
-                <p class="text-lg text-red-100 leading-relaxed mb-8">"Our Story Our Voice" provides the platform, equipment, and mentorship needed to turn isolation into connection. We don't just teach storytelling; we build leaders.</p>
-                <a href="{{ url_for('main.about') }}" class="inline-block bg-white text-red-600 font-bold py-4 px-8 rounded-xl hover:bg-slate-900 hover:text-white transition shadow-lg text-center w-full md:w-auto">See Our Impact</a>
+                <div class="w-10 md:w-12 h-1 bg-white mb-6 md:mb-8"></div>
+                
+                <h2 class="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 md:mb-6 leading-tight">
+                    We build the bridge to <span class="text-red-200">belonging.</span>
+                </h2>
+                
+                <p class="text-base md:text-lg text-red-100 leading-relaxed mb-6 md:mb-8">
+                    "Our Story Our Voice" provides the platform, equipment, and mentorship needed to turn isolation into connection. We don't just teach storytelling; we build leaders.
+                </p>
+                
+                <a href="{{ url_for('main.about') }}" 
+                   class="inline-block bg-white text-red-600 font-bold py-3.5 md:py-4 px-8 rounded-xl hover:bg-slate-900 hover:text-white transition shadow-lg text-center w-full md:w-auto text-sm md:text-base">
+                   See Our Impact
+                </a>
             </div>
         </div>
     </section>
 
     {% if events %}
-    <section class="py-20 bg-gray-50">
-        <div class="container mx-auto px-6">
-            <div class="flex justify-between items-end mb-12">
-                <div>
-                    <span class="text-red-600 font-bold tracking-widest uppercase text-xs md:text-sm">Mark Your Calendar</span>
-                    <h2 class="text-3xl font-bold mt-2 text-slate-900">Upcoming Gatherings</h2>
-                </div>
-                <a href="{{ url_for('main.events') }}" class="hidden md:inline-flex items-center font-bold text-slate-900 hover:text-red-600 transition">View All Events <i class="fa-solid fa-arrow-right ml-2"></i></a>
+<section class="py-12 md:py-24 bg-gray-50/50">
+    <div class="container mx-auto px-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4">
+            <div>
+                <span class="text-red-600 font-bold tracking-widest uppercase text-[10px] md:text-sm block mb-1">Mark Your Calendar</span>
+                <h2 class="text-2xl md:text-4xl font-bold text-slate-900 leading-tight">Upcoming Gatherings</h2>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {% for event in events %}
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-red-100 transition duration-300 group flex flex-col overflow-hidden">
-                    <div class="h-48 relative w-full bg-gray-200">
-                        <img src="{{ event.image_url }}" alt="{{ event.title }}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
-                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur text-gray-900 text-xs font-bold px-3 py-1 rounded-full shadow-sm">{{ event.date_time.strftime('%I:%M %p') }}</div>
-                    </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="bg-slate-50 rounded-xl p-2.5 text-center min-w-[60px] border border-slate-100 group-hover:bg-red-50 group-hover:border-red-100 transition">
-                                <span class="block text-red-600 font-bold text-xs uppercase">{{ event.date_time.strftime('%b') }}</span>
-                                <span class="block text-slate-900 font-bold text-xl">{{ event.date_time.strftime('%d') }}</span>
-                            </div>
-                            <div class="text-right max-w-[60%]">
-                                <p class="text-slate-500 text-xs flex items-center justify-end gap-1 truncate"><i class="fa-solid fa-location-dot text-red-500"></i> {{ event.location }}</p>
-                            </div>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2 leading-tight group-hover:text-red-600 transition line-clamp-2">{{ event.title }}</h3>
-                        <p class="text-slate-500 text-sm mb-6 line-clamp-2">{{ event.description }}</p>
-                        <div class="mt-auto pt-4 border-t border-gray-50">
-                            <a href="{{ url_for('main.event_detail', event_id=event.id) }}" class="w-full block text-center py-3 rounded-lg bg-white border-2 border-slate-900 text-slate-900 font-bold hover:bg-slate-900 hover:text-white transition">RSVP Now</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            <div class="mt-8 text-center md:hidden">
-                <a href="{{ url_for('main.events') }}" class="font-bold text-slate-900 border-b-2 border-slate-900 pb-1">View All Events</a>
-            </div>
+            <a href="{{ url_for('main.events') }}" class="hidden md:inline-flex items-center font-bold text-slate-900 hover:text-red-600 transition group">
+                View All Events 
+                <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+            </a>
         </div>
-    </section>
-    {% endif %}
 
-    <section class="py-24 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">How You Can Help</h2>
-                <p class="text-slate-500 text-lg">We can't do this alone. Choose the path that fits you best.</p>
+        <div class="flex md:grid overflow-x-auto md:overflow-x-visible pb-6 md:pb-0 -mx-6 px-6 md:mx-0 md:px-0 scrollbar-hide snap-x snap-mandatory grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {% for event in events %}
+            <div class="snap-center min-w-[85vw] md:min-w-0 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-red-100 transition-all duration-300 group flex flex-col overflow-hidden">
+                <div class="h-44 md:h-52 relative w-full bg-gray-200 overflow-hidden">
+                    <img src="{{ event.image_url }}" alt="{{ event.title }}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div class="absolute top-4 right-4 bg-white/95 backdrop-blur text-gray-900 text-[10px] font-bold px-3 py-1 rounded-full shadow-sm border border-gray-100">
+                        {{ event.date_time.strftime('%I:%M %p') }}
+                    </div>
+                </div>
+
+                <div class="p-5 md:p-6 flex flex-col flex-grow">
+                    <div class="flex items-start justify-between mb-4 gap-2">
+                        <div class="bg-slate-50 rounded-xl p-2 text-center min-w-[55px] border border-slate-100 group-hover:bg-red-50 group-hover:border-red-100 transition-colors">
+                            <span class="block text-red-600 font-bold text-[10px] uppercase leading-none mb-1">{{ event.date_time.strftime('%b') }}</span>
+                            <span class="block text-slate-900 font-extrabold text-lg leading-none">{{ event.date_time.strftime('%d') }}</span>
+                        </div>
+                        <div class="text-right flex-1 min-w-0">
+                            <p class="text-slate-500 text-[11px] md:text-xs flex items-center justify-end gap-1 font-medium">
+                                <i class="fa-solid fa-location-dot text-red-500 shrink-0"></i> 
+                                <span class="truncate">{{ event.location }}</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-lg md:text-xl font-bold text-slate-900 mb-2 leading-snug group-hover:text-red-600 transition line-clamp-2">
+                        {{ event.title }}
+                    </h3>
+                    
+                    <p class="text-slate-500 text-xs md:text-sm mb-6 line-clamp-2 leading-relaxed">
+                        {{ event.description }}
+                    </p>
+
+                    <div class="mt-auto pt-4 border-t border-gray-50">
+                        <a href="{{ url_for('main.event_detail', event_id=event.id) }}" class="w-full block text-center py-3 rounded-xl bg-slate-900 text-white font-bold text-sm hover:bg-red-600 transition-all shadow-md shadow-slate-900/10">
+                            RSVP Now
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+            {% endfor %}
+        </div>
+
+        <div class="mt-8 text-center md:hidden">
+            <a href="{{ url_for('main.events') }}" class="inline-block font-bold text-slate-900 text-sm border-b-2 border-red-600 pb-1">
+                View All Upcoming Events
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+<section class="py-16 md:py-24 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-12 md:mb-20">
+            <h2 class="text-2xl md:text-4xl font-bold text-slate-900 mb-4">How You Can Help</h2>
+            <p class="text-slate-500 text-sm md:text-lg px-4">We can't do this alone. Choose the path that fits you best and join our mission.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch">
+            
+            <div class="order-2 md:order-1 bg-white rounded-3xl p-8 border border-slate-100 shadow-sm hover:shadow-xl transition duration-300 flex flex-col items-center text-center group">
+                <div class="w-14 h-14 md:w-16 md:h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl md:text-2xl mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-slate-900 mb-3">Become a Mentor</h3>
+                <p class="text-slate-500 mb-8 flex-grow text-sm md:text-base leading-relaxed">Share your experience with a youth who needs guidance. A commitment of just 2 hours a month.</p>
+                <a href="{{url_for('main.apply_partner')}}" class="w-full py-3 rounded-xl border-2 border-blue-100 text-blue-600 font-bold hover:bg-blue-50 transition-colors">Join Team</a>
+            </div>
+
+            <div class="order-1 md:order-2 bg-slate-900 rounded-3xl p-8 md:p-10 shadow-2xl shadow-slate-400/30 md:-translate-y-6 flex flex-col items-center text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-red-600 rounded-full blur-[80px] opacity-20"></div>
                 
-                <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm hover:shadow-xl transition duration-300 flex flex-col items-center text-center group">
-                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
-                        <i class="fa-solid fa-hand-holding-heart"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-3">Become a Mentor</h3>
-                    <p class="text-slate-500 mb-8 flex-grow text-sm md:text-base">Share your experience with a youth who needs guidance. A commitment of just 2 hours a month.</p>
-                    <a href="{{url_for('main.apply_partner')}}" class="w-full py-3 rounded-xl border-2 border-blue-100 text-blue-600 font-bold hover:bg-blue-50 transition">Join Team</a>
+                <div class="w-16 h-16 md:w-20 md:h-20 bg-red-600 text-white rounded-2xl flex items-center justify-center text-2xl md:text-3xl mb-6 relative z-10 shadow-lg shadow-red-900/40">
+                    <i class="fa-solid fa-heart"></i>
                 </div>
-
-                <div class="bg-slate-900 rounded-3xl p-10 shadow-2xl shadow-slate-400/50 transform md:-translate-y-6 flex flex-col items-center text-center relative overflow-hidden order-first md:order-none">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-red-600 rounded-full blur-3xl opacity-20"></div>
-                    <div class="w-20 h-20 bg-red-600 text-white rounded-2xl flex items-center justify-center text-3xl mb-6 relative z-10 shadow-lg shadow-red-900/50">
-                        <i class="fa-solid fa-heart"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-3 relative z-10">Donate Funds</h3>
-                    <p class="text-slate-300 mb-8 flex-grow relative z-10 text-base md:text-lg">Fuel our workshops and equipment. Your contribution is tax-deductible and 100% impactful.</p>
-                    <a href="/campaigns" class="w-full py-4 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 transition relative z-10 transform hover:-translate-y-1">Donate Now</a>
-                    <p class="text-xs text-slate-500 mt-4 relative z-10">Secure payment via Stripe</p>
-                </div>
-
-                <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm hover:shadow-xl transition duration-300 flex flex-col items-center text-center group">
-                    <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
-                        <i class="fa-solid fa-briefcase"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-3">Partner With Us</h3>
-                    <p class="text-slate-500 mb-8 flex-grow text-sm md:text-base">Align your corporate brand with community impact. Sponsorship packages available.</p>
-                    <a href="{{url_for('main.contact_us')}}" class="w-full py-3 rounded-xl border-2 border-purple-100 text-purple-600 font-bold hover:bg-purple-50 transition">Contact Us</a>
-                </div>
+                <h3 class="text-xl md:text-2xl font-bold text-white mb-3 relative z-10">Donate Funds</h3>
+                <p class="text-slate-300 mb-8 flex-grow relative z-10 text-sm md:text-lg leading-relaxed">Fuel our workshops and equipment. Your contribution is tax-deductible and 100% impactful.</p>
+                <a href="/campaigns" class="w-full py-4 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 transition relative z-10 shadow-lg shadow-red-600/20 active:scale-95">Donate Now</a>
+                <p class="text-[10px] text-slate-500 mt-4 relative z-10 uppercase tracking-widest font-medium">Secure payment via Stripe</p>
             </div>
-        </div>
-    </section>
 
+            <div class="order-3 md:order-3 bg-white rounded-3xl p-8 border border-slate-100 shadow-sm hover:shadow-xl transition duration-300 flex flex-col items-center text-center group">
+                <div class="w-14 h-14 md:w-16 md:h-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-xl md:text-2xl mb-6 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-slate-900 mb-3">Partner With Us</h3>
+                <p class="text-slate-500 mb-8 flex-grow text-sm md:text-base leading-relaxed">Align your corporate brand with community impact. Sponsorship packages available.</p>
+                <a href="{{url_for('main.contact_us')}}" class="w-full py-3 rounded-xl border-2 border-purple-100 text-purple-600 font-bold hover:bg-purple-50 transition-colors">Contact Us</a>
+            </div>
+
+        </div>
+    </div>
+</section>
     {% include 'user/footer.html' %}
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
