@@ -27,7 +27,7 @@ from .extension import db,mail
 from . import oauth  # <--- IMPORT OAUTH FROM YOUR __INIT__ FILE
 
 s = URLSafeTimedSerializer(os.getenv('SECRET_KEY'))
-
+load_dotenv()
 main_routes = Blueprint('main', __name__)
 
 
@@ -52,7 +52,7 @@ import secrets
 def get_osov_videos():
     # 1. Pull credentials from .env
     api_key = os.getenv('YOUTUBE_API_KEY')
-    channel_id = os.getenv('channel_id') # Should be UC6yGfS-nQOVd8rmk-4fjdMA
+    channel_id = os.getenv('CHANNEL_ID') # Should be UC6yGfS-nQOVd8rmk-4fjdMA
 
     # DEBUG SECTION - Check your logs for these!
     if not api_key:
