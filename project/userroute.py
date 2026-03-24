@@ -54,9 +54,16 @@ def get_osov_videos():
     api_key = os.getenv('YOUTUBE_API_KEY')
     channel_id = os.getenv('CHANNEL_ID') # Should be UC6yGfS-nQOVd8rmk-4fjdMA
 
-    if not api_key or not channel_id:
-        print("CRITICAL: Missing YouTube Config in .env")
-        return []
+    # DEBUG SECTION - Check your logs for these!
+    if not api_key:
+        print("DEBUG: API Key is MISSING")
+    else:
+        print(f"DEBUG: API Key exists (Starts with: {api_key[:5]}...)")
+
+    if not channel_id:
+        print("DEBUG: Channel ID is MISSING")
+    else:
+        print(f"DEBUG: Channel ID exists: {channel_id}")
 
     try:
         # 2. Build service without the 'file_cache' warning
@@ -156,15 +163,16 @@ def google_callback():
 
 @main_routes.route('/',methods = ['GET','POST'])
 def index():
-    # Debug line: Remove the filter to prove you have 3 events
-    upcoming_events = Event.query.order_by(Event.date_time.desc()).limit(3).all()
-    # explicit join condition
-    stories = Story.query.join(User).order_by(Story.created_at.desc()).limit(10).all()
+    try:
+        upcoming_events = Event.query.order_by(Event.date_time.desc()).limit(3).all()
+        stories = Story.query.join(User).order_by(Story.created_at.desc()).limit(10).all()
+    except Exception as e:
+        print(f"DATABASE ERROR: {e}")
+        upcoming_events = []
+        stories = []
+
     latest_vids = get_osov_videos()
-    print(f"DEBUG YOUTUBE: Received {len(latest_vids)} videos from API.")
-    if len(latest_vids) > 0:
-        print(f"DEBUG YOUTUBE: First video title is {latest_vids[0]['title']}")
-    return render_template('user/index.html',stories=stories,events=upcoming_events,videos=latest_vids)
+    return render_template('user/index.html', stories=stories, events=upcoming_events, videos=latest_vids)
 
 @main_routes.route('/about', methods = ['POST','GET'])
 def about():
