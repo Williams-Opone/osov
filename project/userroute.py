@@ -51,29 +51,34 @@ import secrets
 
 def get_osov_videos():
     api_key = os.getenv('YOUTUBE_API_KEY')
-    # Dax Oyibo's Channel ID
-    channel_id = os.getenv('channel_id')
+    channel_id = os.getenv('CHANNEL_ID')
     
-    youtube = build('youtube', 'v3', developerKey=api_key, discoveryServiceUrl=False)
-    
-    # Fetching the 5 most recent videos
-    request = youtube.search().list(
-        part="snippet",
-        channelId=channel_id,
-        maxResults=5,
-        order="date",
-        type="video"
+    if not api_key:
+        # Senior dev move: Always log if your env vars are missing!
+        print("CRITICAL: YOUTUBE_API_KEY is null")
+        return []
+
+    # FIX: Use static_discovery=True. 
+    # This prevents the 'file_cache' warning AND fixes the TypeError.
+    youtube = build(
+        'youtube', 
+        'v3', 
+        developerKey=api_key, 
+        static_discovery=True
     )
-    response = request.execute()
     
-    videos = []
-    for item in response.get('items', []):
-        videos.append({
-            'title': item['snippet']['title'],
-            'id': item['id']['videoId'],
-            'thumb': item['snippet']['thumbnails']['high']['url']
-        })
-    return videos
+    try:
+        request = youtube.search().list(
+            part="snippet",
+            channelId=channel_id,
+            maxResults=5,
+            order="date",
+            type="video"
+        )
+        return request.execute()
+    except Exception as e:
+        print(f"YouTube API Error: {e}")
+        return []
 
 @main_routes.route('/login/google')
 def google_login():
