@@ -51,30 +51,38 @@ def internal_server_error(e):
 import secrets
 
 # These stay outside the function to "remember" the data
-VIDEO_CACHE = []
-CACHE_EXPIRY = 0 
+# Global cache variables
+CACHE = {
+    'videos': [],
+    'expires': 0
+}
 
 def get_osov_videos():
-    global VIDEO_CACHE, CACHE_EXPIRY
+    global CACHE
     
-    # 1. Check if we have valid data in our "memory"
-    if VIDEO_CACHE and time.time() < CACHE_EXPIRY:
-        print("DEBUG: Saving quota! Using cached videos.")
-        return VIDEO_CACHE
+    # 2. Check if we have valid cache (valid for 1 hour)
+    if CACHE['videos'] and time.time() < CACHE['expires']:
+        print("DEBUG: Using Cache to save YouTube Quota!")
+        return CACHE['videos']
 
     api_key = os.getenv('YOUTUBE_API_KEY')
-    channel_id = os.getenv('CHANNEL_ID')
+    channel_id = os.getenv('CHANNEL_ID', '')
     
-    # The 'UU' trick to get the uploads playlist
-    playlist_id = 'UU' + channel_id[2:] if channel_id.startswith('UC') else channel_id
+    if not api_key or not channel_id:
+        print("CRITICAL: Missing YouTube Config in .env")
+        return []
+
+    # The 'UU' trick: Uploads playlist is always the Channel ID with 'UU' at the start
+    upload_playlist_id = 'UU' + channel_id[2:] if channel_id.startswith('UC') else channel_id
 
     try:
+        # Build service
         youtube = build('youtube', 'v3', developerKey=api_key, static_discovery=True)
         
-        # This only costs 1 unit!
+        # CHEAP METHOD: playlistItems (1 unit)
         request = youtube.playlistItems().list(
             part="snippet",
-            playlistId=playlist_id,
+            playlistId=upload_playlist_id,
             maxResults=5
         )
         response = request.execute()
@@ -87,15 +95,17 @@ def get_osov_videos():
                 'thumb': item['snippet']['thumbnails']['high']['url']
             })
         
-        # Store in memory for 1 hour (3600 seconds)
-        VIDEO_CACHE = formatted_videos
-        CACHE_EXPIRY = time.time() + 3600
+        # 3. Save to Cache for 1 hour (3600 seconds)
+        CACHE['videos'] = formatted_videos
+        CACHE['expires'] = time.time() + 3600
         
+        print(f"SUCCESS: Fetched {len(formatted_videos)} videos from API.")
         return formatted_videos
 
     except Exception as e:
         print(f"YOUTUBE API ERROR: {e}")
-        return VIDEO_CACHE # If API fails, show the last successful list
+        # 4. Fallback to whatever is in the cache (even if it's empty)
+        return CACHE['videos']
 @main_routes.route('/login/google')
 def google_login():
     next_page = request.args.get('next', url_for('main.index'))
