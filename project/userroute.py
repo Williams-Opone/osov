@@ -50,16 +50,19 @@ def internal_server_error(e):
 import secrets
 
 def get_osov_videos():
+    # 1. Pull credentials from .env
     api_key = os.getenv('YOUTUBE_API_KEY')
-    channel_id = os.getenv('CHANNEL_ID')
-    
-    if not api_key:
-        print("CRITICAL: YOUTUBE_API_KEY is null")
+    channel_id = os.getenv('CHANNEL_ID') # Should be UC6yGfS-nQOVd8rmk-4fjdMA
+
+    if not api_key or not channel_id:
+        print("CRITICAL: Missing YouTube Config in .env")
         return []
 
-    youtube = build('youtube', 'v3', developerKey=api_key, static_discovery=True)
-    
     try:
+        # 2. Build service without the 'file_cache' warning
+        youtube = build('youtube', 'v3', developerKey=api_key, static_discovery=True)
+        
+        # 3. Request the 5 latest videos
         request = youtube.search().list(
             part="snippet",
             channelId=channel_id,
@@ -67,24 +70,22 @@ def get_osov_videos():
             order="date",
             type="video"
         )
-        
-        # 1. Execute the request
         response = request.execute()
-        
-        # 2. Extract ONLY the items and format them for your HTML
-        formatted_videos = []
+
+        # 4. Clean the data so the HTML doesn't break
+        videos = []
         for item in response.get('items', []):
-            formatted_videos.append({
+            videos.append({
                 'id': item['id']['videoId'],
                 'title': item['snippet']['title'],
                 'thumb': item['snippet']['thumbnails']['high']['url']
             })
-            
-        # This MUST be lined up with the 'for' above it
-        return formatted_videos 
+        
+        print(f"SUCCESS: Fetched {len(videos)} videos.")
+        return videos
 
     except Exception as e:
-        print(f"YouTube API Error: {e}")
+        print(f"YOUTUBE API ERROR: {e}")
         return []
 @main_routes.route('/login/google')
 def google_login():
