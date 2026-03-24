@@ -160,6 +160,9 @@ def index():
     # explicit join condition
     stories = Story.query.join(User).order_by(Story.created_at.desc()).limit(10).all()
     latest_vids = get_osov_videos()
+    print(f"DEBUG YOUTUBE: Received {len(latest_vids)} videos from API.")
+    if len(latest_vids) > 0:
+        print(f"DEBUG YOUTUBE: First video title is {latest_vids[0]['title']}")
     return render_template('user/index.html',stories=stories,events=upcoming_events,videos=latest_vids)
 
 @main_routes.route('/about', methods = ['POST','GET'])
