@@ -5,7 +5,7 @@ from flask_wtf import CSRFProtect
 from authlib.integrations.flask_client import OAuth
 # __init__.py
 from flask_login import LoginManager
-
+from flask_caching import Cache
 
 
 
@@ -17,3 +17,4 @@ db = SQLAlchemy()
 csrf = CSRFProtect()
 oauth = OAuth()
 mail = Mail()
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})

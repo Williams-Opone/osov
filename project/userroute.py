@@ -12,17 +12,19 @@ from urllib.parse import unquote
 import re
 import stripe 
 from flask_login import login_user, login_required,current_user,logout_user
+import requests 
 
 from datetime import date, datetime
 from sqlalchemy import desc,distinct
 from flask_mail import Message
 from googleapiclient.discovery import build
 from itsdangerous import URLSafeTimedSerializer
+from flask_caching import Cache
 
 from flask import render_template,Blueprint,url_for,redirect,session,request,flash,current_app,abort
 from werkzeug.security import generate_password_hash , check_password_hash
 from .model import User,VolunteerApplication,MentorshipApplication,PartnerApplication,Event,EventRSVP,Story,Donation,NewsletterSubscriber,Campaign
-from .extension import db,mail
+from .extension import db,mail,cache
 
 
 from . import oauth  # <--- IMPORT OAUTH FROM YOUR __INIT__ FILE
@@ -50,62 +52,6 @@ def internal_server_error(e):
 
 import secrets
 
-# These stay outside the function to "remember" the data
-# Global cache variables
-CACHE = {
-    'videos': [],
-    'expires': 0
-}
-
-def get_osov_videos():
-    global CACHE
-    
-    # 2. Check if we have valid cache (valid for 1 hour)
-    if CACHE['videos'] and time.time() < CACHE['expires']:
-        print("DEBUG: Using Cache to save YouTube Quota!")
-        return CACHE['videos']
-
-    api_key = os.getenv('YOUTUBE_API_KEY')
-    channel_id = os.getenv('CHANNEL_ID', '')
-    
-    if not api_key or not channel_id:
-        print("CRITICAL: Missing YouTube Config in .env")
-        return []
-
-    # The 'UU' trick: Uploads playlist is always the Channel ID with 'UU' at the start
-    upload_playlist_id = 'UU' + channel_id[2:] if channel_id.startswith('UC') else channel_id
-
-    try:
-        # Build service
-        youtube = build('youtube', 'v3', developerKey=api_key, static_discovery=True)
-        
-        # CHEAP METHOD: playlistItems (1 unit)
-        request = youtube.playlistItems().list(
-            part="snippet",
-            playlistId=upload_playlist_id,
-            maxResults=5
-        )
-        response = request.execute()
-
-        formatted_videos = []
-        for item in response.get('items', []):
-            formatted_videos.append({
-                'id': item['snippet']['resourceId']['videoId'],
-                'title': item['snippet']['title'],
-                'thumb': item['snippet']['thumbnails']['high']['url']
-            })
-        
-        # 3. Save to Cache for 1 hour (3600 seconds)
-        CACHE['videos'] = formatted_videos
-        CACHE['expires'] = time.time() + 3600
-        
-        print(f"SUCCESS: Fetched {len(formatted_videos)} videos from API.")
-        return formatted_videos
-
-    except Exception as e:
-        print(f"YOUTUBE API ERROR: {e}")
-        # 4. Fallback to whatever is in the cache (even if it's empty)
-        return CACHE['videos']
 @main_routes.route('/login/google')
 def google_login():
     next_page = request.args.get('next', url_for('main.index'))
@@ -173,19 +119,71 @@ def google_callback():
 
     return redirect(next_url)
 
-@main_routes.route('/',methods = ['GET','POST'])
-def index():
+
+
+
+
+# 3. The Optimized YouTube Function
+@cache.memoize(timeout=3600) # Saves results for 1 hour (3600 seconds)
+def get_latest_youtube_videos(api_key, channel_id):
+    import requests
+    url = "https://www.googleapis.com/youtube/v3/search"
+    params = {
+        'key': api_key,
+        'channelId': channel_id,
+        'part': 'snippet,id',
+        'order': 'date',
+        'maxResults': 6,
+        'type': 'video'
+    }
     try:
+        r = requests.get(url, params=params)
+        data = r.json()
+        return [{
+            'title': i['snippet']['title'],
+            'thumbnail': i['snippet']['thumbnails']['high']['url'],
+            'video_id': i['id']['videoId']
+        } for i in data.get('items', [])]
+    except:
+        return []
+    
+@main_routes.route('/', methods=['GET', 'POST'])
+def index():
+    """
+    Main Landing Page Route.
+    Fetches cached YouTube videos and latest database content.
+    """
+    
+    # 1. FETCH YOUTUBE VIDEOS (Securely via .env)
+    # We pull the keys from your .env file using os.getenv
+    yt_api_key = os.getenv('YOUTUBE_API_KEY')
+    yt_channel_id = os.getenv('CHANNEL_ID')
+    
+    # This call is cached (memoized), so it won't hit your API limit on every refresh
+    yt_videos = get_latest_youtube_videos(yt_api_key, yt_channel_id)
+
+    # 2. FETCH DATABASE CONTENT (Events & Stories)
+    try:
+        # Fetch the 3 most recent events
         upcoming_events = Event.query.order_by(Event.date_time.desc()).limit(3).all()
+        
+        # Fetch the 10 most recent stories, joining with User to get author names
         stories = Story.query.join(User).order_by(Story.created_at.desc()).limit(10).all()
+        
     except Exception as e:
+        # Pro-tip: In production, consider using a real logger like 'logging.error'
         print(f"DATABASE ERROR: {e}")
         upcoming_events = []
         stories = []
 
-    latest_vids = get_osov_videos()
-    return render_template('user/index.html', stories=stories, events=upcoming_events, videos=latest_vids)
-
+    # 3. RENDER TEMPLATE
+    # Make sure your HTML loops match these keys: yt_videos, stories, events
+    return render_template(
+        'user/index.html', 
+        stories=stories, 
+        events=upcoming_events, 
+        yt_videos=yt_videos
+    )
 @main_routes.route('/about', methods = ['POST','GET'])
 def about():
     return render_template('user/about.html')

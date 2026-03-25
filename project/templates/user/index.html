@@ -207,46 +207,59 @@
             </div>
         </div>
     </section>
-    <!--<section class="py-20 bg-slate-900 text-white overflow-hidden">
+    <section id="youtube-gallery" class="py-16 md:py-24 bg-slate-900 text-white overflow-hidden">
         <div class="container mx-auto px-6">
-            <div class="flex items-end justify-between mb-12">
-                <div>
-                    <h2 class="text-3xl md:text-5xl font-black mb-4 tracking-tight">Bringing African <span class="text-red-600">Culture</span> to Life</h2>
-                    <p class="text-slate-400">The latest visual narratives from Dax Oyibo.</p>
+            
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+                <div class="max-w-xl">
+                    <span class="text-red-500 font-bold tracking-widest uppercase text-xs mb-2 block">On Screen</span>
+                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">Latest Narratives</h2>
+                    <p class="text-slate-400 text-base md:text-lg">Watch our most recent stories and community highlights directly from YouTube.</p>
                 </div>
-                <div class="flex gap-4">
-                    <button id="slidePrev" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-red-600 transition-all">
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </button>
-                    <button id="slideNext" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-red-600 transition-all">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </button>
-                </div>
+                <a href="https://youtube.com/@YOUR_CHANNEL" target="_blank" class="inline-flex items-center gap-2 text-white font-bold hover:text-red-500 transition group">
+                    Subscribe on YouTube <i class="fa-brands fa-youtube text-red-600 text-xl group-hover:scale-110 transition-transform"></i>
+                </a>
             </div>
     
-            <div class="relative overflow-hidden">
-                <div id="sliderTrack" class="flex transition-transform duration-500 ease-out">
-                    {% for video in videos %}
-                        <div class="flex-none w-full md:w-1/2 lg:w-1/3 p-3">
-                            <div class="group relative rounded-2xl overflow-hidden bg-black aspect-video border border-white/5 shadow-2xl">
-                                <img src="{{ video['thumb'] }}" alt="{{ video['title'] }}" class="w-full h-full object-cover">
-                                
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <a href="https://www.youtube.com/watch?v={{ video['id'] }}" target="_blank" class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center">
-                                        <i class="fa-solid fa-play text-white text-xl"></i>
-                                    </a>
-                                </div>
-
-                                <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent">
-                                    <h3 class="text-white text-lg font-bold truncate">{{ video['title'] }}</h3>
-                                </div>
-                            </div>
+            <div class="relative group/yt-slider">
+                
+                <button id="ytPrev" class="hidden lg:flex absolute top-1/2 -left-6 -translate-y-1/2 z-20 w-12 h-12 bg-slate-800 rounded-full border border-slate-700 text-white items-center justify-center hover:bg-red-600 transition-all opacity-0 group-hover/yt-slider:opacity-100">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+    
+                <button id="ytNext" class="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 z-20 w-12 h-12 bg-slate-800 rounded-full border border-slate-700 text-white items-center justify-center hover:bg-red-600 transition-all opacity-0 group-hover/yt-slider:opacity-100">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+    
+                <div class="overflow-hidden px-2 py-4 -mx-2">
+                    <div id="ytTrack" class="flex transition-transform duration-500 ease-out">
+                        {% for video in yt_videos %}
+                        <div class="w-full md:w-1/2 lg:w-1/3 flex-none px-3 md:px-4">
+                            <a href="https://www.youtube.com/watch?v={{ video.video_id }}" target="_blank" class="block group/card relative h-full">
+                                <article class="relative bg-slate-800 rounded-3xl overflow-hidden aspect-video shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-slate-700">
+                                    
+                                    <img src="{{ video.thumbnail }}" alt="{{ video.title }}" class="w-full h-full object-cover opacity-70 group-hover/card:opacity-100 transition duration-700">
+                                    
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-16 h-16 bg-red-600/90 text-white rounded-full flex items-center justify-center shadow-2xl transform group-hover/card:scale-125 transition-all duration-500 backdrop-blur-sm">
+                                            <i class="fa-solid fa-play ml-1"></i>
+                                        </div>
+                                    </div>
+    
+                                    <div class="absolute bottom-0 w-full p-6 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent">
+                                        <h3 class="text-white font-bold text-base md:text-lg leading-tight line-clamp-2">
+                                            {{ video.title }}
+                                        </h3>
+                                    </div>
+                                </article>
+                            </a>
                         </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
-    </section>-->
+    </section>
     <section id="stories" class="py-16 md:py-24 bg-white overflow-hidden">
         <div class="container mx-auto px-6">
             

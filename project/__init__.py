@@ -6,7 +6,7 @@ from flask_login import current_user
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 # Import extensions and blueprints
-from .extension import db, csrf, oauth, mail, login_manager
+from .extension import db, csrf, oauth, mail, login_manager,cache
 from . import config
 from .model import UserRole
 
@@ -67,7 +67,7 @@ def create_app():
     mail.init_app(app)
     login_manager.init_app(app)
     oauth.init_app(app)
-
+    cache.init_app(app)
     # 6. CONFIGURE CLOUDINARY
     cloudinary.config(
         cloud_name=os.environ.get('cloud_name'), 
