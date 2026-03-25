@@ -478,7 +478,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         
-        // --- 2. UNIVERSAL SLIDER LOGIC (Mouse, Touch & Buttons) ---
+        // --- 2. UNIVERSAL SLIDER LOGIC (Mouse Drag, Touch Swipe & Buttons) ---
         const track = document.getElementById('sliderTrack');
         const prevBtn = document.getElementById('slidePrev');
         const nextBtn = document.getElementById('slideNext');
@@ -502,38 +502,38 @@
                 const visibleCards = getVisibleCards();
                 const maxIndex = Math.max(0, totalCards - visibleCards);
                 
-                // Clamp index
+                // Clamp index to prevent empty space
                 if (currentIndex > maxIndex) currentIndex = maxIndex; 
                 if (currentIndex < 0) currentIndex = 0;
 
                 const percentage = currentIndex * -(100 / visibleCards);
                 prevTranslate = percentage;
                 
+                // Smooth transition with a custom cubic-bezier for a premium feel
                 track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                 track.style.transform = `translateX(${percentage}%)`;
 
-                // Smart Button UI: Opacity + Interaction
+                // Smart Button UI: Fades buttons at the ends
                 prevBtn.style.opacity = currentIndex === 0 ? "0" : "1";
                 prevBtn.style.pointerEvents = currentIndex === 0 ? "none" : "auto";
                 nextBtn.style.opacity = currentIndex >= maxIndex ? "0" : "1";
                 nextBtn.style.pointerEvents = currentIndex >= maxIndex ? "none" : "auto";
             }
 
-            // --- Button Click Events ---
+            // Button Click Events
             nextBtn.addEventListener('click', (e) => { e.preventDefault(); currentIndex++; updateSlider(); });
             prevBtn.addEventListener('click', (e) => { e.preventDefault(); currentIndex--; updateSlider(); });
 
-            // --- Unified Drag Support (Mouse + Touch) ---
+            // Drag/Swipe Support Logic
             const startDrag = (e) => {
                 isDragging = true;
                 startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-                track.style.transition = 'none';
+                track.style.transition = 'none'; // Instant feedback while dragging
                 track.style.cursor = 'grabbing';
             };
 
             const moveDrag = (e) => {
                 if (!isDragging) return;
-                // Only prevent default on touch if it's horizontal to allow vertical scrolling
                 const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
                 const diffX = currentX - startX;
                 
@@ -551,7 +551,7 @@
                 const endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].clientX;
                 const diffX = startX - endX;
 
-                // Threshold for slide change (50px)
+                // Move slide if dragged more than 50px
                 if (Math.abs(diffX) > 50) {
                     if (diffX > 0) currentIndex++;
                     else currentIndex--;
@@ -559,23 +559,23 @@
                 updateSlider();
             };
 
-            // Mouse Event Listeners (For Laptop)
+            // Event Listeners for Laptop (Mouse)
             track.addEventListener('mousedown', startDrag);
             window.addEventListener('mousemove', moveDrag);
             window.addEventListener('mouseup', endDrag);
             
-            // Touch Event Listeners (For Mobile/Tablet)
+            // Event Listeners for Mobile/Tablet (Touch)
             track.addEventListener('touchstart', startDrag, {passive: true});
             track.addEventListener('touchmove', moveDrag, {passive: true});
             track.addEventListener('touchend', endDrag);
 
             window.addEventListener('resize', updateSlider);
-            updateSlider(); 
+            updateSlider(); // Initial run
         }
 
         // --- 3. FAST COUNTER ANIMATION (Intersection Observer) ---
         const counters = document.querySelectorAll('.counter');
-        const counterSpeed = 30; // LOWER = FASTER
+        const counterSpeed = 30; // Lower is faster
 
         const animateCounter = (counter) => {
             const target = +counter.getAttribute('data-target');
@@ -586,7 +586,7 @@
                 if (count < target) {
                     count += inc;
                     counter.innerText = Math.floor(count);
-                    setTimeout(update, 20); // Faster 20ms refresh
+                    setTimeout(update, 20); // Smooth 20ms refresh
                 } else {
                     counter.innerText = target;
                 }
