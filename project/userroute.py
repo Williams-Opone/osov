@@ -19,12 +19,12 @@ from sqlalchemy import desc,distinct
 from flask_mail import Message
 from googleapiclient.discovery import build
 from itsdangerous import URLSafeTimedSerializer
-from flask_caching import Cache
+
 
 from flask import render_template,Blueprint,url_for,redirect,session,request,flash,current_app,abort
 from werkzeug.security import generate_password_hash , check_password_hash
 from .model import User,VolunteerApplication,MentorshipApplication,PartnerApplication,Event,EventRSVP,Story,Donation,NewsletterSubscriber,Campaign
-from .extension import db,mail,cache
+from .extension import db,mail
 
 
 from . import oauth  # <--- IMPORT OAUTH FROM YOUR __INIT__ FILE
