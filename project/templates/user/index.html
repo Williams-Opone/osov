@@ -471,7 +471,6 @@
     </section>
 
     {% include 'user/footer.html' %}
-
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         // 1. Init AOS Animations
@@ -489,11 +488,10 @@
                 const cards = track.children;
                 const totalCards = cards.length;
     
-                // --- Touch Support Variables ---
                 let startX = 0;
+                let isDragging = false;
                 let currentTranslate = 0;
                 let prevTranslate = 0;
-                let isDragging = false;
     
                 function getVisibleCards() {
                     if (window.innerWidth >= 1024) return 3;
@@ -505,57 +503,63 @@
                     const visibleCards = getVisibleCards();
                     const maxIndex = Math.max(0, totalCards - visibleCards);
                     
-                    // Keep index in bounds
+                    // Clamp index
                     if (currentIndex > maxIndex) currentIndex = maxIndex; 
                     if (currentIndex < 0) currentIndex = 0;
     
-                    const percentage = currentIndex * (100 / visibleCards);
-                    currentTranslate = -percentage;
+                    // Use precise percentage
+                    currentTranslate = currentIndex * -(100 / visibleCards);
                     prevTranslate = currentTranslate;
                     
                     track.style.transition = 'transform 0.5s ease-out';
                     track.style.transform = `translateX(${currentTranslate}%)`;
     
-                    // Auto-hide buttons if we are at the ends
-                    prevBtn.style.display = currentIndex === 0 ? 'none' : 'flex';
-                    nextBtn.style.display = currentIndex >= maxIndex ? 'none' : 'flex';
+                    // Button Visibility (Opacity + Pointer Events)
+                    prevBtn.style.opacity = currentIndex === 0 ? "0" : "1";
+                    prevBtn.style.pointerEvents = currentIndex === 0 ? "none" : "auto";
+                    nextBtn.style.opacity = currentIndex >= maxIndex ? "0" : "1";
+                    nextBtn.style.pointerEvents = currentIndex >= maxIndex ? "none" : "auto";
                 }
     
-                // --- Button Click Events ---
                 nextBtn.addEventListener('click', () => { currentIndex++; updateSlider(); });
                 prevBtn.addEventListener('click', () => { currentIndex--; updateSlider(); });
     
-                // --- Touch Events (Swiping for Tablets/Phones) ---
+                // --- Touch Support for Mobile/Tablets ---
                 track.addEventListener('touchstart', (e) => {
                     startX = e.touches[0].clientX;
                     isDragging = true;
-                    track.style.transition = 'none'; // Disable transition while dragging
-                });
+                    track.style.transition = 'none'; // Disable for instant feel
+                }, {passive: true});
     
                 track.addEventListener('touchmove', (e) => {
                     if (!isDragging) return;
                     const currentX = e.touches[0].clientX;
-                    // Calculate movement in percentage relative to container width
-                    const diff = (currentX - startX) / track.offsetWidth * 100;
-                    track.style.transform = `translateX(${prevTranslate + diff}%)`;
-                });
+                    const diffX = currentX - startX;
+                    
+                    // Convert pixel move to percentage move relative to container
+                    const containerWidth = track.parentElement.offsetWidth;
+                    const percentageMove = (diffX / containerWidth) * 100;
+                    
+                    track.style.transform = `translateX(${prevTranslate + percentageMove}%)`;
+                }, {passive: true});
     
                 track.addEventListener('touchend', (e) => {
+                    if (!isDragging) return;
                     isDragging = false;
                     track.style.transition = 'transform 0.5s ease-out';
                     const endX = e.changedTouches[0].clientX;
-                    const diff = startX - endX;
+                    const diffX = startX - endX;
     
-                    // If swiped more than 50px, change slide
-                    if (Math.abs(diff) > 50) {
-                        if (diff > 0) currentIndex++;
+                    // If swiped more than 50 pixels, move to next/prev
+                    if (Math.abs(diffX) > 50) {
+                        if (diffX > 0) currentIndex++;
                         else currentIndex--;
                     }
                     updateSlider();
                 });
     
                 window.addEventListener('resize', updateSlider);
-                updateSlider(); // Initial run
+                updateSlider(); 
             }
     
             // --- Counter Animation Logic ---
