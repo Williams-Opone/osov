@@ -473,90 +473,90 @@
     {% include 'user/footer.html' %}
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        // Init Animations
-        AOS.init({ duration: 800, easing: 'ease-out', once: true, offset: 50 });
+<script>
+    // 1. Init AOS Animations
+    AOS.init({ duration: 800, easing: 'ease-out', once: true, offset: 50 });
 
-        // Slider Logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const track = document.getElementById('sliderTrack');
-            const prevBtn = document.getElementById('slidePrev');
-            const nextBtn = document.getElementById('slideNext');
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // --- Slider Logic ---
+        const track = document.getElementById('sliderTrack');
+        const prevBtn = document.getElementById('slidePrev');
+        const nextBtn = document.getElementById('slideNext');
+        
+        if(track && prevBtn && nextBtn) {
+            let currentIndex = 0;
+            const cards = track.children;
+            const totalCards = cards.length;
+
+            function getVisibleCards() {
+                if (window.innerWidth >= 1024) return 3;
+                if (window.innerWidth >= 768) return 2;
+                return 1;
+            }
+
+            function updateSlider() {
+                const visibleCards = getVisibleCards();
+                const maxIndex = Math.max(0, totalCards - visibleCards);
+                if (currentIndex > maxIndex) currentIndex = 0; 
+                if (currentIndex < 0) currentIndex = maxIndex;
+                const percentage = currentIndex * (100 / visibleCards);
+                track.style.transform = `translateX(-${percentage}%)`;
+            }
+
+            nextBtn.addEventListener('click', () => { currentIndex++; updateSlider(); });
+            prevBtn.addEventListener('click', () => { currentIndex--; updateSlider(); });
+            window.addEventListener('resize', updateSlider);
+        }
+
+        // --- Counter Animation Logic ---
+        const counters = document.querySelectorAll('.counter');
+        const speed = 100; 
+
+        const startCounter = (counter) => {
+            const target = +counter.getAttribute('data-target');
+            let count = 0; // Start at 0 explicitly
             
-            if(track) {
-                let currentIndex = 0;
-                const cards = track.children;
-                const totalCards = cards.length;
-
-                function getVisibleCards() {
-                    if (window.innerWidth >= 1024) return 3;
-                    if (window.innerWidth >= 768) return 2;
-                    return 1;
+            const updateCount = () => {
+                const inc = target / speed;
+                if (count < target) {
+                    count += inc;
+                    counter.innerText = Math.ceil(count);
+                    setTimeout(updateCount, 30);
+                } else {
+                    counter.innerText = target;
                 }
+            };
+            updateCount();
+        };
 
-                function updateSlider() {
-                    const visibleCards = getVisibleCards();
-                    const maxIndex = Math.max(0, totalCards - visibleCards);
-                    if (currentIndex > maxIndex) currentIndex = 0; 
-                    if (currentIndex < 0) currentIndex = maxIndex;
-                    const percentage = currentIndex * (100 / visibleCards);
-                    track.style.transform = `translateX(-${percentage}%)`;
+        // Intersection Observer (The Trigger)
+        const observerOptions = {
+            threshold: 0.2 // Lowered threshold to 20% so it triggers easier on mobile
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    startCounter(entry.target);
+                    observer.unobserve(entry.target); 
                 }
+            });
+        }, observerOptions);
 
-                nextBtn.addEventListener('click', () => { currentIndex++; updateSlider(); });
-                prevBtn.addEventListener('click', () => { currentIndex--; updateSlider(); });
-                window.addEventListener('resize', updateSlider);
-            }
+        counters.forEach(counter => observer.observe(counter));
 
-            // Counter Animation
-            document.addEventListener('DOMContentLoaded', () => {
-            const counters = document.querySelectorAll('.counter');
-            const speed = 100; // Lower is faster
-
-            const startCounter = (counter) => {
-                const updateCount = () => {
-                    const target = +counter.getAttribute('data-target');
-                    const count = +counter.innerText;
-                    const inc = Math.ceil(target / speed);
-
-                    if (count < target) {
-                        counter.innerText = count + inc > target ? target : count + inc;
-                        setTimeout(updateCount, 30);
-                    } else {
-                        counter.innerText = target;
-                    }
-                };
-                updateCount();
-            };
-
-            // The Magic: Intersection Observer
-            const observerOptions = {
-                threshold: 0.5 // Start when 50% of the section is visible
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        startCounter(entry.target);
-                        observer.unobserve(entry.target); // Stop observing once it runs
-                    }
+        // --- Flash Messages ---
+        const messages = document.querySelectorAll('.flash-message');
+        if (messages.length > 0) {
+            setTimeout(() => {
+                messages.forEach(msg => {
+                    msg.classList.add('fade-out');
+                    setTimeout(() => msg.remove(), 500);
                 });
-            }, observerOptions);
-
-            counters.forEach(counter => observer.observe(counter));
-        });
-
-            // Flash Messages Fade Out
-            const messages = document.querySelectorAll('.flash-message');
-            if (messages.length > 0) {
-                setTimeout(() => {
-                    messages.forEach(msg => {
-                        msg.classList.add('fade-out');
-                        setTimeout(() => msg.remove(), 500);
-                    });
-                }, 2000); 
-            }
-        });
-    </script>
+            }, 2000); 
+        }
+    });
+</script>
 </body>
 </html>
