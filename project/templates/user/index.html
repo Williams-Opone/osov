@@ -21,13 +21,46 @@
             background-position: right center;
             background-size: contain;
         }
+        /* Only apply hover effects on devices that actually support hovering (mice) */
+        @media (hover: hover) {
+        .group:hover {
+            transform: translateY(-0.5rem);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
         
-        /* Flash Message Animation */
-        .flash-message { transition: opacity 0.5s ease-out; opacity: 1; }
-        .fade-out { opacity: 0; }
+        .group:hover img {
+            transform: scale(1.1);
+        }
         
-        /* Counter Animation Class */
-        .counter { font-variant-numeric: tabular-nums; }
+        .group:hover h3 {
+            color: #ef4444;
+        }
+        
+        .group:hover .group-hover\:underline {
+            text-decoration: underline;
+        }
+    }
+
+    /* 2. Mobile & Tablet Performance (Crucial!) */
+    #sliderTrack {
+        /* Prevents the page from scrolling up/down while your finger is moving left/right */
+        touch-action: pan-y; 
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* 3. Global Utilities */
+    .flash-message { 
+        transition: opacity 0.5s ease-out; 
+        opacity: 1; 
+    }
+    
+    .fade-out { 
+        opacity: 0; 
+    }
+    
+    .counter { 
+        font-variant-numeric: tabular-nums; 
+    }
     </style>
 </head>
 <body class="text-slate-600 antialiased bg-white overflow-x-hidden">
@@ -246,7 +279,7 @@
                             {% for s in stories %}
                                 <div class="w-full md:w-1/2 lg:w-1/3 flex-none px-3 md:px-4">
                                     <a href="{{ url_for('main.story_detail', slug=s.slug) }}" class="block h-full">
-                                        <article class="group bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer h-full flex flex-col">
+                                        <article class="group bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm transition-all duration-500 cursor-pointer h-full flex flex-col">
                                             <div class="relative overflow-hidden h-64">
                                                 <div class="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition z-10"></div>
                                                 {% if s.image_url %}
@@ -513,9 +546,12 @@
     {% include 'user/footer.html' %}
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
+    // 1. Initialize Global Animations (AOS)
     AOS.init({ duration: 800, easing: 'ease-out', once: true, offset: 50 });
 
     document.addEventListener('DOMContentLoaded', () => {
+        
+        // --- 2. UNIVERSAL SLIDER LOGIC ---
         const track = document.getElementById('sliderTrack');
         const prevBtn = document.getElementById('slidePrev');
         const nextBtn = document.getElementById('slideNext');
@@ -539,39 +575,33 @@
                 const visibleCards = getVisibleCards();
                 const maxIndex = Math.max(0, totalCards - visibleCards);
                 
-                // Clamp index
                 if (currentIndex > maxIndex) currentIndex = maxIndex; 
                 if (currentIndex < 0) currentIndex = 0;
 
                 const percentage = currentIndex * -(100 / visibleCards);
-                prevTranslate = percentage; // Sync translate for drag logic
+                prevTranslate = percentage; 
                 
+                // Re-enable smooth transition for the snap/click effect
                 track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                 track.style.transform = `translateX(${percentage}%)`;
 
-                // Update Button UI
+                // Button Visibility Logic
                 prevBtn.style.opacity = currentIndex === 0 ? "0" : "1";
                 prevBtn.style.pointerEvents = currentIndex === 0 ? "none" : "auto";
                 nextBtn.style.opacity = currentIndex >= maxIndex ? "0" : "1";
                 nextBtn.style.pointerEvents = currentIndex >= maxIndex ? "none" : "auto";
             }
 
-            // Click Handlers
-            nextBtn.addEventListener('click', (e) => { 
-                e.preventDefault(); 
-                currentIndex++; 
-                updateSlider(); 
-            });
-            prevBtn.addEventListener('click', (e) => { 
-                e.preventDefault(); 
-                currentIndex--; 
-                updateSlider(); 
-            });
+            // Click Events
+            nextBtn.addEventListener('click', (e) => { e.preventDefault(); currentIndex++; updateSlider(); });
+            prevBtn.addEventListener('click', (e) => { e.preventDefault(); currentIndex--; updateSlider(); });
 
-            // Drag/Swipe Handlers
+            // --- DRAG / SWIPE LOGIC ---
             const startDrag = (e) => {
                 isDragging = true;
                 startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+                
+                // CRITICAL: Disable transition so card follows finger instantly
                 track.style.transition = 'none';
                 track.style.cursor = 'grabbing';
             };
@@ -581,7 +611,6 @@
                 const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
                 const diffX = currentX - startX;
                 
-                // CRITICAL FIX: Ensure offsetWidth is captured accurately
                 const containerWidth = track.parentElement.getBoundingClientRect().width;
                 const percentageMove = (diffX / containerWidth) * 100;
                 
@@ -592,36 +621,38 @@
                 if (!isDragging) return;
                 isDragging = false;
                 track.style.cursor = 'grab';
-                track.style.transition = 'transform 0.5s ease-out';
                 
                 const endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].clientX;
                 const diffX = startX - endX;
 
+                // Threshold: If swiped more than 50px, change slide
                 if (Math.abs(diffX) > 50) {
                     if (diffX > 0) currentIndex++;
                     else currentIndex--;
                 }
+                
+                // This function re-enables the smooth transition and snaps card to position
                 updateSlider();
             };
 
-            // Listeners
+            // Event Listeners
             track.addEventListener('mousedown', startDrag);
             window.addEventListener('mousemove', moveDrag);
             window.addEventListener('mouseup', endDrag);
+            
             track.addEventListener('touchstart', startDrag, {passive: true});
             track.addEventListener('touchmove', moveDrag, {passive: true});
             track.addEventListener('touchend', endDrag);
 
             window.addEventListener('resize', updateSlider);
-            
-            // Final Senior Trick: Wait for all images/assets to ensure widths are final
             window.addEventListener('load', updateSlider);
             updateSlider(); 
         }
 
-        // --- Counter logic stays the same (it was working fine) ---
+        // --- 3. FAST COUNTER ANIMATION ---
         const counters = document.querySelectorAll('.counter');
-        const counterSpeed = 30;
+        const counterSpeed = 30; 
+
         const animateCounter = (counter) => {
             const target = +counter.getAttribute('data-target');
             let count = 0; 
@@ -631,10 +662,13 @@
                     count += inc;
                     counter.innerText = Math.floor(count);
                     setTimeout(update, 20);
-                } else { counter.innerText = target; }
+                } else {
+                    counter.innerText = target;
+                }
             };
             update();
         };
+
         const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -643,9 +677,10 @@
                 }
             });
         }, { threshold: 0.2 });
+
         counters.forEach(c => counterObserver.observe(c));
 
-        // --- Flash Messages ---
+        // --- 4. FLASH MESSAGES ---
         const messages = document.querySelectorAll('.flash-message');
         if (messages.length > 0) {
             setTimeout(() => {
