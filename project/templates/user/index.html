@@ -473,90 +473,136 @@
     {% include 'user/footer.html' %}
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-    // 1. Init AOS Animations
-    AOS.init({ duration: 800, easing: 'ease-out', once: true, offset: 50 });
-
-    document.addEventListener('DOMContentLoaded', () => {
-        
-        // --- Slider Logic ---
-        const track = document.getElementById('sliderTrack');
-        const prevBtn = document.getElementById('slidePrev');
-        const nextBtn = document.getElementById('slideNext');
-        
-        if(track && prevBtn && nextBtn) {
-            let currentIndex = 0;
-            const cards = track.children;
-            const totalCards = cards.length;
-
-            function getVisibleCards() {
-                if (window.innerWidth >= 1024) return 3;
-                if (window.innerWidth >= 768) return 2;
-                return 1;
-            }
-
-            function updateSlider() {
-                const visibleCards = getVisibleCards();
-                const maxIndex = Math.max(0, totalCards - visibleCards);
-                if (currentIndex > maxIndex) currentIndex = 0; 
-                if (currentIndex < 0) currentIndex = maxIndex;
-                const percentage = currentIndex * (100 / visibleCards);
-                track.style.transform = `translateX(-${percentage}%)`;
-            }
-
-            nextBtn.addEventListener('click', () => { currentIndex++; updateSlider(); });
-            prevBtn.addEventListener('click', () => { currentIndex--; updateSlider(); });
-            window.addEventListener('resize', updateSlider);
-        }
-
-        // --- Counter Animation Logic ---
-        const counters = document.querySelectorAll('.counter');
-        const speed = 90; 
-
-        const startCounter = (counter) => {
-            const target = +counter.getAttribute('data-target');
-            let count = 0; // Start at 0 explicitly
+    <script>
+        // 1. Init AOS Animations
+        AOS.init({ duration: 800, easing: 'ease-out', once: true, offset: 50 });
+    
+        document.addEventListener('DOMContentLoaded', () => {
             
-            const updateCount = () => {
-                const inc = target / speed;
-                if (count < target) {
-                    count += inc;
-                    counter.innerText = Math.ceil(count);
-                    setTimeout(updateCount, 30);
-                } else {
-                    counter.innerText = target;
+            // --- Enhanced Slider Logic (Touch & Desktop) ---
+            const track = document.getElementById('sliderTrack');
+            const prevBtn = document.getElementById('slidePrev');
+            const nextBtn = document.getElementById('slideNext');
+            
+            if(track && prevBtn && nextBtn) {
+                let currentIndex = 0;
+                const cards = track.children;
+                const totalCards = cards.length;
+    
+                // --- Touch Support Variables ---
+                let startX = 0;
+                let currentTranslate = 0;
+                let prevTranslate = 0;
+                let isDragging = false;
+    
+                function getVisibleCards() {
+                    if (window.innerWidth >= 1024) return 3;
+                    if (window.innerWidth >= 768) return 2;
+                    return 1;
                 }
-            };
-            updateCount();
-        };
-
-        // Intersection Observer (The Trigger)
-        const observerOptions = {
-            threshold: 0.2 // Lowered threshold to 20% so it triggers easier on mobile
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    startCounter(entry.target);
-                    observer.unobserve(entry.target); 
+    
+                function updateSlider() {
+                    const visibleCards = getVisibleCards();
+                    const maxIndex = Math.max(0, totalCards - visibleCards);
+                    
+                    // Keep index in bounds
+                    if (currentIndex > maxIndex) currentIndex = maxIndex; 
+                    if (currentIndex < 0) currentIndex = 0;
+    
+                    const percentage = currentIndex * (100 / visibleCards);
+                    currentTranslate = -percentage;
+                    prevTranslate = currentTranslate;
+                    
+                    track.style.transition = 'transform 0.5s ease-out';
+                    track.style.transform = `translateX(${currentTranslate}%)`;
+    
+                    // Auto-hide buttons if we are at the ends
+                    prevBtn.style.display = currentIndex === 0 ? 'none' : 'flex';
+                    nextBtn.style.display = currentIndex >= maxIndex ? 'none' : 'flex';
                 }
-            });
-        }, observerOptions);
-
-        counters.forEach(counter => observer.observe(counter));
-
-        // --- Flash Messages ---
-        const messages = document.querySelectorAll('.flash-message');
-        if (messages.length > 0) {
-            setTimeout(() => {
-                messages.forEach(msg => {
-                    msg.classList.add('fade-out');
-                    setTimeout(() => msg.remove(), 500);
+    
+                // --- Button Click Events ---
+                nextBtn.addEventListener('click', () => { currentIndex++; updateSlider(); });
+                prevBtn.addEventListener('click', () => { currentIndex--; updateSlider(); });
+    
+                // --- Touch Events (Swiping for Tablets/Phones) ---
+                track.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                    track.style.transition = 'none'; // Disable transition while dragging
                 });
-            }, 2000); 
-        }
-    });
-</script>
+    
+                track.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    const currentX = e.touches[0].clientX;
+                    // Calculate movement in percentage relative to container width
+                    const diff = (currentX - startX) / track.offsetWidth * 100;
+                    track.style.transform = `translateX(${prevTranslate + diff}%)`;
+                });
+    
+                track.addEventListener('touchend', (e) => {
+                    isDragging = false;
+                    track.style.transition = 'transform 0.5s ease-out';
+                    const endX = e.changedTouches[0].clientX;
+                    const diff = startX - endX;
+    
+                    // If swiped more than 50px, change slide
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) currentIndex++;
+                        else currentIndex--;
+                    }
+                    updateSlider();
+                });
+    
+                window.addEventListener('resize', updateSlider);
+                updateSlider(); // Initial run
+            }
+    
+            // --- Counter Animation Logic ---
+            const counters = document.querySelectorAll('.counter');
+            const speed = 90; 
+    
+            const startCounter = (counter) => {
+                const target = +counter.getAttribute('data-target');
+                let count = 0; 
+                
+                const updateCount = () => {
+                    const inc = target / speed;
+                    if (count < target) {
+                        count += inc;
+                        counter.innerText = Math.ceil(count);
+                        setTimeout(updateCount, 30);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            };
+    
+            // Intersection Observer for Counters
+            const observerOptions = { threshold: 0.2 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        startCounter(entry.target);
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, observerOptions);
+    
+            counters.forEach(counter => observer.observe(counter));
+    
+            // --- Flash Messages ---
+            const messages = document.querySelectorAll('.flash-message');
+            if (messages.length > 0) {
+                setTimeout(() => {
+                    messages.forEach(msg => {
+                        msg.classList.add('fade-out');
+                        setTimeout(() => msg.remove(), 500);
+                    });
+                }, 2000); 
+            }
+        });
+    </script>
 </body>
 </html>
