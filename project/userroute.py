@@ -123,29 +123,29 @@ def google_callback():
 
 
 
-# 3. The Optimized YouTube Function
-@cache.memoize(timeout=3600) # Saves results for 1 hour (3600 seconds)
-def get_latest_youtube_videos(api_key, channel_id):
-    import requests
-    url = "https://www.googleapis.com/youtube/v3/search"
-    params = {
-        'key': api_key,
-        'channelId': channel_id,
-        'part': 'snippet,id',
-        'order': 'date',
-        'maxResults': 6,
-        'type': 'video'
-    }
-    try:
-        r = requests.get(url, params=params)
-        data = r.json()
-        return [{
-            'title': i['snippet']['title'],
-            'thumbnail': i['snippet']['thumbnails']['high']['url'],
-            'video_id': i['id']['videoId']
-        } for i in data.get('items', [])]
-    except:
-        return []
+# # 3. The Optimized YouTube Function
+# @cache.memoize(timeout=3600) # Saves results for 1 hour (3600 seconds)
+# def get_latest_youtube_videos(api_key, channel_id):
+#     import requests
+#     url = "https://www.googleapis.com/youtube/v3/search"
+#     params = {
+#         'key': api_key,
+#         'channelId': channel_id,
+#         'part': 'snippet,id',
+#         'order': 'date',
+#         'maxResults': 6,
+#         'type': 'video'
+#     }
+#     try:
+#         r = requests.get(url, params=params)
+#         data = r.json()
+#         return [{
+#             'title': i['snippet']['title'],
+#             'thumbnail': i['snippet']['thumbnails']['high']['url'],
+#             'video_id': i['id']['videoId']
+#         } for i in data.get('items', [])]
+#     except:
+#         return []
     
 @main_routes.route('/', methods=['GET', 'POST'])
 def index():
@@ -154,13 +154,13 @@ def index():
     Fetches cached YouTube videos and latest database content.
     """
     
-    # 1. FETCH YOUTUBE VIDEOS (Securely via .env)
-    # We pull the keys from your .env file using os.getenv
-    yt_api_key = os.getenv('YOUTUBE_API_KEY')
-    yt_channel_id = os.getenv('CHANNEL_ID')
+    # # 1. FETCH YOUTUBE VIDEOS (Securely via .env)
+    # # We pull the keys from your .env file using os.getenv
+    # yt_api_key = os.getenv('YOUTUBE_API_KEY')
+    # yt_channel_id = os.getenv('CHANNEL_ID')
     
     # This call is cached (memoized), so it won't hit your API limit on every refresh
-    yt_videos = get_latest_youtube_videos(yt_api_key, yt_channel_id)
+    # yt_videos = get_latest_youtube_videos(yt_api_key, yt_channel_id)
 
     # 2. FETCH DATABASE CONTENT (Events & Stories)
     try:
@@ -181,8 +181,7 @@ def index():
     return render_template(
         'user/index.html', 
         stories=stories, 
-        events=upcoming_events, 
-        yt_videos=yt_videos
+        events=upcoming_events
     )
 @main_routes.route('/about', methods = ['POST','GET'])
 def about():
