@@ -512,13 +512,10 @@
 
     {% include 'user/footer.html' %}
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-    // 1. Initialize Global Animations (AOS)
+<script>
     AOS.init({ duration: 800, easing: 'ease-out', once: true, offset: 50 });
 
     document.addEventListener('DOMContentLoaded', () => {
-        
-        // --- 2. UNIVERSAL SLIDER LOGIC (Mouse Drag, Touch Swipe & Buttons) ---
         const track = document.getElementById('sliderTrack');
         const prevBtn = document.getElementById('slidePrev');
         const nextBtn = document.getElementById('slideNext');
@@ -542,33 +539,40 @@
                 const visibleCards = getVisibleCards();
                 const maxIndex = Math.max(0, totalCards - visibleCards);
                 
-                // Clamp index to prevent empty space
+                // Clamp index
                 if (currentIndex > maxIndex) currentIndex = maxIndex; 
                 if (currentIndex < 0) currentIndex = 0;
 
                 const percentage = currentIndex * -(100 / visibleCards);
-                prevTranslate = percentage;
+                prevTranslate = percentage; // Sync translate for drag logic
                 
-                // Smooth transition with a custom cubic-bezier for a premium feel
                 track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                 track.style.transform = `translateX(${percentage}%)`;
 
-                // Smart Button UI: Fades buttons at the ends
+                // Update Button UI
                 prevBtn.style.opacity = currentIndex === 0 ? "0" : "1";
                 prevBtn.style.pointerEvents = currentIndex === 0 ? "none" : "auto";
                 nextBtn.style.opacity = currentIndex >= maxIndex ? "0" : "1";
                 nextBtn.style.pointerEvents = currentIndex >= maxIndex ? "none" : "auto";
             }
 
-            // Button Click Events
-            nextBtn.addEventListener('click', (e) => { e.preventDefault(); currentIndex++; updateSlider(); });
-            prevBtn.addEventListener('click', (e) => { e.preventDefault(); currentIndex--; updateSlider(); });
+            // Click Handlers
+            nextBtn.addEventListener('click', (e) => { 
+                e.preventDefault(); 
+                currentIndex++; 
+                updateSlider(); 
+            });
+            prevBtn.addEventListener('click', (e) => { 
+                e.preventDefault(); 
+                currentIndex--; 
+                updateSlider(); 
+            });
 
-            // Drag/Swipe Support Logic
+            // Drag/Swipe Handlers
             const startDrag = (e) => {
                 isDragging = true;
                 startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-                track.style.transition = 'none'; // Instant feedback while dragging
+                track.style.transition = 'none';
                 track.style.cursor = 'grabbing';
             };
 
@@ -577,8 +581,10 @@
                 const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
                 const diffX = currentX - startX;
                 
-                const containerWidth = track.parentElement.offsetWidth;
+                // CRITICAL FIX: Ensure offsetWidth is captured accurately
+                const containerWidth = track.parentElement.getBoundingClientRect().width;
                 const percentageMove = (diffX / containerWidth) * 100;
+                
                 track.style.transform = `translateX(${prevTranslate + percentageMove}%)`;
             };
 
@@ -591,7 +597,6 @@
                 const endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].clientX;
                 const diffX = startX - endX;
 
-                // Move slide if dragged more than 50px
                 if (Math.abs(diffX) > 50) {
                     if (diffX > 0) currentIndex++;
                     else currentIndex--;
@@ -599,41 +604,37 @@
                 updateSlider();
             };
 
-            // Event Listeners for Laptop (Mouse)
+            // Listeners
             track.addEventListener('mousedown', startDrag);
             window.addEventListener('mousemove', moveDrag);
             window.addEventListener('mouseup', endDrag);
-            
-            // Event Listeners for Mobile/Tablet (Touch)
             track.addEventListener('touchstart', startDrag, {passive: true});
             track.addEventListener('touchmove', moveDrag, {passive: true});
             track.addEventListener('touchend', endDrag);
 
             window.addEventListener('resize', updateSlider);
-            updateSlider(); // Initial run
+            
+            // Final Senior Trick: Wait for all images/assets to ensure widths are final
+            window.addEventListener('load', updateSlider);
+            updateSlider(); 
         }
 
-        // --- 3. FAST COUNTER ANIMATION (Intersection Observer) ---
+        // --- Counter logic stays the same (it was working fine) ---
         const counters = document.querySelectorAll('.counter');
-        const counterSpeed = 30; // Lower is faster
-
+        const counterSpeed = 30;
         const animateCounter = (counter) => {
             const target = +counter.getAttribute('data-target');
             let count = 0; 
-            
             const update = () => {
                 const inc = target / counterSpeed;
                 if (count < target) {
                     count += inc;
                     counter.innerText = Math.floor(count);
-                    setTimeout(update, 20); // Smooth 20ms refresh
-                } else {
-                    counter.innerText = target;
-                }
+                    setTimeout(update, 20);
+                } else { counter.innerText = target; }
             };
             update();
         };
-
         const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -642,10 +643,9 @@
                 }
             });
         }, { threshold: 0.2 });
-
         counters.forEach(c => counterObserver.observe(c));
 
-        // --- 4. FLASH MESSAGES AUTO-HIDE ---
+        // --- Flash Messages ---
         const messages = document.querySelectorAll('.flash-message');
         if (messages.length > 0) {
             setTimeout(() => {
