@@ -279,46 +279,45 @@
         </div>
     </section>
 
-    <section class="py-16 md:py-20 bg-slate-900 text-white relative overflow-hidden">
-        <div class="relative bg-slate-900 border-y border-gray-800 overflow-hidden">
-            <div class="absolute top-0 left-1/4 w-64 h-64 bg-red-600/10 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-0 right-1/4 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl"></div>
-        
-            <div class="container mx-auto px-6 py-8 md:py-16 relative z-10">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
-                    
-                    <div class="group p-4">
-                        <div class="text-3xl md:text-5xl font-extrabold text-white mb-2">
-                            <span class="counter" data-target="100">0</span><span>M+</span>
-                        </div>
-                        <div class="h-1 w-12 bg-red-500 mx-auto mb-3 rounded-full"></div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">Voices Waiting</div>
+    <section class="py-12 md:py-24 bg-slate-900 text-white relative overflow-hidden">
+        <div class="absolute top-0 left-1/4 w-64 h-64 bg-red-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute bottom-0 right-1/4 w-64 h-64 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+    
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 text-center">
+                
+                <div class="group p-2 md:p-4">
+                    <div class="text-3xl md:text-5xl font-extrabold text-white mb-2 whitespace-nowrap">
+                        <span class="counter" data-target="100">0</span><span>M+</span>
                     </div>
-        
-                    <div class="group p-4">
-                        <div class="text-3xl md:text-5xl font-extrabold text-white mb-2">
-                            <span class="counter" data-target="30">0</span><span>+</span>
-                        </div>
-                        <div class="h-1 w-12 bg-blue-500 mx-auto mb-3 rounded-full"></div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">States Covered</div>
-                    </div>
-        
-                    <div class="group p-4">
-                        <div class="text-3xl md:text-5xl font-extrabold text-white mb-2">
-                            <span>24</span><span class="text-2xl text-gray-500">/</span><span>7</span>
-                        </div>
-                        <div class="h-1 w-12 bg-purple-500 mx-auto mb-3 rounded-full"></div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">Platform Access</div>
-                    </div>
-        
-                    <div class="group p-4">
-                        <div class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500 mb-2">
-                            <span class="counter" data-target="100">0</span><span>%</span>
-                        </div>
-                        <div class="h-1 w-12 bg-orange-500 mx-auto mb-3 rounded-full"></div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">Non-Profit</div>
-                    </div>
+                    <div class="h-1 w-10 md:w-12 bg-red-500 mx-auto mb-3 rounded-full group-hover:w-16 transition-all duration-300"></div>
+                    <div class="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest">Voices Waiting</div>
                 </div>
+    
+                <div class="group p-2 md:p-4">
+                    <div class="text-3xl md:text-5xl font-extrabold text-white mb-2 whitespace-nowrap">
+                        <span class="counter" data-target="30">0</span><span>+</span>
+                    </div>
+                    <div class="h-1 w-10 md:w-12 bg-blue-500 mx-auto mb-3 rounded-full group-hover:w-16 transition-all duration-300"></div>
+                    <div class="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest leading-tight">States Covered</div>
+                </div>
+    
+                <div class="group p-2 md:p-4">
+                    <div class="text-3xl md:text-5xl font-extrabold text-white mb-2 whitespace-nowrap">
+                        <span>24</span><span class="text-xl md:text-2xl text-gray-500 mx-0.5">/</span><span>7</span>
+                    </div>
+                    <div class="h-1 w-10 md:w-12 bg-purple-500 mx-auto mb-3 rounded-full group-hover:w-16 transition-all duration-300"></div>
+                    <div class="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest leading-tight">Platform Access</div>
+                </div>
+    
+                <div class="group p-2 md:p-4">
+                    <div class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500 mb-2 whitespace-nowrap">
+                        <span class="counter" data-target="100">0</span><span>%</span>
+                    </div>
+                    <div class="h-1 w-10 md:w-12 bg-orange-500 mx-auto mb-3 rounded-full group-hover:w-16 transition-all duration-300"></div>
+                    <div class="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest">Non-Profit</div>
+                </div>
+    
             </div>
         </div>
     </section>
@@ -510,23 +509,42 @@
             }
 
             // Counter Animation
+            document.addEventListener('DOMContentLoaded', () => {
             const counters = document.querySelectorAll('.counter');
-            const speed = 200; 
-            counters.forEach(counter => {
+            const speed = 100; // Lower is faster
+
+            const startCounter = (counter) => {
                 const updateCount = () => {
                     const target = +counter.getAttribute('data-target');
                     const count = +counter.innerText;
-                    const inc = target / speed;
+                    const inc = Math.ceil(target / speed);
+
                     if (count < target) {
-                        counter.innerText = Math.ceil(count + inc);
-                        setTimeout(updateCount, 20);
+                        counter.innerText = count + inc > target ? target : count + inc;
+                        setTimeout(updateCount, 30);
                     } else {
                         counter.innerText = target;
                     }
                 };
-                // Only run when in view (using AOS logic implicitly or intersection observer)
                 updateCount();
-            });
+            };
+
+            // The Magic: Intersection Observer
+            const observerOptions = {
+                threshold: 0.5 // Start when 50% of the section is visible
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        startCounter(entry.target);
+                        observer.unobserve(entry.target); // Stop observing once it runs
+                    }
+                });
+            }, observerOptions);
+
+            counters.forEach(counter => observer.observe(counter));
+        });
 
             // Flash Messages Fade Out
             const messages = document.querySelectorAll('.flash-message');
