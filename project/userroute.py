@@ -857,16 +857,31 @@ def signin():
         email = request.form.get('email')
         pwd = request.form.get('pwd')
 
+        # --- DEBUG START ---
+        print(f"DEBUG: Attempting login for {email}")
+        print(f"DEBUG: Password received from form: {'Yes' if pwd else 'No'}")
+        # --- DEBUG END ---
+
         if not email or not pwd:
             flash('Please fill in all fields', 'error')
             return render_template('user/signin.html')
         
         existing_user = User.query.filter_by(email=email).first()
 
-        # 1. VERIFY USER AND PASSWORD (Using your Model's method)
-        # Use .check_password() instead of importing check_password_hash here
-        if existing_user and existing_user.password_hash and existing_user.check_password(pwd):
+        # --- DATABASE DEBUG START ---
+        if not existing_user:
+            print(f"DEBUG: User [{email}] not found in database")
+        else:
+            has_hash = 'Yes' if existing_user.password_hash else 'No'
+            print(f"DEBUG: User found. Hash exists: {has_hash}")
             
+            # Check the password logic
+            match = existing_user.check_password(pwd)
+            print(f"DEBUG: Password match result: {match}")
+        # --- DATABASE DEBUG END ---
+
+        # 1. VERIFY USER AND PASSWORD
+        if existing_user and existing_user.password_hash and existing_user.check_password(pwd):
             # A. Login Success
             login_user(existing_user)
             
@@ -881,7 +896,6 @@ def signin():
         flash('Invalid Email or Password', 'error')
 
     return render_template('user/signin.html')
-
 @main_routes.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     print("--- DEBUGGING FORGOT PASSWORD CONFIG ---")
