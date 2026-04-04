@@ -1,7 +1,6 @@
 <nav class="fixed w-full z-50 top-0 start-0 border-b border-gray-100 bg-white/95 backdrop-blur-md transition-all duration-300" id="mainNav">
     <div class="bg-slate-900 text-white py-2">
         <div class="container mx-auto px-6 flex flex-row justify-between items-center text-[10px] md:text-xs font-medium">
-            
             <div class="flex-1 flex justify-start">
                 <p class="flex items-center gap-1.5 hover:text-red-400 transition-colors">
                     <i class="fa-solid fa-phone text-red-500"></i>
@@ -24,8 +23,6 @@
                     <a href="#" class="hover:text-red-500 transition-all"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
             </div>
-    
-            
         </div>
     </div>
 
@@ -38,16 +35,16 @@
             <span class="sm:hidden block">OSOV</span> 
         </a>
 
-        <div class="hidden lg:flex items-center space-x-8 font-medium text-sm text-slate-600">
-            <a href="{{ url_for('main.index') }}" class="hover:text-red-600 transition-colors">Home</a>
-            <a href="{{ url_for('main.about') }}" class="hover:text-red-600 transition-colors">About</a>
-            <a href="{{ url_for('main.mentorship') }}" class="hover:text-red-600 transition-colors">Programs (EICP)</a>
-            <a href="{{ url_for('main.stories') }}" class="hover:text-red-600 transition-colors">Stories</a>
-            <a href="{{ url_for('main.events') }}" class="hover:text-red-600 transition-colors">Events</a>
+        <div class="hidden lg:flex items-center space-x-8 font-medium text-sm text-slate-600" id="desktopLinks">
+            <a href="{{ url_for('main.index') }}" class="nav-link relative py-1 hover:text-red-600 transition-colors">Home</a>
+            <a href="{{ url_for('main.about') }}" class="nav-link relative py-1 hover:text-red-600 transition-colors">About</a>
+            <a href="{{ url_for('main.mentorship') }}" class="nav-link relative py-1 hover:text-red-600 transition-colors">Programs (EICP)</a>
+            <a href="{{ url_for('main.stories') }}" class="nav-link relative py-1 hover:text-red-600 transition-colors">Stories</a>
+            <a href="{{ url_for('main.events') }}" class="nav-link relative py-1 hover:text-red-600 transition-colors">Events</a>
         </div>
 
         <div class="flex items-center gap-3 md:gap-4">
-            <a href="{{ url_for('main.google_login', next=request.args.get('next')) }}" class="hidden lg:block text-sm font-semibold text-slate-900 hover:text-red-600 transition-colors">
+            <a href="{{ url_for('main.google_login', next=request.args.get('next')) }}" class="nav-link hidden lg:block text-sm font-semibold text-slate-900 hover:text-red-600 transition-colors relative py-1">
                 Sign In
             </a>
             
@@ -65,44 +62,77 @@
     <div id="mobileMenu" class="hidden lg:hidden bg-white border-t border-gray-100 absolute w-full left-0 top-full shadow-xl transition-all duration-300">
         <div class="flex flex-col p-6 space-y-4 font-medium text-slate-700">
             <div class="flex gap-4 pb-4 border-b border-gray-50 text-slate-400">
-                <a href="https://www.facebook.com/profile.php?id=61586080915674" target="_blank" class="hover:text-red-500 transition-all"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="https://www.instagram.com/ourstory_ourvoice/" target="_blank" class="hover:text-red-500 transition-all"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://www.tiktok.com/@ourstories_ourvoice" target="_blank" class="hover:text-red-500 transition-all"><i class="fa-brands fa-tiktok"></i></a>
-                <a href="#" class="hover:text-red-500 transition-all"><i class="fa-brands fa-linkedin-in"></i></a>
-            </div>
-            <a href="{{ url_for('main.index') }}" class="hover:text-red-600 py-2 border-b border-gray-50">Home</a>
-            <a href="{{ url_for('main.about') }}" class="hover:text-red-600 py-2 border-b border-gray-50">About</a>
-            <a href="{{ url_for('main.mentorship') }}" class="hover:text-red-600 py-2 border-b border-gray-50">Programs (EICP)</a>
-            <a href="{{ url_for('main.stories') }}" class="hover:text-red-600 py-2 border-b border-gray-50">Stories</a>
-            <a href="{{ url_for('main.events') }}" class="hover:text-red-600 py-2 border-b border-gray-50">Events</a>
-            <a href="{{ url_for('main.google_login', next=request.args.get('next')) }}" class="text-red-600 font-bold py-2">Sign In</a>
+                <a href="..." class="hover:text-red-500 transition-all"><i class="fa-brands fa-facebook-f"></i></a>
+                </div>
+            <a href="{{ url_for('main.index') }}" class="nav-link-mobile hover:text-red-600 py-2 border-b border-gray-50">Home</a>
+            <a href="{{ url_for('main.about') }}" class="nav-link-mobile hover:text-red-600 py-2 border-b border-gray-50">About</a>
+            <a href="{{ url_for('main.mentorship') }}" class="nav-link-mobile hover:text-red-600 py-2 border-b border-gray-50">Programs (EICP)</a>
+            <a href="{{ url_for('main.stories') }}" class="nav-link-mobile hover:text-red-600 py-2 border-b border-gray-50">Stories</a>
+            <a href="{{ url_for('main.events') }}" class="nav-link-mobile hover:text-red-600 py-2 border-b border-gray-50">Events</a>
+            <a href="{{ url_for('main.google_login') }}" class="nav-link-mobile text-red-600 font-bold py-2">Sign In</a>
         </div>
     </div>
 </nav>
+
+<style>
+    /* Underline Effect Styles */
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #dc2626; /* red-600 */
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after, 
+    .nav-link.active::after {
+        width: 100%;
+    }
+
+    .nav-link.active {
+        color: #dc2626; /* red-600 */
+    }
+
+    /* Mobile active state style */
+    .nav-link-mobile.active {
+        color: #dc2626;
+        padding-left: 8px;
+        border-left: 4px solid #dc2626;
+    }
+</style>
+
 <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuIcon = document.getElementById('menuIcon');
-            const mobileMenu = document.getElementById('mobileMenu');
-            
-            // Use a more reliable way to toggle
-            window.toggleMobileMenu = function() {
-                if (mobileMenu.classList.contains('hidden')) {
-                    // Open Menu
-                    mobileMenu.classList.remove('hidden');
-                    menuIcon.classList.remove('fa-bars');
-                    menuIcon.classList.add('fa-xmark');
-                    
-                    // Optional: Add a smooth fade-in effect via JS
-                    mobileMenu.style.opacity = "0";
-                    setTimeout(() => {
-                        mobileMenu.style.opacity = "1";
-                    }, 10);
-                } else {
-                    // Close Menu
-                    mobileMenu.classList.add('hidden');
-                    menuIcon.classList.remove('fa-xmark');
-                    menuIcon.classList.add('fa-bars');
-                }
-            };
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuIcon = document.getElementById('menuIcon');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        // --- 1. Active Link Logic ---
+        const currentPath = window.location.pathname;
+        const allLinks = document.querySelectorAll('.nav-link, .nav-link-mobile');
+        
+        allLinks.forEach(link => {
+            // Check if the link's href matches the current URL path
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            }
         });
-    </script>
+
+        // --- 2. Mobile Menu Toggle ---
+        window.toggleMobileMenu = function() {
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-xmark');
+                mobileMenu.style.opacity = "0";
+                setTimeout(() => { mobileMenu.style.opacity = "1"; }, 10);
+            } else {
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.remove('fa-xmark');
+                menuIcon.classList.add('fa-bars');
+            }
+        };
+    });
+</script>
