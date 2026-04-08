@@ -580,7 +580,7 @@ def process_volunteer(id, action):
         flash(f'Rejected volunteer: {application.user.first_name}', 'warning')
     
     db.session.commit()
-    return redirect(url_for('admin_route.approvals'))
+    return redirect(url_for('admin.approvals'))
 
 # --- PROCESS PARTNER ---
 @admin_route.route('/admin/partner/<int:id>/<action>')
@@ -599,7 +599,7 @@ def process_partner(id, action):
         flash(f'Rejected partnership with {application.org_name}', 'warning')
     
     db.session.commit()
-    return redirect(url_for('admin_route.approvals'))
+    return redirect(url_for('admin.approvals'))
 
 # --- NEW: END PARTNER CONTRACT (Soft Delete) ---
 @admin_route.route('/admin/partner/<int:id>/end_contract')
@@ -612,7 +612,7 @@ def end_partner_contract(id):
     db.session.commit()
     
     flash(f'Contract ended for {application.org_name}. Moved to archives.', 'info')
-    return redirect(url_for('admin_route.approvals'))
+    return redirect(url_for('admin.approvals'))
 
 def generate_csv_response(headers, rows, filename):
     # 1. Create an in-memory string buffer
