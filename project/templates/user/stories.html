@@ -98,15 +98,18 @@
                 </div>
             </article>
             {% else %}
-                <div class="col-span-full text-center py-20">
-                    <div class="inline-block p-6 rounded-full bg-white shadow-sm border border-gray-100 mb-4">
-                        <i class="fa-solid fa-feather text-4xl text-slate-300"></i>
+                <div class="w-full px-4">
+                    <div class="relative overflow-hidden bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 p-12 md:p-20 flex flex-col items-center text-center">
+                        <div class="absolute inset-0 opacity-40 blob-bg pointer-events-none"></div>
+                        <div class="relative z-10">
+                            <div class="w-20 h-20 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center mb-6 mx-auto">
+                                <i class="fa-solid fa-feather-pointed text-3xl text-red-200"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-900 mb-3">The ink is still drying...</h3>
+                            <p class="text-slate-500 max-w-md mx-auto mb-8">Our storytellers are currently out in the field gathering new narratives.</p>
+                            <a href="/" class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-700 hover:border-red-600 hover:text-red-600 transition-all shadow-sm">Explore Other Sections <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900">No stories found</h3>
-                    <p class="text-slate-500 text-sm mt-1">There are no stories in this category yet.</p>
-                    <a href="{{ url_for('main.stories') }}" class="mt-6 inline-flex items-center text-red-600 font-bold hover:underline text-sm">
-                        <i class="fa-solid fa-arrow-left mr-2"></i> View all stories
-                    </a>
                 </div>
             {% endfor %}
         </div>
