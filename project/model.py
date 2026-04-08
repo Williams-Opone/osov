@@ -300,7 +300,8 @@ class Donation(db.Model):
     status = db.Column(db.String(20), default='Pending') # Pending, Success, Failed, Cancelled
     
     # Campaign (Optional)
-    campaign_id = db.Column(db.Integer, db.ForeignKey('campaigns.id'), nullable=True)
+    # Change this line
+    campaign_id = db.Column(db.Integer, db.ForeignKey('campaigns.id', ondelete='SET NULL'), nullable=True)
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

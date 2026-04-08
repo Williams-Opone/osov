@@ -752,13 +752,15 @@ def manage_campaigns():
 def delete_campaign(campaign_id):
     campaign = Campaign.query.get_or_404(campaign_id)
     
-    # Check if it has money attached
-    if campaign.donations:
-        flash('Cannot delete campaign with existing donations. Archive it instead.', 'warning')
-    else:
+    # We remove the "if campaign.donations" check because 
+    # we want to allow deletion even if donations exist.
+    try:
         db.session.delete(campaign)
         db.session.commit()
-        flash('Campaign deleted.', 'success')
+        flash('Campaign deleted. Linked donations have been moved to the General Fund.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error deleting campaign: {str(e)}', 'danger')
         
     return redirect(url_for('admin.manage_campaigns'))
 
