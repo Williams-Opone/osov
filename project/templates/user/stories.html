@@ -98,19 +98,31 @@
                 </div>
             </article>
             {% else %}
-                <div class="w-full px-4">
-                    <div class="relative overflow-hidden bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 p-12 md:p-20 flex flex-col items-center text-center">
-                        <div class="absolute inset-0 opacity-40 blob-bg pointer-events-none"></div>
-                        <div class="relative z-10">
-                            <div class="w-20 h-20 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center mb-6 mx-auto">
-                                <i class="fa-solid fa-feather-pointed text-3xl text-red-200"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-slate-900 mb-3">The ink is still drying...</h3>
-                            <p class="text-slate-500 max-w-md mx-auto mb-8">Our storytellers are currently out in the field gathering new narratives.</p>
-                            <a href="/" class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-700 hover:border-red-600 hover:text-red-600 transition-all shadow-sm">Explore Other Sections <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+            <div class="col-span-1 md:col-span-2 lg:col-span-3">
+                <div class="relative overflow-hidden bg-white rounded-[2rem] border border-slate-100 p-10 md:p-20 shadow-lg shadow-slate-200/40 text-center">
+                    
+                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-red-50 rounded-full blur-3xl opacity-50"></div>
+                    <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-slate-50 rounded-full blur-3xl opacity-50"></div>
+
+                    <div class="relative z-10 flex flex-col items-center">
+                        <div class="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-2xl bg-slate-50 text-slate-400">
+                            <i class="fa-solid fa-feather-pointed text-2xl animate-pulse"></i>
                         </div>
+                        
+                        <h3 class="text-xl md:text-3xl font-bold text-slate-900 mb-3">
+                            The ink is still drying...
+                        </h3>
+                        
+                        <p class="text-slate-500 text-base md:text-lg max-w-lg leading-relaxed mb-8">
+                            We're currently out in the field gathering new narratives. Check back soon to be the first to read them.
+                        </p>
+
+                        <a href="/" class="inline-flex items-center gap-2 px-8 py-3 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-red-600 transition-all duration-300 transform hover:-translate-y-1 shadow-md">
+                            Return Home <i class="fa-solid fa-house text-[10px]"></i>
+                        </a>
                     </div>
                 </div>
+            </div>
             {% endfor %}
         </div>
 
