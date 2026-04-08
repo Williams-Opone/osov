@@ -165,7 +165,7 @@ def index():
     # 2. FETCH DATABASE CONTENT (Events & Stories)
     try:
         # Fetch the 3 most recent events
-        upcoming_events = []
+        upcoming_events = Event.query.order_by(Event.date_time.desc()).limit(3).all()
         
         # Fetch the 10 most recent stories, joining with User to get author names
         stories = Story.query.join(User).order_by(Story.created_at.desc()).limit(10).all()
